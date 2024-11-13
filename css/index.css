@@ -39,11 +39,20 @@ html, body {
 }
 
 /* Neighbor borders for clicked buttons */
-.button.top,
-.button.bottom,
-.button.right,
-.button.left {
+.button.top {
     border-top: 1px dotted var(--grey)
+}
+
+.button.bottom {
+    border-bottom: 1px dotted var(--grey)
+}
+
+.button.left {
+    border-left: 1px dotted var(--grey)
+}
+
+.button.right {
+    border-right: 1px dotted var(--grey)
 }
 
 /* Optional fill colors */
