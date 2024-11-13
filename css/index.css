@@ -2,15 +2,22 @@
 :root {
   --black: black;
   --white: white;
-  --red: #FF7562;
+  --light-grey: #f2f2f2;
   --grey: #8c8c8c;
+  --light-red: #ff7562;
+  --red: #f44336;
+  --green: #4CAF50;
+  --hover-grey: #dcdcdc;
+  --hover-red: #e41f17;
+  --hover-green: #45a049;
 }
 
 
 /* Base styles for HTML and body */
-html, body {
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 /* Grid container for 10x10 layout */
@@ -35,7 +42,7 @@ html, body {
 
 /* Button clicked state */
 .button.clicked {
-    border: 3px solid var(--red);
+    border: 3px solid var(--light-red);
 }
 
 /* Neighbor borders for clicked buttons */
@@ -57,9 +64,52 @@ html, body {
 
 /* Optional fill colors */
 .button.fill-red {
-    background-color: var(--red);
+    background-color: var(--light-red);
 }
 
 .button.fill-white {
     background-color: var(--white);
+}
+
+/* Submit and Clear Buttons Container */
+#controls {
+    display: flex;
+    justify-content: center;  /* Centers the buttons horizontally */
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Button styles for Submit and Clear */
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid var(--black);
+    background-color: var(--light-grey);
+}
+
+/* Hover effect for all buttons */
+button:hover {
+    background-color: var(--hover-grey);
+}
+
+/* Submit Button Style */
+#submit-button {
+    background-color: var(--green);
+    color: var(--white);
+}
+
+#submit-button:hover {
+    background-color: var(--hover-green);
+}
+
+/* Clear Button Style */
+#clear-button {
+    background-color: var(--red);
+    color: var(--white);
+}
+
+#clear-button:hover {
+    background-color: var(--hover-red);
 }

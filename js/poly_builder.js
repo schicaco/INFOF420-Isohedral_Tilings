@@ -66,3 +66,17 @@ function getNeighbors(button) {
     validIndices.forEach(idx => neighbors.push([buttons[idx[0]], idx[1]]));
     return neighbors;
 }
+
+// Submit Button Functionality
+function submitGrid() {
+    const clickedButtons = document.querySelectorAll('.button.clicked');
+    const clickedIndices = Array.from(clickedButtons).map(btn => Array.from(buttons).indexOf(btn));
+    alert('Buttons clicked at indices: ' + clickedIndices.join(', '));
+    // Here, you could implement form submission or other functionality
+}
+
+// Clear Button Functionality
+function clearGrid() {
+    const buttons = document.querySelectorAll('.button');
+    buttons.forEach(button => button.classList.remove('clicked', 'top', 'bottom', 'left', 'right'));
+}
