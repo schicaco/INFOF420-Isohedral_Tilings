@@ -3,16 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Content Page</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Optional for adding custom styles -->
+    <title>INFOF420 Project</title>
+    <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
-    <div id="mainContent" class="content">
-        <!-- Content will be added here by JavaScript -->
-    </div>
-
-    <!-- Linking the external JavaScript file -->
-    <script src="main.js"></script>
-    <script src="poly_builder.js"></script>
+    <header>
+        <h1>Isohedral Tilings & Folding Tiles</h1>
+    </header>
+    <main>
+        <section id="introduction">
+            <h2>Introduction</h2>
+            <p>This project focuses on expanding the study of isohedral tilings by developing algorithms to identify and transform specific classes of tiles.</p>
+            <p>We will focus on two phases:</p>
+            <ol>
+                <li>Detecting Isohedral Tiles with Rotational Symmetries</li>
+                <li>Folding the Tile into a Doubly-Covered Triangle</li>
+            </ol>
+        </section>
+        
+        <section id="poly_builder">
+            <h2>Detecting Isohedral Tiles with Rotational Symmetries</h2>
+            <div id="button-grid"></div>
+        </section>
+    </main>
+    <script src="js/poly_builder.js"></script>
 </body>
 </html>
