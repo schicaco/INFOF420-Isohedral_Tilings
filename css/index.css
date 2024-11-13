@@ -39,18 +39,27 @@ html, body {
 }
 
 /* Neighbor borders for clicked buttons */
-.button.top,
-.button.bottom,
-.button.right,
-.button.left {
+.button.top {
     border-top: 1px dotted var(--grey)
+}
+
+.button.bottom {
+    border-bottom: 1px dotted var(--grey);
+}
+
+.button.right {
+    border-right: 1px dotted var(--grey);
+}
+
+.button.left {
+    border-left: 1px dotted var(--grey);
 }
 
 /* Optional fill colors */
 .button.fill-red {
-    background-color: var(--red);
+    background-color: #FF7562;
 }
 
 .button.fill-white {
-    background-color: var(--white);
+    background-color: white;
 }
