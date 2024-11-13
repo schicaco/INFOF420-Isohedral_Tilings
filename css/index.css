@@ -1,0 +1,56 @@
+/* Define color variables */
+:root {
+  --black: black;
+  --white: white;
+  --red: #FF7562;
+  --grey: #8c8c8c;
+}
+
+
+/* Base styles for HTML and body */
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+/* Grid container for 10x10 layout */
+#button-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 50px); /* 10 columns of 50px each */
+    grid-template-rows: repeat(10, 50px);    /* 10 rows of 50px each */
+    justify-content: center;
+    margin: 0 auto; /* Center the grid in the parent container */
+}
+
+/* Button styles */
+.button {
+    width: 50px;
+    height: 50px;
+    border: 0.75px solid var(--grey);
+    cursor: pointer;
+    outline: none;
+    font-weight: bold;
+    background-color: var(--white);
+}
+
+/* Button clicked state */
+.button.clicked {
+    border: 3px solid var(--red);
+}
+
+/* Neighbor borders for clicked buttons */
+.button.top,
+.button.bottom,
+.button.right,
+.button.left {
+    border-top: 1px dotted var(--grey)
+}
+
+/* Optional fill colors */
+.button.fill-red {
+    background-color: var(--red);
+}
+
+.button.fill-white {
+    background-color: var(--white);
+}
