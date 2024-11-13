@@ -10,27 +10,88 @@
     <header>
         <h1>Isohedral Tilings & Folding Tiles</h1>
     </header>
+
     <main>
-        <section id="introduction">
+        <section id="theory">
             <h2>Introduction</h2>
-            <p>This project focuses on expanding the study of isohedral tilings by developing algorithms to identify and transform specific classes of tiles.</p>
-            <p>We will focus on two phases:</p>
+            <p>This project delves into isohedral tilings, focusing on algorithms that identify and transform specific tile types based on their symmetry properties. Isohedral tilings, where identical shapes tile the plane repetitively, have significant applications in fields such as materials science, art, and mathematics.</p>
+            <p>The project has two main objectives:</p>
             <ol>
-                <li>Detecting Isohedral Tiles with Rotational Symmetries</li>
-                <li>Folding the Tile into a Doubly-Covered Triangle</li>
+                <li><strong>Detecting Isohedral Tiles with Rotational Symmetries:</strong> This phase develops algorithms to identify tiles with 3-fold, 4-fold, or 6-fold rotational symmetries.</li>
+                <li><strong>Folding Tiles into Doubly-Covered Triangles:</strong> This step involves transforming identified tiles into simpler shapes—doubly-covered triangles—while preserving symmetry, allowing for new tiling configurations.</li>
+            </ol>
+
+            <h2>Detecting Isohedral Tiles with Rotational Symmetries</h2>
+            <p>The challenge here is to explore the tiling properties of three primary polygon types, each characterized by distinct rotational symmetries.</p>
+            <p>Instead of investigating all possible polygons or tiling configurations, this study focuses on specific polygonal forms to determine the existence of valid tiling patterns. The polygons considered are:</p>
+            <ul>
+                <li><strong>Polyiamonds:</strong> These polygons, built from triangular units, exhibit 3-fold rotational symmetry.</li>
+                <li><strong>Polyominoes:</strong> Composed of squares, these shapes display 4-fold rotational symmetry.</li>
+                <li><strong>Polyhexes:</strong> Made from hexagonal units, these polygons allow for the exploration of both 3-fold and 6-fold rotational symmetries.</li>
+            </ul>
+            <p>This focused approach adapts existing methodologies to identify and transform isohedral tilings specifically within these polygon classes.</p>
+
+            <h3>Core Concepts</h3>
+
+            <h4>Boundary Word</h4>
+            <p>The boundary of a polygon can be effectively represented using boundary words. These words encode the shape's perimeter as a sequence of directional moves along its edges.</p>
+            <ul>
+                <li>For polyominoes, the boundary word uses four cardinal directions: <strong>{r, u, l, d}</strong> (Right, Up, Left, Down).</li>
+                <li>For polyiamonds and polyhexes, the boundary word includes six directions: <strong>{e, ne, nw, w, sw, se}</strong> (East, Northeast, Northwest, West, Southwest, Southeast).</li>
+            </ul>
+            <p>Each boundary word is represented by <strong>W</strong>, with <strong>W[i]</strong> indicating the <strong>i-th</strong> character in the sequence. Analyzing these words helps uncover structural properties and detect symmetries, such as isohedral tilings, by examining repeated patterns and factorizations within the word.</p>
+
+            <h4>Factorization</h4>
+            <p>Factorization refers to breaking down the boundary word into <strong>subwords</strong> that reveal symmetries in the tiling pattern. A factor of <strong>W</strong> is a contiguous subsequence of letters, denoted as <strong>X</strong>. By analyzing how these factors repeat or interact, we can identify rotational or reflective symmetries essential to determining if the tile can form an isohedral tiling.</p>
+
+            <h4>Rotational Symmetries: 3-Fold, 4-Fold, and 6-Fold</h4>
+            <p>To identify rotational symmetries, we focus on three common types found in tiling patterns:</p>
+            <ul>
+                <li><strong>3-Fold Symmetry:</strong> Achieved through rotations of 120°.</li>
+                <li><strong>4-Fold Symmetry:</strong> Achieved through rotations of 90° (quarter-turns).</li>
+                <li><strong>6-Fold Symmetry:</strong> Achieved through rotations of 60°.</li>
+            </ul>
+            <p>Our goal is to find segments within a tile's boundary word that repeat consistently when rotated by these angles. These repeating segments, which remain invariant or transform into identical segments upon rotation, are the key to identifying symmetries.</p>
+            <p>To represent these repeating segments, we define <strong>k-dromes</strong> as subsequences that map onto themselves or their symmetric counterparts under rotation by an angle <strong>k</strong>, where <strong>k</strong> could be 120°, 90°, or 60° depending on the symmetry type.</p>
+
+            <h3>Algorithm for Detecting Rotational Symmetries</h3>
+            <p>Given a boundary word <strong>W</strong>, our task is to factorize it into segments that reflect the rotational symmetries of the tiling pattern.</p>
+
+            <h4>Steps:</h4>
+            <ol>
+                <li><strong>Define the boundary word:</strong>
+                    <p>Let <strong>W = ABC</strong>, where:</p>
+                    <ul>
+                        <li><strong>A</strong> is a palindrome (reads the same forward and backward),</li>
+                        <li><strong>B</strong> and <strong>C</strong> are <strong>k-dromes</strong> for a specified rotation angle <strong>k</strong> (120°, 90°, or 60°), meaning each transforms or overlaps symmetrically with one another after rotation.</li>
+                    </ul>
+                </li>
+                <li><strong>Factorize for symmetry:</strong>
+                    <p>We seek to decompose the word <strong>W</strong> into segments (<strong>A</strong>, <strong>B</strong>, <strong>C</strong>) that exhibit 3-fold, 4-fold, or 6-fold rotational symmetry.</p>
+                    <ul>
+                        <li><strong>k-drome check:</strong> Each segment should either map onto itself or onto a matching segment when rotated by <strong>k</strong>.</li>
+                        <li><strong>Repetition check:</strong> The full boundary word <strong>W</strong> should repeat symmetrically when rotated.</li>
+                    </ul>
+                </li>
+                <li><strong>Determine valid factorization:</strong>
+                    <ul>
+                        <li>If a factorization <strong>W = ABC</strong> satisfies the conditions under a specified rotation angle, the boundary word exhibits the desired symmetry.</li>
+                        <li>If no valid factorization exists, the boundary word does not support tiling under the specified symmetry.</li>
+                    </ul>
+                </li>
             </ol>
         </section>
-        
+
         <section id="poly_builder">
-            <h2>Detecting Isohedral Tiles with Rotational Symmetries</h2>
+            <h2>Polygon Builder</h2>
             <div id="grid"></div>
             <div id="controls">
                 <button id="submit-button" onclick="submitGrid()">Submit</button>
                 <button id="clear-button" onclick="clearGrid()">Clear</button>
             </div>
-        
         </section>
     </main>
+
     <script src="js/poly_builder.js"></script>
 </body>
 </html>
