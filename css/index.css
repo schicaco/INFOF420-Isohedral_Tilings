@@ -36,7 +36,7 @@ h2 {
 }
 
 /* Grid container for 10x10 layout */
-#button-grid {
+#grid {
     display: grid;
     grid-template-columns: repeat(10, 50px); /* 10 columns of 50px each */
     grid-template-rows: repeat(10, 50px);    /* 10 rows of 50px each */
@@ -44,45 +44,45 @@ h2 {
     margin: 0 auto; /* Center the grid in the parent container */
 }
 
-/* Button styles */
-.button {
+/* Cell styles */
+.cell {
     width: 50px;
     height: 50px;
-    border: 0.75px solid var(--grey);
+    border: 0.5px solid var(--grey);
     cursor: pointer;
     outline: none;
     font-weight: bold;
     background-color: var(--white);
 }
 
-/* Button clicked state */
-.button.clicked {
+/* Cell clicked state */
+.cell.clicked {
     border: 3px solid var(--light-red);
 }
 
-/* Neighbor borders for clicked buttons */
-.button.top {
+/* Neighbor borders for clicked cells */
+.cell.top {
     border-top: 1px dotted var(--grey)
 }
 
-.button.bottom {
+.cell.bottom {
     border-bottom: 1px dotted var(--grey)
 }
 
-.button.left {
+.cell.left {
     border-left: 1px dotted var(--grey)
 }
 
-.button.right {
+.cell.right {
     border-right: 1px dotted var(--grey)
 }
 
 /* Optional fill colors */
-.button.fill-red {
+.cell.fill-red {
     background-color: var(--light-red);
 }
 
-.button.fill-white {
+.cell.fill-white {
     background-color: var(--white);
 }
 
@@ -95,17 +95,16 @@ h2 {
 }
 
 /* Button styles for Submit and Clear */
-button {
+#controls button {
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
     border-radius: 5px;
     border: 1px solid var(--black);
-    background-color: var(--light-grey);
 }
 
 /* Hover effect for all buttons */
-button:hover {
+#controls button:hover {
     background-color: var(--hover-grey);
 }
 
