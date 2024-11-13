@@ -2,19 +2,41 @@
 :root {
   --black: black;
   --white: white;
-  --red: #FF7562;
+  --light-grey: #f2f2f2;
   --grey: #8c8c8c;
+  --light-red: #ff7562;
+  --red: #f44336;
+  --green: #4CAF50;
+  --hover-grey: #dcdcdc;
+  --hover-red: #e41f17;
+  --hover-green: #45a049;
 }
 
 
 /* Base styles for HTML and body */
-html, body {
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h2 {
+    margin: 20px 0px;
 }
 
 /* Grid container for 10x10 layout */
-#button-grid {
+#grid {
     display: grid;
     grid-template-columns: repeat(10, 50px); /* 10 columns of 50px each */
     grid-template-rows: repeat(10, 50px);    /* 10 rows of 50px each */
@@ -22,35 +44,86 @@ html, body {
     margin: 0 auto; /* Center the grid in the parent container */
 }
 
-/* Button styles */
-.button {
+/* Cell styles */
+.cell {
     width: 50px;
     height: 50px;
-    border: 0.75px solid var(--grey);
+    border: 0.5px solid var(--grey);
     cursor: pointer;
     outline: none;
     font-weight: bold;
     background-color: var(--white);
 }
 
-/* Button clicked state */
-.button.clicked {
-    border: 3px solid var(--red);
+/* Cell clicked state */
+.cell.clicked {
+    border: 3px solid var(--light-red);
 }
 
-/* Neighbor borders for clicked buttons */
-.button.top,
-.button.bottom,
-.button.right,
-.button.left {
+/* Neighbor borders for clicked cells */
+.cell.top {
     border-top: 1px dotted var(--grey)
 }
 
-/* Optional fill colors */
-.button.fill-red {
-    background-color: var(--red);
+.cell.bottom {
+    border-bottom: 1px dotted var(--grey)
 }
 
-.button.fill-white {
+.cell.left {
+    border-left: 1px dotted var(--grey)
+}
+
+.cell.right {
+    border-right: 1px dotted var(--grey)
+}
+
+/* Optional fill colors */
+.cell.fill-red {
+    background-color: var(--light-red);
+}
+
+.cell.fill-white {
     background-color: var(--white);
+}
+
+/* Submit and Clear Buttons Container */
+#controls {
+    display: flex;
+    justify-content: center;  /* Centers the buttons horizontally */
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Button styles for Submit and Clear */
+#controls button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid var(--black);
+}
+
+/* Hover effect for all buttons */
+#controls button:hover {
+    background-color: var(--hover-grey);
+}
+
+/* Submit Button Style */
+#submit-button {
+    background-color: var(--green);
+    color: var(--white);
+}
+
+#submit-button:hover {
+    background-color: var(--hover-green);
+}
+
+/* Clear Button Style */
+#clear-button {
+    background-color: var(--red);
+    color: var(--white);
+}
+
+#clear-button:hover {
+    background-color: var(--hover-red);
 }
