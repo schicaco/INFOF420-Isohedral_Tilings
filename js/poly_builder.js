@@ -1,26 +1,17 @@
-// Function to create a button grid
-function createButtonGrid(container) {
-    // Create and add the button grid container
-    const buttonContainer = document.createElement('div');
-    buttonContainer.id = 'button-grid';
-    buttonContainer.className = 'button-grid';
-    container.appendChild(buttonContainer);
-
-    // Generate 100 buttons inside the button container
-    for (let i = 1; i <= 100; i++) {
-        const button = document.createElement('button');
-        button.className = 'button';
-        buttonContainer.appendChild(button);
-    }
-
-    // Attach event listeners to buttons (example from previous logic)
-    const buttons = document.querySelectorAll('.button');
-    buttons.forEach(btn => btn.onclick = function() {
-        buttonClick(btn, getNeighbors(btn));
-    });
+// Generating the buttons
+const buttonContainer = document.getElementById('button-grid');
+for (let i = 1; i <= 100; i++) {
+    const button = document.createElement('button');
+    button.className = 'button';
+    buttonContainer.appendChild(button);
 }
 
-// Example button interaction logic (adjust as needed)
+// Bind click with neighbors 
+const buttons = document.querySelectorAll('.button');
+buttons.forEach(btn => btn.onclick = function() {
+    buttonClick(btn, getNeighbors(btn));
+});
+
 function buttonClick(button, neighbors) {
     button.classList.toggle('clicked');
     neighbors.forEach(nb => {
@@ -54,7 +45,7 @@ function getNeighbors(button) {
     const buttons = document.querySelectorAll('.button');
     const buttonIndex = Array.from(buttons).indexOf(button);
 
-    // Get Left, Right, Top, and Bottom Neighbors
+    // Get Left, Right, Top, and Bottom Neighbor
     const neighborIndices = [
         [buttonIndex - 1, 'L'],
         [buttonIndex + 1, 'R'],
@@ -65,10 +56,10 @@ function getNeighbors(button) {
     const validIndices = neighborIndices.filter(idx => 
         idx[0] >= 0 && 
         idx[0] < buttons.length &&
-        (idx[0] == buttonIndex - 10 ||
-         idx[0] == buttonIndex + 10 ||
-         (idx[0] == buttonIndex - 1 && Math.floor(idx[0] / 10) == Math.floor(buttonIndex / 10)) ||
-         (idx[0] == buttonIndex + 1 && Math.floor(idx[0] / 10) == Math.floor(buttonIndex / 10))
+        (idx[0] === buttonIndex - 10 ||
+         idx[0] === buttonIndex + 10 ||
+         (idx[0] === buttonIndex - 1 && ~~(idx[0] / 10) === ~~(buttonIndex / 10)) ||
+         (idx[0] === buttonIndex + 1 && ~~(idx[0] / 10) === ~~(buttonIndex / 10))
         )
     );
 
