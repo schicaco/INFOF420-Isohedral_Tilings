@@ -67,16 +67,3 @@ function getNeighbors(cell) {
     return neighbors;
 }
 
-// Submit cell Functionality
-function submitGrid() {
-    const clickedcells = document.querySelectorAll('.cell.clicked');
-    const clickedIndices = Array.from(clickedcells).map(btn => Array.from(cells).indexOf(btn));
-    alert('cells clicked at indices: ' + clickedIndices.join(', '));
-    // Here, you could implement form submission or other functionality
-}
-
-// Clear cell Functionality
-function clearGrid() {
-    const cells = document.querySelectorAll('.cell');
-    cells.forEach(cell => cell.classList.remove('clicked', 'top', 'bottom', 'left', 'right'));
-}
