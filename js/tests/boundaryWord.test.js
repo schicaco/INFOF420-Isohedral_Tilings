@@ -75,9 +75,82 @@ describe('BoundaryWord Class', () => {
         expect(word.backtrackWord()).toBe('rdlu');
     });
 
-    test('Circular word transformation', () => {
+    test('circular word transformation', () => {
         const word = new BoundaryWord('uldr');
         const rotated = word.rotateWord(90); // 'ldru'
         expect(rotated).toBe('ldru');
+    });
+
+    test('getFactor: valid factor', () => {
+        const word = new BoundaryWord('uuulruuu');
+        expect(word.getFactor(1, 3)).toBe('uuu'); // Factor from index 1 to 3
+        expect(word.getFactor(4, 6)).toBe('lru'); // Factor from index 4 to 6
+    });
+
+    test('getFactor: invalid indices', () => {
+        const word = new BoundaryWord('uuulruuu');
+        expect(() => word.getFactor(0, 3)).toThrow('Invalid indices: i = 0, j = 3.');
+        expect(() => word.getFactor(4, 10)).toThrow('Invalid indices: i = 4, j = 10.');
+        expect(() => word.getFactor(6, 5)).toThrow('Invalid indices: i = 6, j = 5.');
+    });
+
+    test('isPrefix: valid prefixes', () => {
+        const word = new BoundaryWord('uuulruuu');
+        expect(word.isPrefix('uuu')).toBe(true); // 'uuu' is a prefix
+        expect(word.isPrefix('uuulr')).toBe(true); // 'uuulr' is a prefix
+    });
+
+    test('isPrefix: invalid prefix', () => {
+        const word = new BoundaryWord('uuulruuu');
+        expect(word.isPrefix('lru')).toBe(false); // 'lru' is not a prefix
+    });
+
+    test('isSuffix: valid suffixes', () => {
+        const word = new BoundaryWord('uuulruuu');
+        expect(word.isSuffix('uuu')).toBe(true); // 'uuu' is a suffix
+        expect(word.isSuffix('lruuu')).toBe(true); // 'lruuu' is a suffix
+    });
+
+    test('isSuffix: invalid suffix', () => {
+        const word = new BoundaryWord('uuulruuu');
+        expect(word.isSuffix('uuul')).toBe(false); // 'uuul' is not a suffix
+    });
+
+    test('isAffix: valid affixes', () => {
+        const word = new BoundaryWord('uuulruuu');
+        expect(word.isAffix('uuu')).toBe(true); // 'uuu' is both prefix and suffix
+        expect(word.isAffix('uuul')).toBe(true); // 'uuul' is a prefix (affix)
+        expect(word.isAffix('lruuu')).toBe(true); // 'lruuu' is a suffix (affix)
+    });
+
+    test('isAffix: invalid affix', () => {
+        const word = new BoundaryWord('uuulruuu');
+        expect(word.isAffix('lur')).toBe(false); // 'lur' is not an affix
+    });
+
+    test('isMiddle: valid middle', () => {
+        const word = new BoundaryWord('uuulruuu');
+        expect(word.isMiddle('lr')).toBe(true);  // 'lr' is a middle
+    });
+
+    test('isMiddle: invalid middle', () => {
+        const word = new BoundaryWord('uuulruuu');
+        expect(word.isMiddle('uuu')).toBe(false); // 'uuu' is an affix, not a middle
+        expect(word.isMiddle('uuul')).toBe(false); // 'uuul' is a prefix, not a middle
+    });
+
+    test('findCenter: even-length word', () => {
+        const word = new BoundaryWord('uuulruuu');
+        expect(word.findCenter()).toBe('lr'); // Center of even-length word is 'lr'
+    });
+
+    test('findCenter: odd-length word', () => {
+        const word = new BoundaryWord('uuulruu');
+        expect(word.findCenter()).toBe('l'); // Center of odd-length word is 'l'
+    });
+
+    test('findCenter: single-letter word', () => {
+        const word = new BoundaryWord('uuuu');
+        expect(word.findCenter()).toBe('uu'); // Center of 'uuuu' is the middle two letters
     });
 });
