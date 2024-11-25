@@ -5,12 +5,15 @@
   "main": "js/index.js",
   "scripts": {
     "start": "open index.html",
-    "test": "jtest"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@babel/preset-env": "^7.26.0",
+    "babel-jest": "^29.7.0",
     "jest": "^29.7.0"
-  }
+  },
+  "type": "module"
 }
