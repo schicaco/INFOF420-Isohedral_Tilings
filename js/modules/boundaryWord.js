@@ -90,15 +90,6 @@ class BoundaryWord {
     }
 
     /**
-     * Computes the reflection of the entire word across a line with angle Θ.
-     * @param {number} theta - The reflection angle (-45, 0, 45, or 90 degrees).
-     * @returns {string} - The reflected word.
-     */
-    reflectWord(theta) {
-        return [...this.word].map(letter => BoundaryWord.reflectLetter(letter, theta)).join('');
-    }
-
-    /**
      * Computes the complement of the entire word.
      * @returns {string} - The complement of the word.
      */
