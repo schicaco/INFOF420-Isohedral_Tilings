@@ -16,6 +16,9 @@ class BoundaryWord {
         }
         this.word = word.toLowerCase(); // Stores the word in lowercase
 
+        if (!this.isWordInAlphabet()) {
+            throw new Error("Invalid word: All letters must be in the alphabet.");
+        }
     }
 
     /**
