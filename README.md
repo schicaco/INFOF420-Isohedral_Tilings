@@ -6,7 +6,13 @@ This project is part of the INFO-F420 course and is focused on the study of isoh
 
 1. **Detecting Isohedral Tiles with Rotational Symmetries**
 2. **Folding Tiles into a Doubly-Covered Triangle**
-3. 
+
+## Deployment
+
+The project is hosted online and accessible via the following link:
+
+[**Visit Webpage**](https://schicaco.github.io/INFOF420-Isohedral_Tilings/)
+
 ## Technologies Used
 
 - **HTML** for the structure of the web interface.
@@ -14,9 +20,18 @@ This project is part of the INFO-F420 course and is focused on the study of isoh
 - **JavaScript** for implementing the logic of detecting isohedral tiles and folding operations.
 - **Node.js** with **npm** for managing dependencies.
 
-## Setup
+## Setup Instructions
 
-To get started with the project, follow these steps:
+Follow these steps to set up and run the project locally:
+
+### Prerequisites
+
+Ensure that the following are installed on your system:
+
+- [Node.js](https://nodejs.org) (v16 or higher recommended)
+- A modern web browser (e.g., Chrome, Firefox)
+
+### Steps
 
 1. Clone the repository:
 
