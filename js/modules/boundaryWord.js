@@ -1,5 +1,8 @@
 import BoundaryWordError from '../error.js';
 
+/**
+ * Constants for letter direction and rotations.
+ */
 const ALPHABET = new Map([
     ['u', [0, 1]],
     ['d', [0, -1]],
@@ -14,16 +17,20 @@ const ROTATIONS = new Map([
     ['r', { 90: 'd', 180: 'l', 270: 'u' }],
 ]);
 
+/**
+ * Class representing a boundary word and its associated operations.
+ */
 class BoundaryWord {
     /**
      * Constructs a BoundaryWord instance with the given word, converted to lowercase.
      * @param {string} word - The input word.
+     * @throws {BoundaryWordError} - If the word is invalid.
      */
     constructor(word) {
-        if (!word || word.length < 4 || typeof word !== 'string') {
+        if (!word || typeof word !== 'string' || word.length < 4) {
             throw new BoundaryWordError.invalidWord();
         }
-        this.word = word.toLowerCase(); // Stores the word in lowercase
+        this.word = word.toLowerCase();
 
         if (!this.isWordInAlphabet()) {
             throw new BoundaryWordError.invalidLetter();
@@ -31,26 +38,26 @@ class BoundaryWord {
     }
 
     /**
-     * Checks if all letters in the word are within the defined ALPHABET.
-     * @returns {boolean} - True if all letters are in the ALPHABET; false otherwise.
+     * Validates if all letters in the word belong to the defined ALPHABET.
+     * @returns {boolean} - True if all letters are valid, otherwise false.
      */
     isWordInAlphabet() {
         return [...this.word].every(letter => ALPHABET.has(letter));
     }
 
     /**
-     * Retrieves the stored word.
-     * @returns {string} - The word in lowercase.
+     * Retrieves the stored word in lowercase.
+     * @returns {string} - The word.
      */
     getWord() {
         return this.word;
     }
 
     /**
-     * Retrieves a letter at a specific index in the word.
-     * @param {number} index - The index of the letter to retrieve.
+     * Retrieves a specific letter by its index.
+     * @param {number} index - The index of the desired letter.
      * @returns {string} - The letter at the specified index.
-     * @throws {Error} - If the index is out of bounds.
+     * @throws {BoundaryWordError} - If the index is out of bounds.
      */
     getLetter(index) {
         if (index < 0 || index >= this.word.length) {
@@ -60,31 +67,33 @@ class BoundaryWord {
     }
 
     /**
-     * Rotates a letter by Θ degrees counterclockwise.
-     * @param {string} letter - The input letter.
-     * @param {number} theta - The rotation angle (90, 180, or 270 degrees).
+     * Rotates a letter by a specified angle.
+     * @param {string} letter - The letter to rotate.
+     * @param {number} theta - The rotation angle (90, 180, 270).
      * @returns {string} - The rotated letter.
+     * @throws {BoundaryWordError} - If the rotation angle or letter is invalid.
      */
     static rotateLetter(letter, theta) {
         if (theta % 360 === 0) return letter;
-        if (!ROTATIONS.has(letter) || !ROTATIONS.get(letter)[theta]) {
+        const rotation = ROTATIONS.get(letter)?.[theta];
+        if (!rotation) {
             throw new BoundaryWordError.invalidRotation(theta);
         }
-        return ROTATIONS.get(letter)[theta];
+        return rotation;
     }
 
     /**
-     * Computes the complement of a letter.
-     * @param {string} letter - The input letter.
-     * @returns {string} - The complement of the letter (180-degree rotation).
+     * Computes the complement of a letter (180-degree rotation).
+     * @param {string} letter - The letter to complement.
+     * @returns {string} - The complemented letter.
      */
     static complementLetter(letter) {
         return this.rotateLetter(letter, 180);
     }
 
     /**
-     * Computes the rotation of the entire word by Θ degrees.
-     * @param {number} theta - The rotation angle (90, 180, or 270 degrees).
+     * Rotates the entire word by a specified angle.
+     * @param {number} theta - The rotation angle (90, 180, 270).
      * @returns {string} - The rotated word.
      */
     rotateWord(theta) {
@@ -93,7 +102,7 @@ class BoundaryWord {
 
     /**
      * Computes the complement of the entire word.
-     * @returns {string} - The complement of the word.
+     * @returns {string} - The complemented word.
      */
     complementWord() {
         return this.rotateWord(180);
@@ -108,19 +117,19 @@ class BoundaryWord {
     }
 
     /**
-     * Computes the backtrack of the word.
-     * @returns {string} - The backtracked word (equal to the reversed word in this context).
+     * Returns the backtrack of the word (equal to the reversed word).
+     * @returns {string} - The backtracked word.
      */
     backtrackWord() {
         return this.reverseWord();
     }
 
     /**
-     * Returns a factor of the word from index i to j (inclusive).
+     * Extracts a substring (factor) of the word.
      * @param {number} i - Start index (1-based).
      * @param {number} j - End index (1-based).
-     * @returns {string} - The factor of the word.
-     * @throws {Error} - If indices are out of bounds or invalid.
+     * @returns {string} - The extracted factor.
+     * @throws {BoundaryWordError} - If indices are invalid.
      */
     getFactor(i, j) {
         if (i < 1 || j > this.word.length || i > j) {
@@ -130,41 +139,39 @@ class BoundaryWord {
     }
 
     /**
-     * Checks if a factor is a prefix of the word.
-     * @param {string} factor - The factor to check.
-     * @returns {boolean} - True if the factor is a prefix; false otherwise.
+     * Checks if a substring is a prefix of the word.
+     * @param {string} factor - The substring to check.
+     * @returns {boolean} - True if the substring is a prefix, otherwise false.
      */
     isPrefix(factor) {
         return this.word.startsWith(factor);
     }
 
     /**
-     * Checks if a factor is a suffix of the word.
-     * @param {string} factor - The factor to check.
-     * @returns {boolean} - True if the factor is a suffix; false otherwise.
+     * Checks if a substring is a suffix of the word.
+     * @param {string} factor - The substring to check.
+     * @returns {boolean} - True if the substring is a suffix, otherwise false.
      */
     isSuffix(factor) {
         return this.word.endsWith(factor);
     }
 
     /**
-     * Checks if a factor is an affix (prefix or suffix) of the word.
-     * @param {string} factor - The factor to check.
-     * @returns {boolean} - True if the factor is an affix; false otherwise.
+     * Checks if a substring is an affix (prefix or suffix) of the word.
+     * @param {string} factor - The substring to check.
+     * @returns {boolean} - True if the substring is an affix, otherwise false.
      */
     isAffix(factor) {
         return this.isPrefix(factor) || this.isSuffix(factor);
     }
 
     /**
-     * Checks if a factor is a middle (not an affix) of the word.
-     * @param {string} factor - The factor to check.
-     * @returns {boolean} - True if the factor is a middle; false otherwise.
+     * Checks if a substring is a middle (not an affix) of the word.
+     * @param {string} factor - The substring to check.
+     * @returns {boolean} - True if the substring is in the middle, otherwise false.
      */
     isMiddle(factor) {
-        const prefix = this.isPrefix(factor);
-        const suffix = this.isSuffix(factor);
-        return !prefix && !suffix && this.word.includes(factor);
+        return this.word.includes(factor) && !this.isAffix(factor);
     }
 
     /**
@@ -172,50 +179,37 @@ class BoundaryWord {
      * @returns {string} - The center of the word (1 or 2 letters).
      */
     findCenter() {
-        const length = this.word.length;
-        if (length % 2 === 1) {
-            return this.word.charAt(Math.floor(length / 2));
-        } else {
-            const mid = length / 2;
-            return this.word.slice(mid - 1, mid + 1);
-        }
+        const mid = Math.floor(this.word.length / 2);
+        return this.word.length % 2 === 0
+            ? this.word.slice(mid - 1, mid + 1)
+            : this.word.charAt(mid);
     }
 
     /**
      * Checks if the word is a Θ-drome.
-     * @param {number} theta - The angle for Θ-drome (must be 0, 90, 180, or 270 degrees).
-     * @returns {boolean} - True if the word is a Θ-drome, false otherwise.
+     * @param {number} theta - The rotation angle (0, 90, 180, 270).
+     * @returns {boolean} - True if the word is a Θ-drome, otherwise false.
+     * @throws {BoundaryWordError} - If the rotation angle is invalid.
      */
-    isThetaDrome(theta) {        
+    isThetaDrome(theta) {
         if (![0, 90, 180, 270].includes(theta)) {
             throw new BoundaryWordError.invalidRotation(theta);
         }
-
-        const length = this.word.length;
-        const half = Math.floor(length / 2);
+        const half = Math.floor(this.word.length / 2);
         const firstHalf = this.word.slice(0, half);
         const secondHalf = this.word.slice(-half);
-
-        // Check if secondHalf matches the rotation of firstHalf by θ + 180
         const rotatedFirstHalf = [...firstHalf]
             .map(letter => BoundaryWord.rotateLetter(letter, theta + 180))
             .join('');
-
         return secondHalf === rotatedFirstHalf;
     }
 
     /**
      * Checks if the word is a palindrome.
-     * @returns {boolean} - True if the word is a palindrome, false otherwise.
+     * @returns {boolean} - True if the word is a palindrome, otherwise false.
      */
     isPalindrome() {
-        const length = this.word.length;
-        const half = Math.floor(length / 2);
-        const firstHalf = this.word.slice(0, half);
-        const secondHalf = this.word.slice(-half);
-
-        // Check if secondHalf is the reverse of firstHalf
-        return secondHalf === [...firstHalf].reverse().join('');
+        return this.word === this.reverseWord();
     }
 }
 
