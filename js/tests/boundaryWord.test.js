@@ -2,8 +2,8 @@ import BoundaryWord from '../modules/BoundaryWord';
 
 describe('BoundaryWord Class', () => {
     test('Constructor: valid word', () => {
-        const word = new BoundaryWord('news');
-        expect(word.getWord()).toBe('news');
+        const word = new BoundaryWord('ldru');
+        expect(word.getWord()).toBe('ldru');
     });
 
     test('Constructor: invalid word (empty string)', () => {
@@ -11,7 +11,7 @@ describe('BoundaryWord Class', () => {
     });
 
     test('Constructor: invalid word (too short)', () => {
-        expect(() => new BoundaryWord('new')).toThrow('Invalid word: A string of at least 4 letters is required.');
+        expect(() => new BoundaryWord('ldr')).toThrow('Invalid word: A string of at least 4 letters is required.');
     });
 
     test('Constructor: invalid word (non-string)', () => {
@@ -19,29 +19,23 @@ describe('BoundaryWord Class', () => {
         expect(() => new BoundaryWord(123)).toThrow('Invalid word: A string of at least 4 letters is required.');
     });
 
-    test('isWordInAlphabet: word in alphabet', () => {
-        const word = new BoundaryWord('news');
-        expect(word.isWordInAlphabet()).toBe(true);
-    });
-
-    test('isWordInAlphabet: word not in alphabet', () => {
-        const word = new BoundaryWord('north');
-        expect(word.isWordInAlphabet()).toBe(false);
+    test('Constructor: invalid word (invalid letters)', () => {
+        expect(() => new BoundaryWord('ldrx')).toThrow('Invalid word: All letters must be in the alphabet.');
     });
 
     test('getLetter: valid index', () => {
-        const word = new BoundaryWord('news');
-        expect(word.getLetter(0)).toBe('n');
-        expect(word.getLetter(3)).toBe('s');
+        const word = new BoundaryWord('ldru');
+        expect(word.getLetter(0)).toBe('l');
+        expect(word.getLetter(3)).toBe('u');
     });
 
     test('getLetter: invalid index (negative)', () => {
-        const word = new BoundaryWord('news');
+        const word = new BoundaryWord('ldru');
         expect(() => word.getLetter(-1)).toThrow('Index -1 is out of bounds.');
     });
 
     test('getLetter: invalid index (out of range)', () => {
-        const word = new BoundaryWord('news');
+        const word = new BoundaryWord('ldru');
         expect(() => word.getLetter(4)).toThrow('Index 4 is out of bounds.');
     });
 });

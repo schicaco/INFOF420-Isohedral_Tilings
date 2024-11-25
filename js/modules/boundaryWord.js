@@ -1,8 +1,8 @@
 const ALPHABET = new Map([
-    ['n', [0, 1]],
-    ['e', [1, 0]],
-    ['s', [0, -1]],
-    ['w', [-1, 0]]
+    ['u', [0, 1]],
+    ['d', [0, -1]],
+    ['l', [-1, 0]],
+    ['r', [1, 0]],
 ]);
 
 class BoundaryWord {
@@ -49,6 +49,8 @@ class BoundaryWord {
         }
         return this.word[index];
     }
+
+
 }
 
 export default BoundaryWord;
