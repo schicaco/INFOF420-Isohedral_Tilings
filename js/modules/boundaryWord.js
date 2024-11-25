@@ -1,3 +1,5 @@
+import BoundaryWordError from '../error.js';
+
 const ALPHABET = new Map([
     ['u', [0, 1]],
     ['d', [0, -1]],
@@ -19,12 +21,12 @@ class BoundaryWord {
      */
     constructor(word) {
         if (!word || word.length < 4 || typeof word !== 'string') {
-            throw new Error("Invalid word: A string of at least 4 letters is required.");
+            throw new BoundaryWordError.invalidWord();
         }
         this.word = word.toLowerCase(); // Stores the word in lowercase
 
         if (!this.isWordInAlphabet()) {
-            throw new Error("Invalid word: All letters must be in the alphabet.");
+            throw new BoundaryWordError.invalidLetter();
         }
     }
 
@@ -52,7 +54,7 @@ class BoundaryWord {
      */
     getLetter(index) {
         if (index < 0 || index >= this.word.length) {
-            throw new Error(`Index ${index} is out of bounds.`);
+            throw new BoundaryWordError.invalidIndex(index);
         }
         return this.word[index];
     }
@@ -66,7 +68,7 @@ class BoundaryWord {
     static rotateLetter(letter, theta) {
         if (theta % 360 === 0) return letter;
         if (!ROTATIONS.has(letter) || !ROTATIONS.get(letter)[theta]) {
-            throw new Error(`Invalid rotation angle ${theta}.`);
+            throw new BoundaryWordError.invalidRotation(theta);
         }
         return ROTATIONS.get(letter)[theta];
     }
@@ -122,7 +124,7 @@ class BoundaryWord {
      */
     getFactor(i, j) {
         if (i < 1 || j > this.word.length || i > j) {
-            throw new Error(`Invalid indices: i = ${i}, j = ${j}.`);
+            throw new BoundaryWordError.invalidIndices(i, j);
         }
         return this.word.slice(i - 1, j);
     }
@@ -186,7 +188,7 @@ class BoundaryWord {
      */
     isThetaDrome(theta) {        
         if (![0, 90, 180, 270].includes(theta)) {
-            throw new Error(`Invalid rotation angle ${theta}.`);
+            throw new BoundaryWordError.invalidRotation(theta);
         }
 
         const length = this.word.length;

@@ -1,3 +1,4 @@
+import BoundaryWordError from '../error';
 import BoundaryWord from '../modules/BoundaryWord';
 
 describe('BoundaryWord Class', () => {
@@ -7,20 +8,20 @@ describe('BoundaryWord Class', () => {
     });
 
     test('Constructor: invalid word (empty string)', () => {
-        expect(() => new BoundaryWord('')).toThrow('Invalid word: A string of at least 4 letters is required.');
+        expect(() => new BoundaryWord('')).toThrow(BoundaryWordError.invalidWord());
     });
 
     test('Constructor: invalid word (too short)', () => {
-        expect(() => new BoundaryWord('ldr')).toThrow('Invalid word: A string of at least 4 letters is required.');
+        expect(() => new BoundaryWord('ldr')).toThrow(BoundaryWordError.invalidWord());
     });
 
     test('Constructor: invalid word (non-string)', () => {
         // @ts-expect-error: Testing with a non-string input
-        expect(() => new BoundaryWord(123)).toThrow('Invalid word: A string of at least 4 letters is required.');
+        expect(() => new BoundaryWord(123)).toThrow(BoundaryWordError.invalidWord());
     });
 
     test('Constructor: invalid word (invalid letters)', () => {
-        expect(() => new BoundaryWord('ldrx')).toThrow('Invalid word: All letters must be in the alphabet.');
+        expect(() => new BoundaryWord('ldrx')).toThrow(BoundaryWordError.invalidLetter());
     });
 
     test('getLetter: valid index', () => {
@@ -31,12 +32,12 @@ describe('BoundaryWord Class', () => {
 
     test('getLetter: invalid index (negative)', () => {
         const word = new BoundaryWord('ldru');
-        expect(() => word.getLetter(-1)).toThrow('Index -1 is out of bounds.');
+        expect(() => word.getLetter(-1)).toThrow(BoundaryWordError.invalidIndex(-1));
     });
 
     test('getLetter: invalid index (out of range)', () => {
         const word = new BoundaryWord('ldru');
-        expect(() => word.getLetter(4)).toThrow('Index 4 is out of bounds.');
+        expect(() => word.getLetter(4)).toThrow(BoundaryWordError.invalidIndex(4));
     });
 
     test('rotateLetter: valid rotations', () => {
@@ -46,7 +47,7 @@ describe('BoundaryWord Class', () => {
     });
 
     test('rotateLetter: invalid rotation angle', () => {
-        expect(() => BoundaryWord.rotateLetter('u', 45)).toThrow('Invalid rotation angle 45.');
+        expect(() => BoundaryWord.rotateLetter('u', 45)).toThrow(BoundaryWordError.invalidRotation(45));
     });
 
     test('complementLetter: valid complement', () => {
@@ -89,9 +90,9 @@ describe('BoundaryWord Class', () => {
 
     test('getFactor: invalid indices', () => {
         const word = new BoundaryWord('uuulruuu');
-        expect(() => word.getFactor(0, 3)).toThrow('Invalid indices: i = 0, j = 3.');
-        expect(() => word.getFactor(4, 10)).toThrow('Invalid indices: i = 4, j = 10.');
-        expect(() => word.getFactor(6, 5)).toThrow('Invalid indices: i = 6, j = 5.');
+        expect(() => word.getFactor(0, 3)).toThrow(BoundaryWordError.invalidIndices(0, 3));
+        expect(() => word.getFactor(4, 10)).toThrow(BoundaryWordError.invalidIndices(4, 10));
+        expect(() => word.getFactor(6, 5)).toThrow(BoundaryWordError.invalidIndices(6, 5));
     });
 
     test('isPrefix: valid prefixes', () => {
@@ -201,6 +202,6 @@ describe('BoundaryWord Class', () => {
 
     test('isThetaDrome: invalid rotation angle', () => {
         const word = new BoundaryWord('ulul');
-        expect(() => word.isThetaDrome(45)).toThrow('Invalid rotation angle 45'); // Only multiples of 90 are valid
+        expect(() => word.isThetaDrome(45)).toThrow(BoundaryWordError.invalidRotation(45)); // Only multiples of 90 are valid
     });
 });
