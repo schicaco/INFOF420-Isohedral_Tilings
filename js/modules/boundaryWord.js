@@ -1,4 +1,9 @@
-const ALPHABET = ['n', 'e', 's', 'w'];
+const ALPHABET = new Map([
+    ['n', [0, 1]],
+    ['e', [1, 0]],
+    ['s', [0, -1]],
+    ['w', [-1, 0]]
+]);
 
 class BoundaryWord {
     /**
@@ -10,6 +15,7 @@ class BoundaryWord {
             throw new Error("Invalid word: A non-empty string is required.");
         }
         this.word = word.toLowerCase(); // Stores the word in lowercase
+
     }
 
     /**
@@ -17,7 +23,7 @@ class BoundaryWord {
      * @returns {boolean} - True if all letters are in the ALPHABET; false otherwise.
      */
     isWordInAlphabet() {
-        return [...this.word].every(letter => ALPHABET.includes(letter));
+        return [...this.word].every(letter => ALPHABET.has(letter));
     }
 
     /**
