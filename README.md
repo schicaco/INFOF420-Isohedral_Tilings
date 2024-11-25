@@ -6,23 +6,7 @@ This project is part of the INFO-F420 course and is focused on the study of isoh
 
 1. **Detecting Isohedral Tiles with Rotational Symmetries**
 2. **Folding Tiles into a Doubly-Covered Triangle**
-
-## Project Structure
-
-The project is organized in the following way:
-
-.
-├── README.md           # Project documentation
-├── css
-│   └── index.css       # Stylesheet for the project
-├── index.html          # Main HTML file
-├── js
-│   ├── index.js        # Main JavaScript logic
-│   ├── modules         # Folder containing reusable modules
-│   └── tests           # Folder containing tests for the project
-├── package-lock.json   # Lock file for dependencies
-└── package.json        # Project metadata and dependencies
-
+3. 
 ## Technologies Used
 
 - **HTML** for the structure of the web interface.
