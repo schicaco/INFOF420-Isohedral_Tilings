@@ -11,8 +11,8 @@ class BoundaryWord {
      * @param {string} word - The input word.
      */
     constructor(word) {
-        if (!word || typeof word !== 'string') {
-            throw new Error("Invalid word: A non-empty string is required.");
+        if (!word || word.length < 4 || typeof word !== 'string') {
+            throw new Error("Invalid word: A string of at least 4 letters is required.");
         }
         this.word = word.toLowerCase(); // Stores the word in lowercase
 

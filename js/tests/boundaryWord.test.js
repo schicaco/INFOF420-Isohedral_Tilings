@@ -7,12 +7,16 @@ describe('BoundaryWord Class', () => {
     });
 
     test('Constructor: invalid word (empty string)', () => {
-        expect(() => new BoundaryWord('')).toThrow('Invalid word: A non-empty string is required.');
+        expect(() => new BoundaryWord('')).toThrow('Invalid word: A string of at least 4 letters is required.');
+    });
+
+    test('Constructor: invalid word (too short)', () => {
+        expect(() => new BoundaryWord('new')).toThrow('Invalid word: A string of at least 4 letters is required.');
     });
 
     test('Constructor: invalid word (non-string)', () => {
         // @ts-expect-error: Testing with a non-string input
-        expect(() => new BoundaryWord(123)).toThrow('Invalid word: A non-empty string is required.');
+        expect(() => new BoundaryWord(123)).toThrow('Invalid word: A string of at least 4 letters is required.');
     });
 
     test('isWordInAlphabet: word in alphabet', () => {
