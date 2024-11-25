@@ -6,10 +6,10 @@ const ALPHABET = new Map([
 ]);
 
 const ROTATIONS = new Map([
-    ['u', { 90: 'l', 180: 'd', 270: 'r' }],
-    ['d', { 90: 'r', 180: 'u', 270: 'l' }],
-    ['l', { 90: 'd', 180: 'r', 270: 'u' }],
-    ['r', { 90: 'u', 180: 'l', 270: 'd' }],
+    ['u', { 90: 'r', 180: 'd', 270: 'l' }],
+    ['d', { 90: 'l', 180: 'u', 270: 'r' }],
+    ['l', { 90: 'u', 180: 'r', 270: 'd' }],
+    ['r', { 90: 'd', 180: 'l', 270: 'u' }],
 ]);
 
 class BoundaryWord {
@@ -64,9 +64,9 @@ class BoundaryWord {
      * @returns {string} - The rotated letter.
      */
     static rotateLetter(letter, theta) {
-        if (theta === 0) return letter;
+        if (theta % 360 === 0) return letter;
         if (!ROTATIONS.has(letter) || !ROTATIONS.get(letter)[theta]) {
-            throw new Error(`Invalid rotation angle ${theta} or letter ${letter}.`);
+            throw new Error(`Invalid rotation angle ${theta}.`);
         }
         return ROTATIONS.get(letter)[theta];
     }
@@ -177,6 +177,43 @@ class BoundaryWord {
             const mid = length / 2;
             return this.word.slice(mid - 1, mid + 1);
         }
+    }
+
+    /**
+     * Checks if the word is a Θ-drome.
+     * @param {number} theta - The angle for Θ-drome (must be 0, 90, 180, or 270 degrees).
+     * @returns {boolean} - True if the word is a Θ-drome, false otherwise.
+     */
+    isThetaDrome(theta) {        
+        if (![0, 90, 180, 270].includes(theta)) {
+            throw new Error(`Invalid rotation angle ${theta}.`);
+        }
+
+        const length = this.word.length;
+        const half = Math.floor(length / 2);
+        const firstHalf = this.word.slice(0, half);
+        const secondHalf = this.word.slice(-half);
+
+        // Check if secondHalf matches the rotation of firstHalf by θ + 180
+        const rotatedFirstHalf = [...firstHalf]
+            .map(letter => BoundaryWord.rotateLetter(letter, theta + 180))
+            .join('');
+
+        return secondHalf === rotatedFirstHalf;
+    }
+
+    /**
+     * Checks if the word is a palindrome.
+     * @returns {boolean} - True if the word is a palindrome, false otherwise.
+     */
+    isPalindrome() {
+        const length = this.word.length;
+        const half = Math.floor(length / 2);
+        const firstHalf = this.word.slice(0, half);
+        const secondHalf = this.word.slice(-half);
+
+        // Check if secondHalf is the reverse of firstHalf
+        return secondHalf === [...firstHalf].reverse().join('');
     }
 }
 

@@ -40,13 +40,13 @@ describe('BoundaryWord Class', () => {
     });
 
     test('rotateLetter: valid rotations', () => {
-        expect(BoundaryWord.rotateLetter('u', 90)).toBe('l');
+        expect(BoundaryWord.rotateLetter('u', 90)).toBe('r');
         expect(BoundaryWord.rotateLetter('d', 180)).toBe('u');
-        expect(BoundaryWord.rotateLetter('r', 270)).toBe('d');
+        expect(BoundaryWord.rotateLetter('r', 270)).toBe('u');
     });
 
     test('rotateLetter: invalid rotation angle', () => {
-        expect(() => BoundaryWord.rotateLetter('u', 45)).toThrow('Invalid rotation angle 45 or letter u.');
+        expect(() => BoundaryWord.rotateLetter('u', 45)).toThrow('Invalid rotation angle 45.');
     });
 
     test('complementLetter: valid complement', () => {
@@ -56,7 +56,7 @@ describe('BoundaryWord Class', () => {
 
     test('rotateWord: valid rotation', () => {
         const word = new BoundaryWord('uldr');
-        expect(word.rotateWord(90)).toBe('ldru');
+        expect(word.rotateWord(90)).toBe('ruld');
         expect(word.rotateWord(180)).toBe('drul');
     });
 
@@ -77,8 +77,8 @@ describe('BoundaryWord Class', () => {
 
     test('circular word transformation', () => {
         const word = new BoundaryWord('uldr');
-        const rotated = word.rotateWord(90); // 'ldru'
-        expect(rotated).toBe('ldru');
+        const rotated = word.rotateWord(90);
+        expect(rotated).toBe('ruld');
     });
 
     test('getFactor: valid factor', () => {
@@ -152,5 +152,55 @@ describe('BoundaryWord Class', () => {
     test('findCenter: single-letter word', () => {
         const word = new BoundaryWord('uuuu');
         expect(word.findCenter()).toBe('uu'); // Center of 'uuuu' is the middle two letters
+    });
+
+    test('isPalindrome: valid palindrome (even length)', () => {
+        const word = new BoundaryWord('uurrdlldrruu');
+        expect(word.isPalindrome()).toBe(true); // uurrdlldrruu reads the same forwards and backwards
+    });
+
+    test('isPalindrome: invalid palindrome (even length)', () => {
+        const word = new BoundaryWord('uurrduldrruu');
+        expect(word.isPalindrome()).toBe(false); // uurrduldrruu does not read the same forwards and backwards
+    });
+
+    test('isPalindrome: valid palindrome (odd length)', () => {
+        const word = new BoundaryWord('uurrdldrruu');
+        expect(word.isPalindrome()).toBe(true); // uurrdldrruu reads the same forwards and backwards
+    });
+
+    test('isPalindrome: invalid palindrome (odd length)', () => {
+        const word = new BoundaryWord('uurrdulrdrruu');
+        expect(word.isPalindrome()).toBe(false); // uurrdulrdrruu does not read the same forwards and backwards
+    });
+
+    test('isThetaDrome: valid 90-drome', () => {
+        const word = new BoundaryWord('lddr');
+        expect(word.isThetaDrome(90)).toBe(true); // uldr splits into ul and dr, where dr = t90+180(ul)
+    });
+
+    test('isThetaDrome: invalid 90-drome', () => {
+        const word = new BoundaryWord('uldr');
+        expect(word.isThetaDrome(90)).toBe(false); // ulul does not satisfy 90-drome
+    });
+
+    test('isThetaDrome: valid 180-drome', () => {
+        const word = new BoundaryWord('ulul');
+        expect(word.isThetaDrome(180)).toBe(true); // ulul splits into ul and ul, ul = t180+180(ul)
+    });
+
+    test('isThetaDrome: invalid 180-drome', () => {
+        const word = new BoundaryWord('uurd');
+        expect(word.isThetaDrome(180)).toBe(false); // uurd splits into uu and rd, rd = t180+180(uu)
+    });
+
+    test('isThetaDrome: invalid Θ-drome (odd length)', () => {
+        const word = new BoundaryWord('ululu');
+        expect(word.isThetaDrome(90)).toBe(false); // ululu has odd length, cannot be a Θ-drome
+    });
+
+    test('isThetaDrome: invalid rotation angle', () => {
+        const word = new BoundaryWord('ulul');
+        expect(() => word.isThetaDrome(45)).toThrow('Invalid rotation angle 45'); // Only multiples of 90 are valid
     });
 });
