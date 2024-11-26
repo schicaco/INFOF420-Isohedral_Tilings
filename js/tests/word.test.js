@@ -176,22 +176,22 @@ describe('Word Class', () => {
         });
 
         test('isThetaDrome: valid 90-drome (even length)', () => {
-            const word = new Word('udrl');
+            const word = new Word('durl');
             expect(word.isThetaDrome(90)).toBe(true);
         });
 
         test('isThetaDrome: valid 90-drome (odd length)', () => {
-            const word = new Word('udurl');
+            const word = new Word('dulrl');
             expect(word.isThetaDrome(90)).toBe(true);
         });
 
         test('isThetaDrome: invalid 90-drome (even length)', () => {
-            const word = new Word('udlr');
+            const word = new Word('udrl');
             expect(word.isThetaDrome(90)).toBe(false);
         });
 
         test('isThetaDrome: invalid 90-drome (odd length)', () => {
-            const word = new Word('rdulr');
+            const word = new Word('udlrl');
             expect(word.isThetaDrome(90)).toBe(false);
         });
 
@@ -216,22 +216,22 @@ describe('Word Class', () => {
         });
 
         test('isThetaDrome: valid 270-drome (even length)', () => {
-            const word = new Word('udlr');
+            const word = new Word('dulr');
             expect(word.isThetaDrome(270)).toBe(true);
         });
 
         test('isThetaDrome: valid 270-drome (odd length)', () => {
-            const word = new Word('udulr');
+            const word = new Word('durlr');
             expect(word.isThetaDrome(270)).toBe(true);
         });
 
         test('isThetaDrome: invalid 270-drome (even length)', () => {
-            const word = new Word('udrl');
+            const word = new Word('durl');
             expect(word.isThetaDrome(270)).toBe(false);
         });
 
         test('isThetaDrome: invalid 270-drome (odd length)', () => {
-            const word = new Word('udurl');
+            const word = new Word('dulrl');
             expect(word.isThetaDrome(270)).toBe(false);
         });
 
