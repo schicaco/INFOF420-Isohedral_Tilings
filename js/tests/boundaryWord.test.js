@@ -1,5 +1,5 @@
 import BoundaryWordError from '../error';
-import BoundaryWord from '../modules/BoundaryWord';
+import BoundaryWord from '../modules/boundaryWord.js';
 
 describe('BoundaryWord Class', () => {
     // Constructor Tests

@@ -20,7 +20,7 @@ class Tiling {
 
     /**
      * Preprocesses the boundary word to find palindromes and 90-dromes.
-     * @param {string} word - The word to preprocess.
+     * @param {BoundaryWord} word - The word to preprocess.
      * @returns {object} An object containing all palindromes and 90-dromes found in the word.
      */
     preprocessFactors(word) {
@@ -31,57 +31,31 @@ class Tiling {
 
     /**
      * Finds all palindromes in a given word using Manacher's algorithm.
-     * @param {string} word - The word to search for palindromes.
-     * @returns {string[]} An array of palindromic substrings.
+     * @param {BoundaryWord} word - The word to search for palindromes.
+     * @returns {BoundaryWord[]} An array of palindromic substrings.
      */
     findAllPalindromes(word) {
-        const n = word.length;
-        const result = [];
-        const radius = new Array(n).fill(0);
-
-        let center = 0;
-        let right = 0;
-
-        for (let i = 0; i < n; i++) {
-            const mirror = 2 * center - i;
-
-            if (i < right) {
-                radius[i] = Math.min(right - i, radius[mirror]);
-            }
-
-            // Attempt to expand palindrome centered at i
-            while (
-                i + radius[i] + 1 < n &&
-                i - radius[i] - 1 >= 0 &&
-                word[i + radius[i] + 1] === word[i - radius[i] - 1]
-            ) {
-                radius[i]++;
-            }
-
-            // Update center and right boundary
-            if (i + radius[i] > right) {
-                center = i;
-                right = i + radius[i];
-            }
-
-            // If radius[i] > 0, add the palindrome substring
-            if (radius[i] > 0) {
-                result.push(word.slice(i - radius[i], i + radius[i] + 1));
-            }
-        }
-
         return result;
     }
 
     /**
      * Finds all 90-dromes in a given word. (Custom logic here.)
-     * @param {string} word - The word to search for 90-dromes.
-     * @returns {string[]} An array of 90-dromic substrings.
+     * @param {BoundaryWord} word - The word to search for 90-dromes.
+     * @returns {BoundaryWord[]} An array of 90-dromic substrings.
      */
     findAll90Dromes(word) {
-        // Replace this with actual logic for finding 90-dromes
         const result = [];
+        // Replace this with actual logic for finding 90-dromes
         return result;
+    }
+
+    /**
+     * Keep the k-dromes where the factor is >= |W|/3
+     * @param {BoundaryWord[]} factors - k-dromes and 90-dromes 
+     * @returns {integer} The minimum size 
+     */    
+    getLongFactors(factors, minLength) {
+        return factors.filter(factor => factor.length >= minLength);
     }
 }
 
