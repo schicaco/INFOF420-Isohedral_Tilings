@@ -33,6 +33,7 @@ describe('Tiling - Palindrome Function', () => {
         const expectedPalindromes = ['ruur', 'uu', 'uurruu', 'ruurruur', 'rr', 'urru'];
 
         // Call the function
+        const word = boundaryWord.getWord(); 
         const palindromes = tiling.findAllPalindromes(word);
 
         // Assert the result matches expected palindromes
@@ -48,6 +49,8 @@ describe('Tiling - Palindrome Function', () => {
         const expectedPalindromes = [];
 
         // Call the function
+        const word = boundaryWord.getWord(); 
+
         const palindromes = tiling.findAllPalindromes(word);
 
         // Assert that no palindromes are found
@@ -63,6 +66,8 @@ describe('Tiling - Palindrome Function', () => {
         const expectedPalindromes = ['u'];
 
         // Call the function
+        const word = boundaryWord.getWord(); 
+
         const palindromes = tiling.findAllPalindromes(word);
 
         // Assert the single-letter palindrome is found

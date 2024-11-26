@@ -23,7 +23,9 @@ class Tiling {
      * @param {BoundaryWord} word - The word to preprocess.
      * @returns {object} An object containing all palindromes and 90-dromes found in the word.
      */
-    preprocessFactors(word) {
+    preprocessFactors(boundword) {
+
+        const word = boundword.getWord(); 
         const palindromes = this.findAllPalindromes(word); // Use Manacher's algorithm
         const ninetyDromes = this.findAll90Dromes(word);  // Custom logic for 90-dromes
         return { palindromes, ninetyDromes };
@@ -31,10 +33,46 @@ class Tiling {
 
     /**
      * Finds all palindromes in a given word using Manacher's algorithm.
-     * @param {BoundaryWord} word - The word to search for palindromes.
-     * @returns {BoundaryWord[]} An array of palindromic substrings.
+     * @param {string} word - The word to search for palindromes.
+     * @returns {string[]} An array of palindromic substrings.
      */
     findAllPalindromes(word) {
+        const n = word.length;
+        const processed = '#' + word.split('').join('#') + '#'; // Add separators for uniformity
+        const m = processed.length;
+        const radius = new Array(m).fill(0);
+    
+        let center = 0, right = 0;
+        for (let i = 0; i < m; i++) {
+            if (i < right) {
+                radius[i] = Math.min(right - i, radius[2 * center - i]);
+            }
+    
+            // Expand around the center
+            while (
+                i - radius[i] - 1 >= 0 &&
+                i + radius[i] + 1 < m &&
+                processed[i - radius[i] - 1] === processed[i + radius[i] + 1]
+            ) {
+                radius[i]++;
+            }
+    
+            // Update center and right
+            if (i + radius[i] > right) {
+                center = i;
+                right = i + radius[i];
+            }
+        }
+    
+        const result = [];
+        for (let i = 0; i < m; i++) {
+            const length = radius[i];
+            if (length > 0) {
+                const start = Math.floor((i - length) / 2);
+                result.push(word.substring(start, start + length));
+            }
+        }
+
         return result;
     }
 
