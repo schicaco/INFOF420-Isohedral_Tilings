@@ -11,10 +11,10 @@ const ALPHABET = new Map([
 ]);
 
 const ROTATIONS = new Map([
-    ['u', { 90: 'r', 180: 'd', 270: 'l' }],
-    ['d', { 90: 'l', 180: 'u', 270: 'r' }],
-    ['l', { 90: 'u', 180: 'r', 270: 'd' }],
-    ['r', { 90: 'd', 180: 'l', 270: 'u' }],
+    ['u', { 0: 'u', 90: 'r', 180: 'd', 270: 'l' }],
+    ['d', { 0: 'u', 90: 'l', 180: 'u', 270: 'r' }],
+    ['l', { 0: 'u', 90: 'u', 180: 'r', 270: 'd' }],
+    ['r', { 0: 'u', 90: 'd', 180: 'l', 270: 'u' }],
 ]);
 
 /**
@@ -74,7 +74,8 @@ class BoundaryWord {
      * @throws {BoundaryWordError} - If the rotation angle or letter is invalid.
      */
     static rotateLetter(letter, theta) {
-        if (theta % 360 === 0) return letter;
+        theta = theta % 360;
+
         const rotation = ROTATIONS.get(letter)?.[theta];
         if (!rotation) {
             throw new BoundaryWordError.invalidRotation(theta);
@@ -192,6 +193,8 @@ class BoundaryWord {
      * @throws {BoundaryWordError} - If the rotation angle is invalid.
      */
     isThetaDrome(theta) {
+        theta = theta % 360;
+        
         if (![0, 90, 180, 270].includes(theta)) {
             throw new BoundaryWordError.invalidRotation(theta);
         }
