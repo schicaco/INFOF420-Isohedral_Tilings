@@ -12,9 +12,9 @@ const ALPHABET = new Map([
 
 const ROTATIONS = new Map([
     ['u', { 0: 'u', 90: 'r', 180: 'd', 270: 'l' }],
-    ['d', { 0: 'u', 90: 'l', 180: 'u', 270: 'r' }],
-    ['l', { 0: 'u', 90: 'u', 180: 'r', 270: 'd' }],
-    ['r', { 0: 'u', 90: 'd', 180: 'l', 270: 'u' }],
+    ['d', { 0: 'd', 90: 'l', 180: 'u', 270: 'r' }],
+    ['l', { 0: 'l', 90: 'u', 180: 'r', 270: 'd' }],
+    ['r', { 0: 'r', 90: 'd', 180: 'l', 270: 'u' }],
 ]);
 
 /**
@@ -69,7 +69,7 @@ class BoundaryWord {
     /**
      * Rotates a letter by a specified angle.
      * @param {string} letter - The letter to rotate.
-     * @param {number} theta - The rotation angle (90, 180, 270).
+     * @param {number} theta - The rotation angle (0, 90, 180, 270).
      * @returns {string} - The rotated letter.
      * @throws {BoundaryWordError} - If the rotation angle or letter is invalid.
      */
@@ -94,7 +94,7 @@ class BoundaryWord {
 
     /**
      * Rotates the entire word by a specified angle.
-     * @param {number} theta - The rotation angle (90, 180, 270).
+     * @param {number} theta - The rotation angle (0, 90, 180, 270).
      * @returns {string} - The rotated word.
      */
     rotateWord(theta) {
@@ -118,11 +118,14 @@ class BoundaryWord {
     }
 
     /**
-     * Returns the backtrack of the word (equal to the reversed word).
+     * Returns the backtrack of the word (equal to the complement of the reversed word).
      * @returns {string} - The backtracked word.
      */
     backtrackWord() {
-        return this.reverseWord();
+        const reversed = [...this.word].reverse().join('');
+        const complemented = reversed.split('').map(letter => BoundaryWord.complementLetter(letter)).join('');
+
+        return complemented
     }
 
     /**
@@ -194,7 +197,7 @@ class BoundaryWord {
      */
     isThetaDrome(theta) {
         theta = theta % 360;
-        
+
         if (![0, 90, 180, 270].includes(theta)) {
             throw new BoundaryWordError.invalidRotation(theta);
         }
@@ -202,6 +205,7 @@ class BoundaryWord {
         const firstHalf = this.word.slice(0, half);
         const secondHalf = this.word.slice(-half);
         const rotatedFirstHalf = [...firstHalf]
+            .reverse()
             .map(letter => BoundaryWord.rotateLetter(letter, theta + 180))
             .join('');
         return secondHalf === rotatedFirstHalf;
@@ -212,7 +216,7 @@ class BoundaryWord {
      * @returns {boolean} - True if the word is a palindrome, otherwise false.
      */
     isPalindrome() {
-        return this.word === this.reverseWord();
+        return this.isThetaDrome(180);
     }
 }
 
