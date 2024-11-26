@@ -54,9 +54,9 @@ describe('BoundaryWord Class', () => {
 
         test('rotateWord: valid rotation', () => {
             expect(word.rotateWord(0)).toBe('udlr');
-            expect(word.rotateWord(90)).toBe('rlud');
+            expect(word.rotateWord(90)).toBe('lrdu');
             expect(word.rotateWord(180)).toBe('durl');
-            expect(word.rotateWord(270)).toBe('lrdu');
+            expect(word.rotateWord(270)).toBe('rlud');
         });
 
         test('rotateWord: invalid rotation angle', () => {
@@ -101,24 +101,24 @@ describe('BoundaryWord Class', () => {
     describe('Static Methods', () => {
         test('rotateLetter: valid rotations', () => {
             expect(BoundaryWord.rotateLetter('u', 0)).toBe('u');
-            expect(BoundaryWord.rotateLetter('u', 90)).toBe('r');
+            expect(BoundaryWord.rotateLetter('u', 90)).toBe('l');
             expect(BoundaryWord.rotateLetter('u', 180)).toBe('d');
-            expect(BoundaryWord.rotateLetter('u', 270)).toBe('l');
+            expect(BoundaryWord.rotateLetter('u', 270)).toBe('r');
 
             expect(BoundaryWord.rotateLetter('d', 0)).toBe('d');
-            expect(BoundaryWord.rotateLetter('d', 90)).toBe('l');
+            expect(BoundaryWord.rotateLetter('d', 90)).toBe('r');
             expect(BoundaryWord.rotateLetter('d', 180)).toBe('u');
-            expect(BoundaryWord.rotateLetter('d', 270)).toBe('r');
+            expect(BoundaryWord.rotateLetter('d', 270)).toBe('l');
 
             expect(BoundaryWord.rotateLetter('l', 0)).toBe('l');
-            expect(BoundaryWord.rotateLetter('l', 90)).toBe('u');
+            expect(BoundaryWord.rotateLetter('l', 90)).toBe('d');
             expect(BoundaryWord.rotateLetter('l', 180)).toBe('r');
-            expect(BoundaryWord.rotateLetter('l', 270)).toBe('d');
+            expect(BoundaryWord.rotateLetter('l', 270)).toBe('u');
 
             expect(BoundaryWord.rotateLetter('r', 0)).toBe('r');
-            expect(BoundaryWord.rotateLetter('r', 90)).toBe('d');
+            expect(BoundaryWord.rotateLetter('r', 90)).toBe('u');
             expect(BoundaryWord.rotateLetter('r', 180)).toBe('l');
-            expect(BoundaryWord.rotateLetter('r', 270)).toBe('u');
+            expect(BoundaryWord.rotateLetter('r', 270)).toBe('d');
         });
 
         test('rotateLetter: invalid rotation angle', () => {
