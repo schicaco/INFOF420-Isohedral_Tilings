@@ -1,29 +1,29 @@
-import BoundaryWordError from '../error';
-import BoundaryWord from '../modules/BoundaryWord';
+import WordError from '../error';
+import Word from '../modules/word';
 
-describe('BoundaryWord Class', () => {
+describe('Word Class', () => {
     // Constructor Tests
     describe('Constructor', () => {
         test('valid word', () => {
-            const word = new BoundaryWord('udlr');
+            const word = new Word('udlr');
             expect(word.getWord()).toBe('udlr');
         });
 
         test('invalid word (empty string)', () => {
-            expect(() => new BoundaryWord('')).toThrow(BoundaryWordError.invalidWord());
+            expect(() => new Word('')).toThrow(WordError.invalidWord());
         });
 
         test('invalid word (too short)', () => {
-            expect(() => new BoundaryWord('udl')).toThrow(BoundaryWordError.invalidWord());
+            expect(() => new Word('udl')).toThrow(WordError.invalidWord());
         });
 
         test('invalid word (non-string)', () => {
             // @ts-expect-error: Testing with a non-string input
-            expect(() => new BoundaryWord(123)).toThrow(BoundaryWordError.invalidWord());
+            expect(() => new Word(123)).toThrow(WordError.invalidWord());
         });
 
         test('invalid word (invalid letters)', () => {
-            expect(() => new BoundaryWord('udlx')).toThrow(BoundaryWordError.invalidLetter());
+            expect(() => new Word('udlx')).toThrow(WordError.invalidLetter());
         });
     });
 
@@ -33,8 +33,8 @@ describe('BoundaryWord Class', () => {
         let longWord;
 
         beforeEach(() => {
-            word = new BoundaryWord('udlr');
-            longWord = new BoundaryWord('uuulruuu');
+            word = new Word('udlr');
+            longWord = new Word('uuulruuu');
         });
 
         test('getLetter: valid index', () => {
@@ -45,11 +45,11 @@ describe('BoundaryWord Class', () => {
         });
 
         test('getLetter: invalid index (negative)', () => {
-            expect(() => word.getLetter(-1)).toThrow(BoundaryWordError.invalidIndex(-1));
+            expect(() => word.getLetter(-1)).toThrow(WordError.invalidIndex(-1));
         });
 
         test('getLetter: invalid index (out of range)', () => {
-            expect(() => word.getLetter(4)).toThrow(BoundaryWordError.invalidIndex(4));
+            expect(() => word.getLetter(4)).toThrow(WordError.invalidIndex(4));
         });
 
         test('rotateWord: valid rotation', () => {
@@ -60,7 +60,7 @@ describe('BoundaryWord Class', () => {
         });
 
         test('rotateWord: invalid rotation angle', () => {
-            expect(() => word.rotateWord(45)).toThrow(BoundaryWordError.invalidRotation(45));
+            expect(() => word.rotateWord(45)).toThrow(WordError.invalidRotation(45));
         });
 
         test('complementWord: complemented word', () => {
@@ -81,18 +81,18 @@ describe('BoundaryWord Class', () => {
         });
 
         test('getFactor: invalid indices', () => {
-            expect(() => longWord.getFactor(0, 3)).toThrow(BoundaryWordError.invalidIndices(0, 3));
-            expect(() => longWord.getFactor(4, 10)).toThrow(BoundaryWordError.invalidIndices(4, 10));
-            expect(() => longWord.getFactor(6, 5)).toThrow(BoundaryWordError.invalidIndices(6, 5));
+            expect(() => longWord.getFactor(0, 3)).toThrow(WordError.invalidIndices(0, 3));
+            expect(() => longWord.getFactor(4, 10)).toThrow(WordError.invalidIndices(4, 10));
+            expect(() => longWord.getFactor(6, 5)).toThrow(WordError.invalidIndices(6, 5));
         });
 
         test('findCenter: odd-length word', () => {
-            const oddWord = new BoundaryWord('uuuluuu');
+            const oddWord = new Word('uuuluuu');
             expect(oddWord.findCenter()).toBe('l');
         });
 
         test('findCenter: even-length word', () => {
-            const evenWord = new BoundaryWord('uuulluuu');
+            const evenWord = new Word('uuulluuu');
             expect(evenWord.findCenter()).toBe('ll');
         });
     });
@@ -100,144 +100,144 @@ describe('BoundaryWord Class', () => {
     // Static Method Tests
     describe('Static Methods', () => {
         test('rotateLetter: valid rotations', () => {
-            expect(BoundaryWord.rotateLetter('u', 0)).toBe('u');
-            expect(BoundaryWord.rotateLetter('u', 90)).toBe('l');
-            expect(BoundaryWord.rotateLetter('u', 180)).toBe('d');
-            expect(BoundaryWord.rotateLetter('u', 270)).toBe('r');
+            expect(Word.rotateLetter('u', 0)).toBe('u');
+            expect(Word.rotateLetter('u', 90)).toBe('l');
+            expect(Word.rotateLetter('u', 180)).toBe('d');
+            expect(Word.rotateLetter('u', 270)).toBe('r');
 
-            expect(BoundaryWord.rotateLetter('d', 0)).toBe('d');
-            expect(BoundaryWord.rotateLetter('d', 90)).toBe('r');
-            expect(BoundaryWord.rotateLetter('d', 180)).toBe('u');
-            expect(BoundaryWord.rotateLetter('d', 270)).toBe('l');
+            expect(Word.rotateLetter('d', 0)).toBe('d');
+            expect(Word.rotateLetter('d', 90)).toBe('r');
+            expect(Word.rotateLetter('d', 180)).toBe('u');
+            expect(Word.rotateLetter('d', 270)).toBe('l');
 
-            expect(BoundaryWord.rotateLetter('l', 0)).toBe('l');
-            expect(BoundaryWord.rotateLetter('l', 90)).toBe('d');
-            expect(BoundaryWord.rotateLetter('l', 180)).toBe('r');
-            expect(BoundaryWord.rotateLetter('l', 270)).toBe('u');
+            expect(Word.rotateLetter('l', 0)).toBe('l');
+            expect(Word.rotateLetter('l', 90)).toBe('d');
+            expect(Word.rotateLetter('l', 180)).toBe('r');
+            expect(Word.rotateLetter('l', 270)).toBe('u');
 
-            expect(BoundaryWord.rotateLetter('r', 0)).toBe('r');
-            expect(BoundaryWord.rotateLetter('r', 90)).toBe('u');
-            expect(BoundaryWord.rotateLetter('r', 180)).toBe('l');
-            expect(BoundaryWord.rotateLetter('r', 270)).toBe('d');
+            expect(Word.rotateLetter('r', 0)).toBe('r');
+            expect(Word.rotateLetter('r', 90)).toBe('u');
+            expect(Word.rotateLetter('r', 180)).toBe('l');
+            expect(Word.rotateLetter('r', 270)).toBe('d');
         });
 
         test('rotateLetter: invalid rotation angle', () => {
-            expect(() => BoundaryWord.rotateLetter('u', 45)).toThrow(BoundaryWordError.invalidRotation(45));
+            expect(() => Word.rotateLetter('u', 45)).toThrow(WordError.invalidRotation(45));
         });
 
         test('complementLetter: valid complements', () => {
-            expect(BoundaryWord.complementLetter('u')).toBe('d');
-            expect(BoundaryWord.complementLetter('d')).toBe('u');
-            expect(BoundaryWord.complementLetter('l')).toBe('r');
-            expect(BoundaryWord.complementLetter('r')).toBe('l');
+            expect(Word.complementLetter('u')).toBe('d');
+            expect(Word.complementLetter('d')).toBe('u');
+            expect(Word.complementLetter('l')).toBe('r');
+            expect(Word.complementLetter('r')).toBe('l');
         });
     });
 
     // Special Case Tests
     describe('Special Cases', () => {
         test('isPalindrome: valid palindrome (even length)', () => {
-            const word = new BoundaryWord('uuulluuu');
+            const word = new Word('uuulluuu');
             expect(word.isPalindrome()).toBe(true);
         });
 
         test('isPalindrome: valid palindrome (odd length)', () => {
-            const word = new BoundaryWord('uuuluuu');
+            const word = new Word('uuuluuu');
             expect(word.isPalindrome()).toBe(true);
         });
 
         test('isPalindrome: invalid palindrome (even length)', () => {
-            const word = new BoundaryWord('uuulruuu');
+            const word = new Word('uuulruuu');
             expect(word.isPalindrome()).toBe(false);
         });
 
         test('isPalindrome: invalid palindrome (odd length)', () => {
-            const word = new BoundaryWord('uudlruuu');
+            const word = new Word('uudlruuu');
             expect(word.isPalindrome()).toBe(false);
         });
 
         test('isThetaDrome: valid 0-drome (even length)', () => {
-            const word = new BoundaryWord('udud');
+            const word = new Word('udud');
             expect(word.isThetaDrome(0)).toBe(true);
         });
 
         test('isThetaDrome: valid 0-drome (odd length)', () => {
-            const word = new BoundaryWord('udlud');
+            const word = new Word('udlud');
             expect(word.isThetaDrome(0)).toBe(true);
         });
 
         test('isThetaDrome: invalid 0-drome (even length)', () => {
-            const word = new BoundaryWord('udlr');
+            const word = new Word('udlr');
             expect(word.isThetaDrome(0)).toBe(false);
         });
 
         test('isThetaDrome: invalid 0-drome (odd length)', () => {
-            const word = new BoundaryWord('udldu');
+            const word = new Word('udldu');
             expect(word.isThetaDrome(0)).toBe(false);
         });
 
         test('isThetaDrome: valid 90-drome (even length)', () => {
-            const word = new BoundaryWord('udrl');
+            const word = new Word('udrl');
             expect(word.isThetaDrome(90)).toBe(true);
         });
 
         test('isThetaDrome: valid 90-drome (odd length)', () => {
-            const word = new BoundaryWord('udurl');
+            const word = new Word('udurl');
             expect(word.isThetaDrome(90)).toBe(true);
         });
 
         test('isThetaDrome: invalid 90-drome (even length)', () => {
-            const word = new BoundaryWord('udlr');
+            const word = new Word('udlr');
             expect(word.isThetaDrome(90)).toBe(false);
         });
 
         test('isThetaDrome: invalid 90-drome (odd length)', () => {
-            const word = new BoundaryWord('rdulr');
+            const word = new Word('rdulr');
             expect(word.isThetaDrome(90)).toBe(false);
         });
 
         test('isThetaDrome: valid 180-drome (even length)', () => {
-            const word = new BoundaryWord('uuulluuu');
+            const word = new Word('uuulluuu');
             expect(word.isThetaDrome(180)).toBe(true);
         });
 
         test('isThetaDrome: valid 180-drome (odd length)', () => {
-            const word = new BoundaryWord('uuuluuu');
+            const word = new Word('uuuluuu');
             expect(word.isThetaDrome(180)).toBe(true);
         });
 
         test('isThetaDrome: invalid 180-drome (even length)', () => {
-            const word = new BoundaryWord('uuulruuu');
+            const word = new Word('uuulruuu');
             expect(word.isThetaDrome(180)).toBe(false);
         });
 
         test('isThetaDrome: invalid 180-drome (odd length)', () => {
-            const word = new BoundaryWord('uuudlruuu');
+            const word = new Word('uuudlruuu');
             expect(word.isThetaDrome(180)).toBe(false);
         });
 
         test('isThetaDrome: valid 270-drome (even length)', () => {
-            const word = new BoundaryWord('udlr');
+            const word = new Word('udlr');
             expect(word.isThetaDrome(270)).toBe(true);
         });
 
         test('isThetaDrome: valid 270-drome (odd length)', () => {
-            const word = new BoundaryWord('udulr');
+            const word = new Word('udulr');
             expect(word.isThetaDrome(270)).toBe(true);
         });
 
         test('isThetaDrome: invalid 270-drome (even length)', () => {
-            const word = new BoundaryWord('udrl');
+            const word = new Word('udrl');
             expect(word.isThetaDrome(270)).toBe(false);
         });
 
         test('isThetaDrome: invalid 270-drome (odd length)', () => {
-            const word = new BoundaryWord('udurl');
+            const word = new Word('udurl');
             expect(word.isThetaDrome(270)).toBe(false);
         });
 
         test('isThetaDrome: invalid rotation angle', () => {
-            const word = new BoundaryWord('udlr');
-            expect(() => word.isThetaDrome(45)).toThrow(BoundaryWordError.invalidRotation(45));
+            const word = new Word('udlr');
+            expect(() => word.isThetaDrome(45)).toThrow(WordError.invalidRotation(45));
         });
     });
 
@@ -246,7 +246,7 @@ describe('BoundaryWord Class', () => {
         let word;
 
         beforeEach(() => {
-            word = new BoundaryWord('uuulruuu');
+            word = new Word('uuulruuu');
         });
 
         test('isPrefix: valid prefixes', () => {
