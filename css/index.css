@@ -160,3 +160,86 @@ ul li {
 #clear-button:hover {
     background-color: var(--hover-red);
 }
+
+/* General styles for the section */
+#polygon_builder {
+    background-color: #fff;
+    padding: 30px;
+    margin: 40px auto;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    color: #333;
+  }
+  
+  #polygon_builder h2 {
+    text-align: center;
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  label {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
+    color: #555;
+  }
+  
+  #polygon_input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+  }
+  
+  #polygon_input:focus {
+    border-color: #00796b;
+    outline: none;
+  }
+  
+  #process_polygon {
+    width: 100%;
+    padding: 12px;
+    background-color: #00796b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  #process_polygon:hover {
+    background-color: #004d40;
+  }
+  
+  #output {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    color: #333;
+    min-height: 50px;
+    font-size: 16px;
+    text-align: center;
+  }
+  
+  #output.success {
+    background-color: #e8f5e9;
+    border-color: #4caf50;
+    color: #2e7d32;
+  }
+  
+  #output.error {
+    background-color: #ffebee;
+    border-color: #e57373;
+    color: #d32f2f;
+  }

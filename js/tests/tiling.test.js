@@ -1,10 +1,9 @@
 import Tiling from '../modules/tiling.js';
-import word from '../modules/word.js';
-import { Alphabet4Letters } from '../modules/word.js';
+import Word from '../modules/word.js';
 
 describe('Tiling Class Tests', () => {
     test('should instantiate correctly with a valid word', () => {
-        const validWord = new word('uurddl');
+        const validWord = new Word('uurddl');
         const tiling = new Tiling(validWord);
         expect(tiling).toBeInstanceOf(Tiling);
         expect(tiling.word).toBe(validWord);
@@ -17,7 +16,7 @@ describe('Tiling Class Tests', () => {
     });
 
     test('should not modify the boundary word', () => {
-        const validWord = new word('uurddl');
+        const validWord = new Word('uurddl');
         const tiling = new Tiling(validWord);
         expect(tiling.word.getWord()).toBe('uurddl');
     });
@@ -26,7 +25,7 @@ describe('Tiling Class Tests', () => {
 // Test for finding 90-dromes
 describe('findAll90Dromes', () => {
     test('identifies all 90-dromic substrings', () => {
-        const validWord = new word('ldurdrldl');
+        const validWord = new Word('ldurdrldl');
         const tiling = new Tiling(validWord);
         const ninetyDromes = tiling.findAllThetaDromes(validWord.getWord(), 90);
         const expected = [
@@ -51,35 +50,35 @@ describe('isFoldSymmetryPossible', () => {
     });
 
     test('Valid factorization with A as long factor', () => {
-        wordInstance = new word('uuurruuudurdrlrlud');
+        wordInstance = new Word('uuurruuudurdrlrlud');
         tiling = new Tiling(wordInstance);
 
         expect(tiling.isFoldSymmetryPossible(90)).toBe(true);
     });
 
     test('Valid factorization with B as long factor', () => {
-        wordInstance = new word('urrudurdrlrlud');
+        wordInstance = new Word('urrudurdrlrlud');
         tiling = new Tiling(wordInstance);
 
         expect(tiling.isFoldSymmetryPossible(90)).toBe(true);
     });
 
     test('Valid factorization with C as long factor', () => {
-        wordInstance = new word('urrurluddurdrl');
+        wordInstance = new Word('urrurluddurdrl');
         tiling = new Tiling(wordInstance);
 
         expect(tiling.isFoldSymmetryPossible(90)).toBe(true);
     });
 
     test('No valid factorization', () => {
-        wordInstance = new word('uurldlururul');
+        wordInstance = new Word('uurldlururul');
         tiling = new Tiling(wordInstance);
 
         expect(tiling.isFoldSymmetryPossible(90)).toBe(false);
     });
 
     test('Boundary word with no palindromes or 90-dromes', () => {
-        wordInstance = new word('uldrdlu');
+        wordInstance = new Word('uldrdlu');
         tiling = new Tiling(wordInstance);
 
         expect(tiling.isFoldSymmetryPossible(90)).toBe(false);
@@ -91,7 +90,7 @@ describe('Tiling - getLongFactors', () => {
     let tiling;
 
     beforeEach(() => {
-        const validWord = new word('uuulruuurldluuur');
+        const validWord = new Word('uuulruuurldluuur');
         tiling = new Tiling(validWord);
     });
 
