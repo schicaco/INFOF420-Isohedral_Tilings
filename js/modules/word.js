@@ -27,7 +27,7 @@ class Word {
      * @throws {WordError} - If the word is invalid.
      */
     constructor(word) {
-        if (!word || typeof word !== 'string' || word.length < 4) {
+        if (!word || typeof word !== 'string' || word.length < 2) { //Admissibility of thetadromes
             throw new WordError.invalidWord();
         }
         this.word = word.toLowerCase();

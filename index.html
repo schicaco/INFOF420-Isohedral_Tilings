@@ -1,22 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+    <head>
     <meta charset="UTF-8">
     <title>Quarter-Turn Factorization Algorithm</title>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script type="module" src="js/index.js"></script>
+    <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
     <header>
         <h1>Isohedral Tilings & Folding Tiles</h1>
     </header>
     <img src="images\tiling1.png" alt="Example of tiling" width="500" height="300">
+    <img src="images\tiling1.png" alt="Example of tiling" width="500" height="300">
 
     <main>
         <section id="theory">
             <h2>Introduction</h2>
             <p>This project explores isohedral tilings, focusing on algorithms that identify and transform specific tile types based on their symmetry properties. Isohedral tilings, where identical shapes tile the plane repetitively, have significant applications in fields such as materials science, art, and mathematics.</p>
+            <p>This project explores isohedral tilings, focusing on algorithms that identify and transform specific tile types based on their symmetry properties. Isohedral tilings, where identical shapes tile the plane repetitively, have significant applications in fields such as materials science, art, and mathematics.</p>
             <p>The project has two main objectives:</p>
             <ol>
+                <li><strong>Detecting Isohedral Tiles with Rotational Symmetries:</strong> Develop algorithms to identify tiles with 3-fold, 4-fold, or 6-fold rotational symmetries.</li>
+                <li><strong>Folding Tiles into Doubly-Covered Triangles:</strong> Transform identified tiles into simpler shapes—doubly-covered triangles—while preserving symmetry, allowing for new tiling configurations.</li>
                 <li><strong>Detecting Isohedral Tiles with Rotational Symmetries:</strong> Develop algorithms to identify tiles with 3-fold, 4-fold, or 6-fold rotational symmetries.</li>
                 <li><strong>Folding Tiles into Doubly-Covered Triangles:</strong> Transform identified tiles into simpler shapes—doubly-covered triangles—while preserving symmetry, allowing for new tiling configurations.</li>
             </ol>
@@ -138,7 +145,126 @@
             <h3>3-Fold, 4-Fold, and 6-Fold Rotations</h3>
 
             <p>Here, we focus on identifying isohedral tiles characterized by 3-fold, 4-fold, and 6-fold rotational symmetries. The specific polygons considered are:</p>
+
+            <h2>Core Concepts</h2>
+            
+            <!-- Definitions and Core Concepts -->
+            <div class="definition">
+                <h3>Definition: Tile</h3>
+                <p>A <strong>tile</strong> is a shape or geometric figure (like a polyomino) used in the process of tiling a plane or surface. Tiling (or tessellation) involves covering a surface entirely with copies of one or more tiles without any gaps or overlaps.</p>
+            </div>
+
+            <div class="definition">
+                <h3>Definition: Polyomino</h3>
+                <p>A <strong>polyomino</strong> is a plane geometric figure formed by joining one or more equal squares edge to edge.</p>
+            </div>
+
+            <div class="definition">
+                <h3>Definition: Symmetry</h3>
+                <p><strong>Symmetry</strong> in mathematics refers to a transformation that leaves an object looking the same after it has been applied. For tilings, symmetries include rotations, reflections, and translations that map the tiling onto itself.</p>
+                <p><strong>Example of Symmetry:</strong> A square has 4-fold rotational symmetry, meaning it can be rotated by 90 degrees and still look the same.</p>
+            </div>
+
+            <div class="definition">
+                <h3>Definition: Isohedral Tile</h3>
+                <p>An <strong>isohedral tile</strong> is a shape that can tile the plane such that every tile in the tiling is identical in shape and size, and each one can be mapped onto any other by a symmetry of the tiling. This property is also referred to as transitivity, meaning the tiling pattern exhibits uniformity, as each tile looks indistinguishable in its position relative to others in the tiling.</p>
+            </div>
+            <img src="images\tiling2.png" alt="Example of tiling" width="300" height="200">
+            <div class="definition">
+                <h3>Definition: Examples of Tilings</h3>
+                <ul>
+                    <li><strong>Isohedral Tiling Example:</strong> The regular hexagonal tiling is isohedral because each hexagon is identical and the tiling exhibits 6-fold rotational symmetry.</li>
+                    <li><strong>Non-Isohedral Tiling Example:</strong> The Penrose tiling is not isohedral as it uses two distinct shapes that do not map onto each other via the tiling's symmetries.</li>
+                    <li><strong>Non-Isohedral Tiling with Isohedral Tile:</strong> A tiling composed of regular pentagons and squares is not isohedral, but the squares within the tiling are isohedral tiles on their own.</li>
+                </ul>
+            </div>
+
+            <div class="definition">
+                <h3>Definition: Boundary Word</h3>
+                <p>A <strong>boundary word</strong> is a sequence that represents the directions taken when traversing the perimeter of a tile. For this project, we will read the boundary words starting from the top left corner (an arbitrary choice) and proceed in a clockwise direction. The boundary word is composed of the letters representing the four cardinal directions:</p>
+                <ul>
+                    <li><strong>E</strong> (East)</li>
+                    <li><strong>N</strong> (North)</li>
+                    <li><strong>W</strong> (West)</li>
+                    <li><strong>S</strong> (South)</li>
+                </ul>
+                <p><strong>Example:</strong> Consider a simple square tile. Starting from the top left corner and moving clockwise, its boundary word could be represented as "EENNWWSS".</p>
+            </div>
+            <img src="images\bword.png" alt="Example of boundary word" width="440" height="240">
+            <div class="definition">
+                <h3>Definition: Period</h3>
+                <p>A <strong>period</strong> of a word \( W \) is the smallest positive integer \( p \) such that \( W[i] = W[i + p] \) for all valid \( i \).</p>
+                <p><strong>Example:</strong> In the word "ababab", the smallest period is 2, since the pattern "ab" repeats.</p>
+            </div>
+
+            <div class="definition">
+                <h3>Definition: Norm Function</h3>
+                <p>The <strong>norm function</strong>, denoted as \( ||W|| \), represents the length of the word \( W \).</p>
+                <p><strong>Example:</strong> If \( W = "ENWS" \), then \( ||W|| = 4 \).</p>
+            </div>
+
+            <div class="definition">
+                <h3>Definition: Palindrome</h3>
+                <p>A <strong>palindrome</strong> is a word or sequence that reads the same forward and backward. In the context of boundary words, a palindrome indicates reflective symmetry along an axis.</p>
+                <p><strong>Example of a Palindrome:</strong> The word "dduudd" is a palindrome because it reads the same forwards and backwards.</p>
+                <p><strong>Formally:</strong> A word \( W \) of length \( n \) is a palindrome if \( W[i] = W[n - i + 1] \) for all \( i \) from \( 1 \) to \( n \).</p>
+            </div>
+            <div class="definition">
+                <h3>Useful notations</h3>
+                <ol>
+                    <li>
+                        <strong>\( \overline{W} \)</strong> (Complement of a word \( W \)): The word obtained by replacing each letter in \( W \) with its complement.
+                    </li>
+                    <li>
+                        <strong>\( \widetilde{W} \)</strong> (Reverse of a word \( W \)): The letters of \( W \) in reverse order.
+                    </li>
+                    <li>
+                        <strong>\( \overline{\widetilde{W}} \)</strong> (Backtrack of a word \( W \)): The complement of the reverse word \( W \).
+                    </li>
+                </ol>
+            </div>
+
+            <div class="definition">
+                <h3>Definition: Θ-Drome</h3>
+                <p>A <strong>Θ-drome</strong> is a generalization of palindromes for rotational symmetries. It is a word that is symmetric under rotation by an angle \( \theta \) degrees.</p>
+                <p>A word \( X \) is a \( \theta \)-drome if it can be written in the form:</p>
+                <blockquote>
+                    \[
+                    X = Y \cdot t_{\theta + 180}(\widetilde{Y})
+                    \]
+                </blockquote>
+                <p>A factor \( X \) is <strong>admissible</strong> for a word \( W \) if we can write \( W = XU \) with \( U \) a word.</p>
+                <p><strong>Example of a 90-drome:</strong> Consider the boundary word "rurd", it is a 90-drome because "rurd" = \( Y \cdot t(90+180)({\widetilde{Y}}) \) with \( Y = "rd" \).</p>
+                <p><strong>Explanation of \( Y_e \):</strong> In the context of a Θ-drome, \( {\widetilde{Y}} \) represents the **ending segment** of the substring \( Y \). This segment is the portion of \( Y \) that undergoes the transformation \( t_{\Theta+180} \) to form the drome.</p>
+            </div>
+            <img src="images\90drome.png" alt="Example of 90 drome" width="440" height="240">
+            <!-- Definition: Admissible -->
+            <div class="definition">
+                <h3>Definition: Admissible</h3>
+                <p>An <strong>admissible factor</strong> is a substring \( X \) of the boundary word \( W \) that satisfies one of the following conditions, ensuring it can be part of a valid quarter-turn factorization:</p>
+                <ol>
+                    <li>
+                        <strong>Θ-drome:</strong>
+                        <ul>
+                            <li><em>Definition:</em> A word \( X \) is a Θ-drome if \( X = Y \cdot ( t_{\Theta+180}\{\widetilde{Y}\} \)), where \( {\widetilde{Y}} \) is the end segment of \( Y \), and \( t_{\Theta+180} \) represents a transformation combining a Θ-degree rotation with a 180-degree rotation.</li>
+                            <li><em>Admissibility Condition:</em> \( W = XU \) with \( U[-1] \neq t_{\Theta+180}(U)[1] \).</li>
+                        </ul>
+                    </li>
+                    
+                </ol>
+            </div>
+
+
+
+            <h2>Symmetries in Tilings</h2>
+            
+            <h3>3-Fold, 4-Fold, and 6-Fold Rotations</h3>
+
+            <p>Here, we focus on identifying isohedral tiles characterized by 3-fold, 4-fold, and 6-fold rotational symmetries. The specific polygons considered are:</p>
             <ul>
+                <li><strong>Polyiamonds:</strong> Built from equilateral triangles, exhibiting 3-fold rotational symmetry.</li>
+                <li><strong>Polyominoes:</strong> Composed of squares, displaying 4-fold rotational symmetry.</li>
+                <li><strong>Polyhexes:</strong> Made from regular hexagons, allowing for 3-fold and 6-fold rotational symmetries.</li>
                 <li><strong>Polyiamonds:</strong> Built from equilateral triangles, exhibiting 3-fold rotational symmetry.</li>
                 <li><strong>Polyominoes:</strong> Composed of squares, displaying 4-fold rotational symmetry.</li>
                 <li><strong>Polyhexes:</strong> Made from regular hexagons, allowing for 3-fold and 6-fold rotational symmetries.</li>
@@ -147,7 +273,14 @@
             <h3>Using the Quarter-Turn Factorization Algorithm for Rotational Symmetries</h3>
             <p>The <strong>quarter-turn factorization algorithm</strong>, described below, is not limited to detecting 4-fold rotational symmetry. By adjusting the parameter \( \Theta \) (the rotation angle), the same algorithm can be applied to identify other rotational symmetries in boundary words. The algorithm works as follows:</p>
         
+
+            <h3>Using the Quarter-Turn Factorization Algorithm for Rotational Symmetries</h3>
+            <p>The <strong>quarter-turn factorization algorithm</strong>, described below, is not limited to detecting 4-fold rotational symmetry. By adjusting the parameter \( \Theta \) (the rotation angle), the same algorithm can be applied to identify other rotational symmetries in boundary words. The algorithm works as follows:</p>
+        
             <ul>
+                <li><strong>For 3-fold rotational symmetry:</strong> Set \( \Theta = 120° \).</li>
+                <li><strong>For 4-fold rotational symmetry:</strong> Set \( \Theta = 90° \) (default case in the algorithm).</li>
+                <li><strong>For 6-fold rotational symmetry:</strong> Set \( \Theta = 60° \).</li>
                 <li><strong>For 3-fold rotational symmetry:</strong> Set \( \Theta = 120° \).</li>
                 <li><strong>For 4-fold rotational symmetry:</strong> Set \( \Theta = 90° \) (default case in the algorithm).</li>
                 <li><strong>For 6-fold rotational symmetry:</strong> Set \( \Theta = 60° \).</li>
@@ -159,7 +292,37 @@
 
             <h3>Quarter-Turn Factorization in Boundary Words</h3>
             <p>In the study of polyominoes and their tiling properties, understanding the symmetries of their boundary words is crucial. This section provides a comprehensive explanation of an algorithm for detecting quarter-turn factorizations in boundary words of polyominoes. We will define key concepts, present important lemmas with proofs, and explain the algorithm in a didactic manner, ensuring clarity and accessibility.</p>
+        
+            <p>The logic of the algorithm remains consistent across these symmetries. It identifies admissible factors such as palindromes and \( \Theta \)-dromes, preprocesses them, and verifies potential tiling configurations. This unified approach makes the algorithm versatile and applicable to a wide range of tiling problems.</p>
 
+            <!-- Definitions already wrapped above -->
+
+            <h3>Quarter-Turn Factorization in Boundary Words</h3>
+            <p>In the study of polyominoes and their tiling properties, understanding the symmetries of their boundary words is crucial. This section provides a comprehensive explanation of an algorithm for detecting quarter-turn factorizations in boundary words of polyominoes. We will define key concepts, present important lemmas with proofs, and explain the algorithm in a didactic manner, ensuring clarity and accessibility.</p>
+
+            <div class="definition">
+                <h3>Definition: Quarter-Turn Factorization</h3>
+                <p>A <strong>quarter-turn factorization</strong> of a boundary word \( W \) is a factorization of the form <strong>\( W = ABC \)</strong>, where:</p>
+                <ul>
+                    <li><strong>A</strong> is a palindrome.</li>
+                    <li><strong>B</strong> and <strong>C</strong> are 90-dromes.</li>
+                </ul>
+                <p>This factorization helps identify 4-fold rotational symmetries in polyominoes.</p>
+            </div>
+
+            <h4>Example of Quarter-Turn Factorization</h4>
+            <p>Consider the boundary word <strong>W = "uurruudurdrlrlud"</strong>.</p>
+            <ul>
+                <li><strong>A = "uurruu"</strong> &mdash; This is a palindrome because it reads the same forwards and backwards.</li>
+                <li><strong>B = "durdrl"</strong> &mdash; This is a 90-drome. Applying the rotation for a 90-drome:
+                    <ul>
+                        <li>\( t_{90+180}(u) = r \)</li>
+                        <li>\( t_{90+180}(d) = l \)</li>
+                        <li>\( t_{90+180}(l) = u \)</li>
+                        <li>\( t_{90+180}(r) = d \)</li>
+                    </ul> 
+                    
+                    We get for the first part of B "durl" : "lrd" which we reverse to get the 90-drome : <strong>"drl"</strong>. 
             <div class="definition">
                 <h3>Definition: Quarter-Turn Factorization</h3>
                 <p>A <strong>quarter-turn factorization</strong> of a boundary word \( W \) is a factorization of the form <strong>\( W = ABC \)</strong>, where:</p>
@@ -952,22 +1115,13 @@ function getDoubleEndingDromes(end90Dromes, position):
     
     <p><strong>Final Note:</strong> While the pseudocode provided offers a clear structural representation, actual implementation may require further optimizations and handling of specific edge cases based on the exact definitions and properties of the polyomino tilings in question.</p>
 
-
-    
-    
-
-        <section id="poly_builder">
-            <h2>Polygon Builder</h2>
-            <p>Use the interactive grid below to create your own polyominoes, polyiamonds, or polyhexes and test the algorithms described above.</p>
-            <!-- Placeholder for Polygon Builder Interface -->
-            <div id="grid"></div>
-            <div id="controls">
-                <button id="submit-button" onclick="submitGrid()">Submit</button>
-                <button id="clear-button" onclick="clearGrid()">Clear</button>
-            </div>
-        </section>
+    <section id="polygon_builder">
+        <h2>Process Polygon</h2>
+        <label for="polygon_input">Enter polygon:</label>
+        <input type="text" id="polygon_input" placeholder="rrdllu"/>
+        <button id="process_polygon">Process polygon</button>
+        <div id="output"></div>
+    </section>
     </main>
-
-
 </body>
 </html>

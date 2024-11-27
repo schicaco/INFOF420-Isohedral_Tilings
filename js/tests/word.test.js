@@ -14,7 +14,7 @@ describe('Word Class', () => {
         });
 
         test('invalid word (too short)', () => {
-            expect(() => new Word('udl')).toThrow(WordError.invalidWord());
+            expect(() => new Word('u')).toThrow(WordError.invalidWord()); //Admissibility of word
         });
 
         test('invalid word (non-string)', () => {
