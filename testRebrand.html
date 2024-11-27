@@ -229,8 +229,12 @@
             </ul>
             <p>Therefore, <strong>W = A + B + C = "uurruu" + "durdrl" + "rlud"</strong> is a valid quarter-turn factorization.</p>
 
+            Here is an illustration example below using the word. 
+            
+            <img src="images\quarterTurn.png" alt="Illustration" width="440" height="240">
+
             <!-- Placeholder for Illustration -->
-            <p><em>[Illustration of the boundary word "EENNEEENWSENWS" factored into A (palindrome), B and C (90-dromes)]</em></p>
+            
 
                 <div class="definition">
                     <h3>Period</h3>
@@ -241,7 +245,7 @@
                 <div class="definition">
                     <h3>Norm Function</h3>
                     <p>The <strong>norm function</strong>, denoted as \( ||W|| \), represents the length of the word \( W \).</p>
-                    <p><strong>Example:</strong> If \( W = "ENWS" \), then \( ||W|| = 4 \).</p>
+                    <p><strong>Example:</strong> If \( W = "ruld" \), then \( ||W|| = 4 \).</p>
                 </div>
             
 
@@ -254,7 +258,7 @@
             <div class="lemma">
                 <h5>Lemma 5.1. Let \( W \) be a word with a period \( p \), and \( X \) a 90-drome subword of \( W \). Then we have \( |X| \leq p \).</h5>
                 <p><strong>Explanation:</strong> In a word that repeats every \( p \) characters, any 90-drome within it cannot be longer than \( p \). This is because the symmetry imposed by the 90-drome cannot extend beyond the repeating pattern of the word.</p>
-                <p>This will be useful because: TODO</p>
+                
             </div>
 
             <!-- Lemma 2 -->
@@ -343,8 +347,8 @@ function preprocessAdmissibleFactors(W):
         
         <h4>Function Descriptions:</h4>
         <ul>
-            <li><code>preprocessPalindromes(W)</code>: Utilizes Lemma 4.12 to preprocess \( W \) and its reflection \( W_f \) to enable \( O(1) \)-time queries for the longest palindromic substrings centered at any position.</li>
-            <li><code>preprocess90Dromes(W)</code>: Applies Lemma 4.12 to preprocess \( W \) and its 90-degree rotated version \( t_{90}(W_f) \) to facilitate \( O(1) \)-time queries for the longest 90-drome substrings starting at any position.</li>
+            <li><code>preprocessPalindromes(W)</code>: Utilizes Lemma 4.12 to preprocess \( W \) and its reflection \( \widetilde{W} \) to enable \( O(1) \)-time queries for the longest palindromic substrings centered at any position.</li>
+            <li><code>preprocess90Dromes(W)</code>: Applies Lemma 4.12 to preprocess \( W \) and its 90-degree rotated version \( t_{90}(\widetilde{W}) \) to facilitate \( O(1) \)-time queries for the longest 90-drome substrings starting at any position.</li>
             <li><code>organizeFactors(W, palindromes, dromes)</code>: Organizes the identified palindromic and 90-drome factors into length-sorted lists based on their starting and ending positions.</li>
         </ul>
         
@@ -990,35 +994,8 @@ function getDoubleEndingDromes(end90Dromes, position):
     <p><strong>Final Note:</strong> While the pseudocode provided offers a clear structural representation, actual implementation may require further optimizations and handling of specific edge cases based on the exact definitions and properties of the polyomino tilings in question.</p>
 
 
-        </section>
-
-        <section id="folding">
-            <h2>Folding Tiles into Doubly-Covered Triangles</h2>
-            <p>In this phase, we explore how the identified isohedral tiles can be folded into simpler shapes, specifically doubly-covered triangles. This process involves manipulating the tiles to overlap parts of themselves, forming new shapes that can still tile the plane.</p>
-
-            <div class="definition">
-                <h2>Definition: Doubly-Covered Triangle</h2>
-                <p>A <strong>doubly-covered triangle</strong> is a configuration where two identical triangular shapes are overlaid on top of one another, typically formed by folding a tile.</p>
-            </div>
-
-            <!-- Placeholder for Illustration -->
-            <p><em>[Illustration of folding a tile into a doubly-covered triangle]</em></p>
-
-            <h3>Folding Algorithm</h3>
-            <p>The algorithm for folding involves:</p>
-            <ol>
-                <li><strong>Identifying fold lines:</strong> Determine where the tile can be folded without cutting.</li>
-                <li><strong>Executing the fold:</strong> Manipulate the tile along the fold lines to create overlapping regions.</li>
-                <li><strong>Verifying tiling capability:</strong> Ensure that the new shape can tile the plane without gaps or overlaps.</li>
-            </ol>
-
-            <h3>Applications</h3>
-            <p>Folding tiles into simpler shapes allows for the creation of new tiling patterns and can simplify the analysis of tiling capabilities. It also has implications in materials science for designing foldable structures.</p>
-
-            <!-- Placeholder for Illustration -->
-             
-            <p><em>[Illustration of tiling with the folded shape]</em></p>
-        </section>
+    
+    
 
         <section id="poly_builder">
             <h2>Polygon Builder</h2>
