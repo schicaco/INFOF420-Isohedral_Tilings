@@ -17,6 +17,7 @@ class Tiling {
 
     /**
      * Preprocesses the boundary word to find palindromes and 90-dromes.
+     * @param {number} rotDegree 
      * @returns {object} An object containing all palindromes and 90-dromes found in the word.
      */
     preprocessFactors(rotDegree) {
@@ -25,7 +26,7 @@ class Tiling {
         const minLength = Math.floor(wordLength / 3);
 
         const palindromes = this.findAllThetaDromes(wordStr, 180);
-        const ninetyDromes = this.findAllThetaDromes(wordStr, 90);
+        const ninetyDromes = this.findAllThetaDromes(wordStr, rotDegree);
 
         // // Filter factors by minimum length
         // const longPalindromes = this.getLongFactors(palindromes, minLength);
@@ -76,13 +77,14 @@ class Tiling {
     }
 
     /**
-     * Checks if a quarter-turn factorization exists where W = ABC,
-     * with A being a palindrome, and B, C being 90-dromes.
+     * Checks if the theta-fold symmetry is possible for tiling with W = ABC,
+     * with A being a palindrome, and B, C being theta-dromes.
      * Only one of the factors A, B, or C needs to be a long factor.
+     * @param {number} rotDegree 
      * @returns {boolean} True if the factorization exists, otherwise false.
      */
-    isQuarterTurnFactorizationPossible() {
-        const { palindromes, ninetyDromes } = this.preprocessFactors();
+    isFoldSymmetryPossible(rotDegree) {
+        const { palindromes, ninetyDromes } = this.preprocessFactors(rotDegree);
         const wordStr = this.word.getWord();
         const n = wordStr.length;
 

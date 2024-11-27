@@ -40,7 +40,7 @@ describe('findAll90Dromes', () => {
     });
 });
 
-describe('isQuarterTurnFactorizationPossible', () => {
+describe('isFoldSymmetryPossible', () => {
     let wordInstance;
     let tiling;
 
@@ -54,35 +54,35 @@ describe('isQuarterTurnFactorizationPossible', () => {
         wordInstance = new word('uuurruuudurdrlrlud');
         tiling = new Tiling(wordInstance);
 
-        expect(tiling.isQuarterTurnFactorizationPossible()).toBe(true);
+        expect(tiling.isFoldSymmetryPossible(90)).toBe(true);
     });
 
     test('Valid factorization with B as long factor', () => {
         wordInstance = new word('urrudurdrlrlud');
         tiling = new Tiling(wordInstance);
 
-        expect(tiling.isQuarterTurnFactorizationPossible()).toBe(true);
+        expect(tiling.isFoldSymmetryPossible(90)).toBe(true);
     });
 
     test('Valid factorization with C as long factor', () => {
         wordInstance = new word('urrurluddurdrl');
         tiling = new Tiling(wordInstance);
 
-        expect(tiling.isQuarterTurnFactorizationPossible()).toBe(true);
+        expect(tiling.isFoldSymmetryPossible(90)).toBe(true);
     });
 
     test('No valid factorization', () => {
         wordInstance = new word('uurldlururul');
         tiling = new Tiling(wordInstance);
 
-        expect(tiling.isQuarterTurnFactorizationPossible()).toBe(false);
+        expect(tiling.isFoldSymmetryPossible(90)).toBe(false);
     });
 
     test('Boundary word with no palindromes or 90-dromes', () => {
         wordInstance = new word('uldrdlu');
         tiling = new Tiling(wordInstance);
 
-        expect(tiling.isQuarterTurnFactorizationPossible()).toBe(false);
+        expect(tiling.isFoldSymmetryPossible(90)).toBe(false);
     });
 });
 
