@@ -19,65 +19,24 @@ class Tiling {
      * Preprocesses the boundary word to find palindromes and 90-dromes.
      * @returns {object} An object containing all palindromes and 90-dromes found in the word.
      */
-    preprocessFactors() {
+    preprocessFactors(rotDegree) {
         const wordStr = this.word.getWord();
         const wordLength = wordStr.length;
         const minLength = Math.floor(wordLength / 3);
 
-        const palindromes = this.findAllPalindromes(wordStr);
-        const ninetyDromes = this.findAll90Dromes(wordStr);
+        const palindromes = this.findAllThetaDromes(wordStr, 180);
+        const ninetyDromes = this.findAllThetaDromes(wordStr, 90);
 
-        // Filter factors by minimum length
-        const longPalindromes = this.getLongFactors(palindromes, minLength);
-        const longNinetyDromes = this.getLongFactors(ninetyDromes, minLength);
+        // // Filter factors by minimum length
+        // const longPalindromes = this.getLongFactors(palindromes, minLength);
+        // const longNinetyDromes = this.getLongFactors(ninetyDromes, minLength);
 
-        return { palindromes: longPalindromes, ninetyDromes: longNinetyDromes };
+        return { palindromes: palindromes, ninetyDromes: ninetyDromes };
     }
 
-    /**
-     * Finds all palindromic substrings in the boundary word using Manacher's algorithm.
-     * @param {string} word - The word to search for palindromes.
-     * @returns {Array<{ start: number, end: number, palindrome: string }>} An array of objects containing palindromic substrings and their positions.
-     */
-    findAllPalindromes(word) {
-        const modifiedWord = '#' + word.split('').join('#') + '#';
-        const n = modifiedWord.length;
-        const p = new Array(n).fill(0);
-        let center = 0, right = 0;
-        const palindromes = [];
-
-        for (let i = 1; i < n - 1; i++) {
-            const mirror = 2 * center - i;
-
-            if (i < right) {
-                p[i] = Math.min(right - i, p[mirror]);
-            }
-
-            // Expand around center i
-            while (modifiedWord[i + (1 + p[i])] === modifiedWord[i - (1 + p[i])]) {
-                p[i]++;
-            }
-
-            // Update center and right boundary
-            if (i + p[i] > right) {
-                center = i;
-                right = i + p[i];
-            }
-
-            // If palindrome length is greater than 1, store it
-            if (p[i] > 0) {
-                const start = Math.floor((i - p[i]) / 2);
-                const end = start + p[i];
-                const palindrome = word.slice(start, end);
-                palindromes.push({ start, end, palindrome });
-            }
-        }
-
-        return palindromes;
-    }
 
     /**
-     * Finds all 90-dromic substrings in the boundary word.
+     * Finds all theta-dromic substrings in the boundary word.
      * @param {string} word - The word to search for 90-dromes.
      * @param {number} rotDegree  
      * @returns {Array<{ start: number, end: number, drome: string }>} An array of objects containing 90-dromic substrings and their positions.
@@ -94,7 +53,7 @@ class Tiling {
                 try {
                     if (substring.length % 2 ==0 &&  wordObj.isThetaDrome(rotDegree)) {
                         let endIdx = end-1; 
-                        ninetyDromes.push({ start, endIdx, drome: substring });
+                        ninetyDromes.push({ start, end: endIdx, drome: substring });
                     }
                 } catch (error) {
                     // Ignore invalid rotations
@@ -113,8 +72,77 @@ class Tiling {
      * @returns {Array} An array of filtered factors.
      */
     getLongFactors(factors, minLength) {
-        return factors.filter(factor => (factor.end - factor.start) >= minLength);
+        return factors.filter(factor => (factor.end - factor.start+1) >= minLength);
+    }
+
+    /**
+     * Checks if a quarter-turn factorization exists where W = ABC,
+     * with A being a palindrome, and B, C being 90-dromes.
+     * Only one of the factors A, B, or C needs to be a long factor.
+     * @returns {boolean} True if the factorization exists, otherwise false.
+     */
+    isQuarterTurnFactorizationPossible() {
+        const { palindromes, ninetyDromes } = this.preprocessFactors();
+        const wordStr = this.word.getWord();
+        const n = wordStr.length;
+
+        // Helper to validate contiguity and alignment
+        const isValidFactorization = (a, b, c) => 
+            a.end + 1 === b.start && 
+            b.end + 1 === c.start && 
+            c.end === n - 1;
+
+        const encounteredFactors = [];
+        encounteredFactors.push(this.getLongFactors(palindromes,Math.floor(n / 3) ) )
+        encounteredFactors.push(n/3)
+        encounteredFactors.push(palindromes)
+        // Case 1: A is the long factor
+        for (const a of this.getLongFactors(palindromes,Math.floor(n / 3) )) {
+            for (const b of ninetyDromes) {
+                for (const c of ninetyDromes) {
+
+                    encounteredFactors.push({ a, b, c });
+                    if (isValidFactorization(a, b, c)) {
+                        this.isTilingPossible = true;
+                        return true;
+                    }
+                }
+            }
+        }
+
+        // Case 2: B or C is the long factor
+        for (const b of ninetyDromes) {
+            if (b.end - b.start + 1 >= Math.floor(n / 3)) { // B is long
+                for (const a of palindromes) {
+                    for (const c of ninetyDromes) {
+                        if (isValidFactorization(a, b, c)) {
+                            this.isTilingPossible = true;
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Case 3: C is the long factor
+        for (const c of ninetyDromes) {
+            if (c.end - c.start + 1 >= Math.floor(n / 3)) { // C is long
+                for (const a of palindromes) {
+                    for (const b of ninetyDromes) {
+                        if (isValidFactorization(a, b, c)) {
+                            this.isTilingPossible = true;
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+
+        return false;
     }
 }
+
+
 
 export default Tiling;
