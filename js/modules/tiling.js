@@ -96,8 +96,6 @@ class Tiling {
 
         const encounteredFactors = [];
         encounteredFactors.push(this.getLongFactors(palindromes,Math.floor(n / 3) ) )
-        encounteredFactors.push(n/3)
-        encounteredFactors.push(palindromes)
         // Case 1: A is the long factor
         for (const a of this.getLongFactors(palindromes,Math.floor(n / 3) )) {
             for (const b of ninetyDromes) {
