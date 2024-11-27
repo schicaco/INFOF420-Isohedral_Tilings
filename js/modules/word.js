@@ -1,4 +1,4 @@
-import BoundaryWordError from '../error.js';
+import WordError from '../error.js';
 
 /**
  * Constants for letter direction and rotations.
@@ -11,29 +11,29 @@ const ALPHABET = new Map([
 ]);
 
 const ROTATIONS = new Map([
-    ['u', { 90: 'r', 180: 'd', 270: 'l' }],
-    ['d', { 90: 'l', 180: 'u', 270: 'r' }],
-    ['l', { 90: 'u', 180: 'r', 270: 'd' }],
-    ['r', { 90: 'd', 180: 'l', 270: 'u' }],
+    ['u', { 0: 'u', 90: 'l', 180: 'd', 270: 'r' }],
+    ['d', { 0: 'd', 90: 'r', 180: 'u', 270: 'l' }],
+    ['l', { 0: 'l', 90: 'd', 180: 'r', 270: 'u' }],
+    ['r', { 0: 'r', 90: 'u', 180: 'l', 270: 'd' }],
 ]);
 
 /**
- * Class representing a boundary word and its associated operations.
+ * Class representing a word and its associated operations.
  */
-class BoundaryWord {
+class Word {
     /**
-     * Constructs a BoundaryWord instance with the given word, converted to lowercase.
+     * Constructs a Word instance with the given word, converted to lowercase.
      * @param {string} word - The input word.
-     * @throws {BoundaryWordError} - If the word is invalid.
+     * @throws {WordError} - If the word is invalid.
      */
     constructor(word) {
-        if (!word || typeof word !== 'string' || word.length < 4) {
-            throw new BoundaryWordError.invalidWord();
+        if (!word || typeof word !== 'string' || word.length < 2) { //Admissibility of thetadromes
+            throw new WordError.invalidWord();
         }
         this.word = word.toLowerCase();
 
         if (!this.isWordInAlphabet()) {
-            throw new BoundaryWordError.invalidLetter();
+            throw new WordError.invalidLetter();
         }
     }
 
@@ -57,11 +57,11 @@ class BoundaryWord {
      * Retrieves a specific letter by its index.
      * @param {number} index - The index of the desired letter.
      * @returns {string} - The letter at the specified index.
-     * @throws {BoundaryWordError} - If the index is out of bounds.
+     * @throws {WordError} - If the index is out of bounds.
      */
     getLetter(index) {
         if (index < 0 || index >= this.word.length) {
-            throw new BoundaryWordError.invalidIndex(index);
+            throw new WordError.invalidIndex(index);
         }
         return this.word[index];
     }
@@ -69,15 +69,16 @@ class BoundaryWord {
     /**
      * Rotates a letter by a specified angle.
      * @param {string} letter - The letter to rotate.
-     * @param {number} theta - The rotation angle (90, 180, 270).
+     * @param {number} theta - The rotation angle (0, 90, 180, 270).
      * @returns {string} - The rotated letter.
-     * @throws {BoundaryWordError} - If the rotation angle or letter is invalid.
+     * @throws {WordError} - If the rotation angle or letter is invalid.
      */
     static rotateLetter(letter, theta) {
-        if (theta % 360 === 0) return letter;
+        theta = theta % 360;
+
         const rotation = ROTATIONS.get(letter)?.[theta];
         if (!rotation) {
-            throw new BoundaryWordError.invalidRotation(theta);
+            throw new WordError.invalidRotation(theta);
         }
         return rotation;
     }
@@ -93,11 +94,11 @@ class BoundaryWord {
 
     /**
      * Rotates the entire word by a specified angle.
-     * @param {number} theta - The rotation angle (90, 180, 270).
+     * @param {number} theta - The rotation angle (0, 90, 180, 270).
      * @returns {string} - The rotated word.
      */
     rotateWord(theta) {
-        return [...this.word].map(letter => BoundaryWord.rotateLetter(letter, theta)).join('');
+        return [...this.word].map(letter => Word.rotateLetter(letter, theta)).join('');
     }
 
     /**
@@ -117,11 +118,14 @@ class BoundaryWord {
     }
 
     /**
-     * Returns the backtrack of the word (equal to the reversed word).
+     * Returns the backtrack of the word (equal to the complement of the reversed word).
      * @returns {string} - The backtracked word.
      */
     backtrackWord() {
-        return this.reverseWord();
+        const reversed = [...this.word].reverse().join('');
+        const complemented = reversed.split('').map(letter => Word.complementLetter(letter)).join('');
+
+        return complemented
     }
 
     /**
@@ -129,11 +133,11 @@ class BoundaryWord {
      * @param {number} i - Start index (1-based).
      * @param {number} j - End index (1-based).
      * @returns {string} - The extracted factor.
-     * @throws {BoundaryWordError} - If indices are invalid.
+     * @throws {WordError} - If indices are invalid.
      */
     getFactor(i, j) {
         if (i < 1 || j > this.word.length || i > j) {
-            throw new BoundaryWordError.invalidIndices(i, j);
+            throw new WordError.invalidIndices(i, j);
         }
         return this.word.slice(i - 1, j);
     }
@@ -189,17 +193,20 @@ class BoundaryWord {
      * Checks if the word is a Θ-drome.
      * @param {number} theta - The rotation angle (0, 90, 180, 270).
      * @returns {boolean} - True if the word is a Θ-drome, otherwise false.
-     * @throws {BoundaryWordError} - If the rotation angle is invalid.
+     * @throws {WordError} - If the rotation angle is invalid.
      */
     isThetaDrome(theta) {
+        theta = theta % 360;
+
         if (![0, 90, 180, 270].includes(theta)) {
-            throw new BoundaryWordError.invalidRotation(theta);
+            throw new WordError.invalidRotation(theta);
         }
         const half = Math.floor(this.word.length / 2);
         const firstHalf = this.word.slice(0, half);
         const secondHalf = this.word.slice(-half);
         const rotatedFirstHalf = [...firstHalf]
-            .map(letter => BoundaryWord.rotateLetter(letter, theta + 180))
+            .reverse()
+            .map(letter => Word.rotateLetter(letter, theta + 180))
             .join('');
         return secondHalf === rotatedFirstHalf;
     }
@@ -209,8 +216,8 @@ class BoundaryWord {
      * @returns {boolean} - True if the word is a palindrome, otherwise false.
      */
     isPalindrome() {
-        return this.word === this.reverseWord();
+        return this.isThetaDrome(180);
     }
 }
 
-export default BoundaryWord;
+export default Word;

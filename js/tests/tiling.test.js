@@ -1,76 +1,41 @@
 import Tiling from '../modules/tiling.js';
-import BoundaryWord from '../modules/boundaryWord.js';
-import { Alphabet4Letters } from '../modules/boundaryWord.js';
+import word from '../modules/word.js';
+import { Alphabet4Letters } from '../modules/word.js';
 
 describe('Tiling Class Tests', () => {
-    test('should instantiate correctly with a valid BoundaryWord', () => {
-        const validWord = new BoundaryWord('uurddl');
+    test('should instantiate correctly with a valid word', () => {
+        const validWord = new word('uurddl');
         const tiling = new Tiling(validWord);
         expect(tiling).toBeInstanceOf(Tiling);
-        expect(tiling.boundaryWord).toBe(validWord);
+        expect(tiling.word).toBe(validWord);
         expect(tiling.isTilingPossible).toBeNull();
     });
 
-    test('should throw an error when instantiated with an invalid BoundaryWord', () => {
+    test('should throw an error when instantiated with an invalid word', () => {
         const invalidWord = "invalid";
-        expect(() => new Tiling(invalidWord)).toThrow('Invalid input: boundaryWord must be an instance of BoundaryWord.');
+        expect(() => new Tiling(invalidWord)).toThrow('Invalid input: word must be an instance of Word.');
     });
 
     test('should not modify the boundary word', () => {
-        const word = new BoundaryWord('uurddl');
-        const tiling = new Tiling(word);
-        expect(tiling.boundaryWord.getWord()).toBe('uurddl');
+        const validWord = new word('uurddl');
+        const tiling = new Tiling(validWord);
+        expect(tiling.word.getWord()).toBe('uurddl');
     });
 });
 
-describe('Tiling - Palindrome Function', () => {
-    test('should find all palindromic substrings in a word', () => {
-        // Example word and setup
-        const boundaryWord = new BoundaryWord("ruurruur");
-        const tiling = new Tiling(boundaryWord);
-
-        // Expected palindromes
-        const expectedPalindromes = ['ruur', 'uu', 'uurruu', 'ruurruur', 'rr', 'urru'];
-
-        // Call the function
-        const word = boundaryWord.getWord(); 
-        const palindromes = tiling.findAllPalindromes(word);
-
-        // Assert the result matches expected palindromes
-        expect(palindromes).toEqual(expect.arrayContaining(expectedPalindromes));
-    });
-
-    test('should return an empty array for a word with no palindromes', () => {
-        // Example word and setup
-        const boundaryWord = new BoundaryWord("urld");
-        const tiling = new Tiling(boundaryWord);
-
-        // Expected result
-        const expectedPalindromes = [];
-
-        // Call the function
-        const word = boundaryWord.getWord(); 
-
-        const palindromes = tiling.findAllPalindromes(word);
-
-        // Assert that no palindromes are found
-        expect(palindromes).toEqual(expectedPalindromes);
-    });
-
-    test('should find single-letter palindromes in a word', () => {
-        // Example word and setup
-        const boundaryWord = new BoundaryWord("u");
-        const tiling = new Tiling(boundaryWord);
-
-        // Expected result
-        const expectedPalindromes = ['u'];
-
-        // Call the function
-        const word = boundaryWord.getWord(); 
-
-        const palindromes = tiling.findAllPalindromes(word);
-
-        // Assert the single-letter palindrome is found
-        expect(palindromes).toEqual(expectedPalindromes);
+// Test for finding 90-dromes
+describe('findAll90Dromes', () => {
+    test('identifies all 90-dromic substrings', () => {
+        const validWord = new word('ldurdrldl');
+        const tiling = new Tiling(validWord);
+        const ninetyDromes = tiling.findAllThetaDromes(validWord.getWord(), 90);
+        const expected = [
+            { drome: "durdrl", endIdx: 6, start: 1 },
+            { drome: "ur", endIdx: 3, start: 2 },
+            { drome: "urdr", endIdx: 5, start: 2 },
+            { drome: "rd", endIdx: 4, start: 3 },
+            { drome: "dl", endIdx: 8, start: 7 }
+        ];
+        expect(ninetyDromes).toEqual(expect.arrayContaining(expected));
     });
 });
