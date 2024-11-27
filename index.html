@@ -67,16 +67,7 @@
             </div>
 
             <div style="text-align: center;">
-                <img src="images/tiling2.png" alt="Example of tiling" width="50%">
-            </div>
-
-            <div class="definition">
-                <h4>Definition: Examples of Tilings</h4>
-                <ul>
-                    <li><strong>Isohedral Tiling Example:</strong> The regular hexagonal tiling is isohedral because each hexagon is identical and the tiling exhibits 6-fold rotational symmetry.</li>
-                    <li><strong>Non-Isohedral Tiling Example:</strong> The Penrose tiling is not isohedral as it uses two distinct shapes that do not map onto each other via the tiling's symmetries.</li>
-                    <li><strong>Non-Isohedral Tiling with Isohedral Tile:</strong> A tiling composed of regular pentagons and squares is not isohedral, but the squares within the tiling are isohedral tiles on their own.</li>
-                </ul>
+                <img src="images/tiling2.png" alt="Example of tiling" width="20%">
             </div>
 
             <div class="definition">
@@ -92,7 +83,7 @@
             </div>
 
             <div style="text-align: center;">
-                <img src="images/bword.png" alt="Example of boundary word" width="30%">
+                <img src="images/bword.png" alt="Example of boundary word" width="25%">
             </div>
 
             <div class="definition">
@@ -103,8 +94,7 @@
 
             <div class="definition">
                 <h4>Definition: Norm Function</h4>
-                <p>The <strong>norm function</strong>, denoted as \( ||W|| \), represents the length of the word \( W \).</p>
-                <p><strong>Example:</strong> If \( W = "ruld" \), then \( ||W|| = 4 \).</p>
+                <p>The <strong>norm function</strong>, denoted as \( |W| \), represents the length of the word \( W \).</p>
             </div>
 
             <div class="definition">
@@ -112,15 +102,6 @@
                 <p>A <strong>palindrome</strong> is a word or sequence that reads the same forward and backward. In the context of boundary words, a palindrome indicates reflective symmetry along an axis.</p>
                 <p><strong>Example of a Palindrome:</strong> The word "dduudd" is a palindrome because it reads the same forwards and backwards.</p>
                 <p><strong>Formally:</strong> A word \( W \) of length \( n \) is a palindrome if \( W[i] = W[n - i + 1] \) for all \( i \) from \( 1 \) to \( n \).</p>
-            </div>
-
-            <div class="definition">
-                <h4>Useful notations</h4>
-                <ol>
-                    <li><strong>\( \overline{W} \)</strong> (Complement of a word \( W \)): The word obtained by replacing each letter in \( W \) with its complement.</li>
-                    <li><strong>\( \widetilde{W} \)</strong> (Reverse of a word \( W \)): The letters of \( W \) in reverse order.</li>
-                    <li><strong>\( \overline{\widetilde{W}} \)</strong> (Backtrack of a word \( W \)): The complement of the reverse word \( W \).</li>
-                </ol>
             </div>
 
             <div class="definition">
@@ -132,8 +113,7 @@
                     X = Y \cdot t_{\theta + 180}(\widetilde{Y})
                     \]
                 </blockquote>
-                <p>A factor \( X \) is <strong>admissible</strong> for a word \( W \) if we can write \( W = XU \) with \( U \) a word.</p>
-                <p><strong>Example of a 90-drome:</strong> Consider the boundary word "rurd", it is a 90-drome because "rurd" = \( Y \cdot t(90+180)({\widetilde{Y}}) \) with \( Y = "rd" \).</p>
+                <p><strong>Example of a 90-drome:</strong> Consider the boundary word "rurd", it is a 90-drome because 'urrddr' = \( Y \cdot t_{90+180}({\widetilde{Y}}) \) with \( Y \) = "urr".</p>
             </div>
 
             <div style="text-align: center;">
@@ -141,7 +121,7 @@
             </div>
 
             <div class="definition">
-                <h4>Definition: Admissible</h4>
+                <h4>Definition: Admissibility</h4>
                 <p>An <strong>admissible factor</strong> is a substring \( X \) of the boundary word \( W \) that satisfies one of the following conditions, ensuring it can be part of a valid quarter-turn factorization:</p>
                 <ul>
                     <li>
@@ -153,6 +133,16 @@
                     </li>
                 </ul>
             </div>
+
+            <div class="definition">
+                <h4>Useful notations</h4>
+                <ol>
+                    <li><strong>\( \overline{W} \)</strong> (Complement of a word \( W \)): The word obtained by replacing each letter in \( W \) with its complement.</li>
+                    <li><strong>\( \widetilde{W} \)</strong> (Reverse of a word \( W \)): The letters of \( W \) in reverse order.</li>
+                    <li><strong>\( \overline{\widetilde{W}} \)</strong> (Backtrack of a word \( W \)): The complement of the reverse word \( W \).</li>
+                </ol>
+            </div>
+
         </section>
         <section>
             <h2 id="symmetries">Symmetries in Tilings</h2>
