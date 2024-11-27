@@ -34,47 +34,20 @@
             <h4>Tile</h4>
             <p>A <strong>tile</strong> is a shape or geometric figure used in the process of tiling a plane or surface. Tiling (or tessellation) involves covering a surface entirely with copies of one or more tiles without any gaps or overlaps.</p>
 
-            <h4>Symmetry</h4>
-            <p><strong>Symmetry</strong> in mathematics refers to a transformation that leaves an object looking the same after it has been applied. For tilings, symmetries include rotations, reflections, and translations that map the tiling onto itself.</p>
-            <p><strong>Example of Symmetry:</strong> A square has 4-fold rotational symmetry, meaning it can be rotated by 90 degrees and still look the same.</p>
-
             <h4>Isohedral Tile</h4>
             <p>An <strong>isohedral tile</strong> is a shape that can tile the plane such that every tile in the tiling is identical in shape and size, and each one can be mapped onto any other by a symmetry of the tiling. This property is also referred to as transitivity, meaning the tiling pattern exhibits uniformity, as each tile looks indistinguishable in its position relative to others in the tiling.</p>
+
             
-            <h4>Examples of Tilings</h4>
-            <ul>
-                <li><strong>Isohedral Tiling Example:</strong> The regular hexagonal tiling is isohedral because each hexagon is identical and the tiling exhibits 6-fold rotational symmetry.</li>
-                <li><strong>Non-Isohedral Tiling Example:</strong> The Penrose tiling is not isohedral as it uses two distinct shapes that do not map onto each other via the tiling's symmetries.</li>
-                <li><strong>Non-Isohedral Tiling with Isohedral Tile:</strong> A tiling composed of regular pentagons and squares is not isohedral, but the squares within the tiling are isohedral tiles on their own.</li>
-            </ul>
 
-            <h4>Boundary Word</h4>
-            <p>A <strong>boundary word</strong> is a sequence that represents the directions taken when traversing the perimeter of a tile. For this project, we will read the boundary words starting from the top left corner (an arbitrary choice) and proceed in a clockwise direction. The boundary word is composed of the letters representing the four cardinal directions:</p>
-            <ul>
-                <li><strong>E</strong> (East)</li>
-                <li><strong>N</strong> (North)</li>
-                <li><strong>W</strong> (West)</li>
-                <li><strong>S</strong> (South)</li>
-            </ul>
-            <p><strong>Example:</strong> Consider a simple square tile. Starting from the top left corner and moving clockwise, its boundary word could be represented as "EENNWWSS".</p>
-
-            <h5>Period</h5>
-            <p>A <strong>period</strong> of a word <strong>W</strong> is the smallest positive integer <strong>p</strong> such that <strong>W[i] = W[i + p]</strong> for all valid <strong>i</strong>.</p>
-            <p><strong>Example:</strong> In the word "ababab", the smallest period is 2, since the pattern "ab" repeats.</p>
-
-            <h5>Norm Function</h5>
-            <p>The <strong>norm function</strong>, denoted as <strong>||W||</strong>, represents the length of the word <strong>W</strong>.</p>
-            <p><strong>Example:</strong> If <strong>W = "ENWS"</strong>, then <strong>||W|| = 4</strong>.</p>
+            <h4>Symmetry</h4>
+            <p><strong>Symmetry</strong> in mathematics refers to a transformation that leaves an object looking the same after it has been applied. For tilings, symmetries include rotations, reflections, and translations that map the tiling onto itself.</p>
 
             <h4>Palindrome</h4>
             <p>A <strong>palindrome</strong> is a word or sequence that reads the same forward and backward. In the context of boundary words, a palindrome indicates reflective symmetry along an axis.</p>
-            <p><strong>Example of a Palindrome:</strong> The word "EENNEE" is a palindrome because it reads the same forwards and backwards.</p>
-            <p><strong>Formally</strong>: A word <strong>W</strong> of length <strong>n</strong> is a palindrome if <strong>W[i] = W[n - i + 1]</strong> for all <strong>i</strong> from <strong>1</strong> to <strong>n</strong>.</p>
 
             <h4>k-Drome</h4>
             <p>A <strong>k-drome</strong> is a generalization of palindromes for rotational symmetries. It is a word that is symmetric under rotation by an angle <strong>k</strong> degrees.</p>
             <p>For example, a <strong>90-drome</strong> is a word where each character maps to its counterpart under a 90-degree rotation.</p>
-            <p><strong>Example of a 90-drome:</strong> Consider the boundary word "ENWS". Under a 90-degree rotation, 'E' becomes 'N', 'N' becomes 'W', 'W' becomes 'S', and 'S' becomes 'E'. If applying the rotation to each character of "ENWS" reverses the word, then it is a 90-drome.</p>
 
             <h4>Quarter-Turn Factorization</h4>
             <p>A <strong>quarter-turn factorization</strong> of a boundary word <strong>W</strong> is a factorization of the form <strong>W = ABC</strong>, where:</p>
@@ -98,27 +71,21 @@
 
             <p>A <strong>polyomino</strong> is a plane geometric figure formed by joining one or more equal squares edge to edge.</p>
 
-            <p>The <strong>boundary word</strong> of a polyomino, denoted by <strong>W</strong>, is the sequence of directions taken when traversing the perimeter of the polyomino starting from the top left corner (an arbitrary choice) and moving clockwise. The boundary word is composed of the letters representing the four cardinal directions:</p>
+            <p>The <strong>boundary word</strong> of a polyomino, denoted by <strong>W</strong>, is the sequence of directions taken when traversing the perimeter of the polyomino in a specified direction (usually clockwise). The boundary word is composed of the letters representing the four cardinal directions:</p>
             <ul>
                 <li><strong>E</strong> (East)</li>
                 <li><strong>N</strong> (North)</li>
                 <li><strong>W</strong> (West)</li>
                 <li><strong>S</strong> (South)</li>
             </ul>
-            <p><strong>Example:</strong> Consider a simple square tile. Starting from the top left corner and moving clockwise, its boundary word could be represented as "EENNWWSS".</p>
 
-            <h5>Period</h5>
-            <p>A <strong>period</strong> of a word <strong>W</strong> is the smallest positive integer <strong>p</strong> such that <strong>W[i] = W[i + p]</strong> for all valid <strong>i</strong>.</p>
-            <p><strong>Example:</strong> In the word "ababab", the smallest period is 2, since the pattern "ab" repeats.</p>
-
-            <h5>Norm Function</h5>
-            <p>The <strong>norm function</strong>, denoted as <strong>||W||</strong>, represents the length of the word <strong>W</strong>.</p>
-            <p><strong>Example:</strong> If <strong>W = "ENWS"</strong>, then <strong>||W|| = 4</strong>.</p>
+            <!-- Placeholder for Illustration -->
+            <img src="images/boundary_word.png" alt="Boundary Word Illustration" style="width:400px; height:auto;">
+            <p><em>[Illustration of a polyomino and its boundary word]</em></p>
 
             <h5>Palindrome</h5>
 
             <p>A <strong>palindrome</strong> is a word that reads the same forwards and backwards.</p>
-            <p><strong>Example of a Palindrome:</strong> The word "EENNEE" is a palindrome because it reads the same forwards and backwards.</p>
             <p><strong>Formally</strong>: A word <strong>W</strong> of length <strong>n</strong> is a palindrome if <strong>W[i] = W[n - i + 1]</strong> for all <strong>i</strong> from <strong>1</strong> to <strong>n</strong>.</p>
 
             <h5>90-Drome</h5>
@@ -135,7 +102,7 @@
                 <li><strong>t<sub>90</sub>(S) = E</strong></li>
             </ul>
 
-            <p><strong>Definition:</strong> A word <strong>W</strong> is a 90-drome if for all positions <strong>i</strong>:</p>
+            <p><strong>Definition</strong>: A word <strong>W</strong> is a 90-drome if for all positions <strong>i</strong>:</p>
             <p><strong>W[i] = t<sub>90</sub>(W[|W| - i + 1])</strong></p>
             <p>That is, each character is the 90-degree rotation of its symmetric counterpart.</p>
 
@@ -160,46 +127,78 @@
             <p>To understand and develop the algorithm for detecting quarter-turn factorizations, we rely on several important lemmas. These lemmas help establish the properties of palindromes and 90-dromes within boundary words.</p>
 
             <!-- Lemma 1 -->
-            <h5>1. Let <strong>W</strong> be a word with a period of length <strong>p</strong>, and <strong>X</strong> a 90-drome subword of <strong>W</strong>. Then <strong>|X| ≤ p</strong>.</h5>
+            <h5>Lemma 1: Length of 90-Drome in a Periodic Word</h5>
+
+            <p><strong>Lemma:</strong> Let <strong>W</strong> be a word with a period of length <strong>p</strong>, and <strong>X</strong> a 90-drome subword of <strong>W</strong>. Then <strong>|X| ≤ p</strong>.</p>
 
             <p><strong>Explanation:</strong> In a word that repeats every <strong>p</strong> characters, any 90-drome within it cannot be longer than <strong>p</strong>. This is because the symmetry imposed by the 90-drome cannot extend beyond the repeating pattern of the word.</p>
 
             <p><strong>Proof Sketch:</strong> Assume, for contradiction, that <strong>|X| > p</strong>. Then, due to the periodicity of <strong>W</strong> and the symmetry of <strong>X</strong>, we encounter conflicting conditions on the characters of <strong>X</strong>, leading to a contradiction. Therefore, <strong>|X| ≤ p</strong>.</p>
 
+            <!-- Placeholder for Detailed Proof -->
+
             <!-- Lemma 2 -->
-            <h5>2. Let <strong>W</strong> be a word. Let <strong>P</strong> be a prefix and <strong>S</strong> be a suffix of <strong>W</strong>, both being 90-dromes with <strong>|P|, |S| ≥ (2/3)|W|</strong>. Then any other 90-drome factor of <strong>W</strong> not sharing the center with <strong>P</strong> or <strong>S</strong> has length less than <strong>2|W| - (|P| + |S|)</strong>.</h5>
+            <h5>Lemma 2: Length Limit of Non-Overlapping 90-Dromes</h5>
+
+            <p><strong>Lemma:</strong> Let <strong>W</strong> be a word. Let <strong>P</strong> be a prefix and <strong>S</strong> be a suffix of <strong>W</strong>, both being 90-dromes with <strong>|P|, |S| ≥ (2/3)|W|</strong>. Then any other 90-drome factor of <strong>W</strong> not sharing the center with <strong>P</strong> or <strong>S</strong> has length less than <strong>2|W| - (|P| + |S|)</strong>.</p>
 
             <p><strong>Explanation:</strong> This lemma limits the length of any additional 90-drome in <strong>W</strong> that doesn't overlap with the centers of <strong>P</strong> or <strong>S</strong>. Essentially, large 90-dromes consume much of the word's length, restricting the size of other non-overlapping 90-dromes.</p>
 
+            <!-- Placeholder for Detailed Proof -->
+
             <!-- Lemma 3 -->
-            <h5>3. Let <strong>W</strong> be a word. Let <strong>P</strong> and <strong>Q</strong> be prefixes of <strong>W</strong>, both being 90-dromes, with <strong>|P| < |Q| < |W|</strong>. Then <strong>|P| < (2/3)|W|</strong>.</h5>
+            <h5>Lemma 3: Upper Bound on Shorter 90-Drome</h5>
+
+            <p><strong>Lemma:</strong> Let <strong>W</strong> be a word. Let <strong>P</strong> and <strong>Q</strong> be prefixes of <strong>W</strong>, both being 90-dromes, with <strong>|P| < |Q| < |W|</strong>. Then <strong>|P| < (2/3)|W|</strong>.</p>
 
             <p><strong>Explanation:</strong> If there are two 90-drome prefixes with different lengths, the shorter one cannot be too long. This is due to the limitations imposed by the presence of the longer 90-drome on the structure of the word.</p>
 
+            <!-- Placeholder for Detailed Proof -->
+
             <!-- Lemma 4 -->
-            <h5>4. Let <strong>W</strong> be a boundary word. There exist <strong>O(1)</strong> admissible 90-drome factors of <strong>W</strong> with length at least <strong>|W| / 3</strong>.</h5>
+            <h5>Lemma 4: Finite Number of Long 90-Dromes</h5>
+
+            <p><strong>Lemma:</strong> Let <strong>W</strong> be a boundary word. There exist <strong>O(1)</strong> admissible 90-drome factors of <strong>W</strong> with length at least <strong>|W| / 3</strong>.</p>
 
             <p><strong>Explanation:</strong> This lemma states that only a constant number of long 90-dromes can exist in <strong>W</strong>. This is important for the efficiency of our algorithm, as it limits the number of candidates we need to consider.</p>
 
+            <!-- Placeholder for Detailed Proof -->
+
             <!-- Lemma 5 -->
-            <h5>5. Let <strong>W</strong> be a word. Let <strong>P</strong> be a prefix and <strong>S</strong> be a suffix of <strong>W</strong>, both being palindromes with <strong>|P|, |S| ≥ (2/3)|W|</strong>, and <strong>P ≠ S</strong>. Then <strong>W</strong> has a period of length <strong>2|W| - (|P| + |S|)</strong>.</h5>
+            <h5>Lemma 5: Periodicity from Long Palindromes</h5>
+
+            <p><strong>Lemma:</strong> Let <strong>W</strong> be a word. Let <strong>P</strong> be a prefix and <strong>S</strong> be a suffix of <strong>W</strong>, both being palindromes with <strong>|P|, |S| ≥ (2/3)|W|</strong>, and <strong>P ≠ S</strong>. Then <strong>W</strong> has a period of length <strong>2|W| - (|P| + |S|)</strong>.</p>
 
             <p><strong>Explanation:</strong> The overlapping structure of long palindromic prefixes and suffixes imposes a periodic pattern on the word <strong>W</strong>.</p>
 
+            <!-- Placeholder for Detailed Proof -->
+
             <!-- Lemma 6 -->
-            <h5>6. Under the same conditions as Lemma 5, any admissible middle palindrome of <strong>W</strong> has length at most <strong>2|W| - (|P| + |S|)</strong>.</h5>
+            <h5>Lemma 6: Length Limit of Middle Palindromes</h5>
+
+            <p><strong>Lemma:</strong> Under the same conditions as Lemma 5, any admissible middle palindrome of <strong>W</strong> has length at most <strong>2|W| - (|P| + |S|)</strong>.</p>
 
             <p><strong>Explanation:</strong> Middle palindromes not overlapping with the long palindromic prefix or suffix must be short due to the periodicity imposed by the longer palindromes.</p>
 
+            <!-- Placeholder for Detailed Proof -->
+
             <!-- Lemma 7 -->
-            <h5>7. There exists an <strong>O(1)</strong>-sized set <strong>F</strong> of factors of <strong>W</strong> such that every admissible palindrome factor with length at least <strong>|W| / 3</strong> is an affix (prefix or suffix) of an element of <strong>F</strong>.</h5>
+            <h5>Lemma 7: Small Set of Factors Covering Long Palindromes</h5>
+
+            <p><strong>Lemma:</strong> There exists an <strong>O(1)</strong>-sized set <strong>F</strong> of factors of <strong>W</strong> such that every admissible palindrome factor with length at least <strong>|W| / 3</strong> is an affix (prefix or suffix) of an element of <strong>F</strong>.</p>
 
             <p><strong>Explanation:</strong> All long palindromic factors are associated with a small, computable set. This allows us to efficiently identify and consider all significant palindromic factors.</p>
 
+            <!-- Placeholder for Detailed Proof -->
+
             <!-- Lemma 8 -->
-            <h5>8. In a boundary word <strong>W = ABC</strong> with <strong>A</strong> a palindrome and <strong>B</strong>, <strong>C</strong> being 90-dromes, <strong>A</strong>, <strong>B</strong>, and <strong>C</strong> are admissible.</h5>
+            <h5>Lemma 8: Admissibility in Quarter-Turn Factorization</h5>
+
+            <p><strong>Lemma:</strong> In a boundary word <strong>W = ABC</strong> with <strong>A</strong> a palindrome and <strong>B</strong>, <strong>C</strong> being 90-dromes, <strong>A</strong>, <strong>B</strong>, and <strong>C</strong> are admissible.</p>
 
             <p><strong>Explanation:</strong> This lemma confirms that the factors in the quarter-turn factorization meet the necessary conditions to be considered palindromes and 90-dromes within the boundary word.</p>
+
+            <!-- Placeholder for Detailed Proof -->
 
             <h4>The Algorithm</h4>
 

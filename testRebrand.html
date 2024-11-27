@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <title>Quarter-Turn Factorization Algorithm</title>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1, h2, h3, h4, h5 {
+            color: #2E4053;
+        }
+        pre {
+            background-color: #F4F6F7;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: Consolas, monospace;
+        }
+        .lemma, .theorem {
+            background-color: #FCF3CF;
+            border-left: 6px solid #F7DC6F;
+            padding: 10px;
+            margin: 20px 0;
+        }
+        .proof {
+            background-color: #D6EAF8;
+            border-left: 6px solid #5DADE2;
+            padding: 10px;
+            margin: 20px 0;
+        }
+        .step {
+            margin-bottom: 30px;
+        }
+        .definition {
+            background-color: #FCF3CF;
+            border-left: 6px solid #F7DC6F;
+            padding: 10px;
+            margin: 20px 0;
+        }
+    </style>
+
+</head>
+<body>
+    <header>
+        <h1>Isohedral Tilings & Folding Tiles</h1>
+    </header>
+    <img src="images\tiling1.png" alt="Example of tiling" width="500" height="300">
+
+    <main>
+        <section id="theory">
+            <h2>Introduction</h2>
+            <p>This project explores isohedral tilings, focusing on algorithms that identify and transform specific tile types based on their symmetry properties. Isohedral tilings, where identical shapes tile the plane repetitively, have significant applications in fields such as materials science, art, and mathematics.</p>
+            <p>The project has two main objectives:</p>
+            <ol>
+                <li><strong>Detecting Isohedral Tiles with Rotational Symmetries:</strong> Develop algorithms to identify tiles with 3-fold, 4-fold, or 6-fold rotational symmetries.</li>
+                <li><strong>Folding Tiles into Doubly-Covered Triangles:</strong> Transform identified tiles into simpler shapes—doubly-covered triangles—while preserving symmetry, allowing for new tiling configurations.</li>
+            </ol>
+
+            <h2>Detecting Isohedral Tiles with Rotational Symmetries</h2>
+
+            <h2>Core Concepts</h2>
+            
+            <!-- Definitions and Core Concepts -->
+            <div class="definition">
+                <h3>Definition: Tile</h3>
+                <p>A <strong>tile</strong> is a shape or geometric figure (like a polyomino) used in the process of tiling a plane or surface. Tiling (or tessellation) involves covering a surface entirely with copies of one or more tiles without any gaps or overlaps.</p>
+            </div>
+
+            <div class="definition">
+                <h3>Definition: Polyomino</h3>
+                <p>A <strong>polyomino</strong> is a plane geometric figure formed by joining one or more equal squares edge to edge.</p>
+            </div>
+
+            <div class="definition">
+                <h3>Definition: Symmetry</h3>
+                <p><strong>Symmetry</strong> in mathematics refers to a transformation that leaves an object looking the same after it has been applied. For tilings, symmetries include rotations, reflections, and translations that map the tiling onto itself.</p>
+                <p><strong>Example of Symmetry:</strong> A square has 4-fold rotational symmetry, meaning it can be rotated by 90 degrees and still look the same.</p>
+            </div>
+
+            <div class="definition">
+                <h3>Definition: Isohedral Tile</h3>
+                <p>An <strong>isohedral tile</strong> is a shape that can tile the plane such that every tile in the tiling is identical in shape and size, and each one can be mapped onto any other by a symmetry of the tiling. This property is also referred to as transitivity, meaning the tiling pattern exhibits uniformity, as each tile looks indistinguishable in its position relative to others in the tiling.</p>
+            </div>
+            <img src="images\tiling2.png" alt="Example of tiling" width="300" height="200">
+            <div class="definition">
+                <h3>Definition: Examples of Tilings</h3>
+                <ul>
+                    <li><strong>Isohedral Tiling Example:</strong> The regular hexagonal tiling is isohedral because each hexagon is identical and the tiling exhibits 6-fold rotational symmetry.</li>
+                    <li><strong>Non-Isohedral Tiling Example:</strong> The Penrose tiling is not isohedral as it uses two distinct shapes that do not map onto each other via the tiling's symmetries.</li>
+                    <li><strong>Non-Isohedral Tiling with Isohedral Tile:</strong> A tiling composed of regular pentagons and squares is not isohedral, but the squares within the tiling are isohedral tiles on their own.</li>
+                </ul>
+            </div>
+
+            <div class="definition">
+                <h3>Definition: Boundary Word</h3>
+                <p>A <strong>boundary word</strong> is a sequence that represents the directions taken when traversing the perimeter of a tile. For this project, we will read the boundary words starting from the top left corner (an arbitrary choice) and proceed in a clockwise direction. The boundary word is composed of the letters representing the four cardinal directions:</p>
+                <ul>
+                    <li><strong>E</strong> (East)</li>
+                    <li><strong>N</strong> (North)</li>
+                    <li><strong>W</strong> (West)</li>
+                    <li><strong>S</strong> (South)</li>
+                </ul>
+                <p><strong>Example:</strong> Consider a simple square tile. Starting from the top left corner and moving clockwise, its boundary word could be represented as "EENNWWSS".</p>
+            </div>
+            <img src="images\bword.png" alt="Example of boundary word" width="440" height="240">
+            <div class="definition">
+                <h3>Definition: Period</h3>
+                <p>A <strong>period</strong> of a word \( W \) is the smallest positive integer \( p \) such that \( W[i] = W[i + p] \) for all valid \( i \).</p>
+                <p><strong>Example:</strong> In the word "ababab", the smallest period is 2, since the pattern "ab" repeats.</p>
+            </div>
+
+            <div class="definition">
+                <h3>Definition: Norm Function</h3>
+                <p>The <strong>norm function</strong>, denoted as \( ||W|| \), represents the length of the word \( W \).</p>
+                <p><strong>Example:</strong> If \( W = "ENWS" \), then \( ||W|| = 4 \).</p>
+            </div>
+
+            <div class="definition">
+                <h3>Definition: Palindrome</h3>
+                <p>A <strong>palindrome</strong> is a word or sequence that reads the same forward and backward. In the context of boundary words, a palindrome indicates reflective symmetry along an axis.</p>
+                <p><strong>Example of a Palindrome:</strong> The word "dduudd" is a palindrome because it reads the same forwards and backwards.</p>
+                <p><strong>Formally:</strong> A word \( W \) of length \( n \) is a palindrome if \( W[i] = W[n - i + 1] \) for all \( i \) from \( 1 \) to \( n \).</p>
+            </div>
+            <div class="definition">
+                <h3>Useful notations</h3>
+                <ol>
+                    <li>
+                        <strong>\( \overline{W} \)</strong> (Complement of a word \( W \)): The word obtained by replacing each letter in \( W \) with its complement.
+                    </li>
+                    <li>
+                        <strong>\( \widetilde{W} \)</strong> (Reverse of a word \( W \)): The letters of \( W \) in reverse order.
+                    </li>
+                    <li>
+                        <strong>\( \overline{\widetilde{W}} \)</strong> (Backtrack of a word \( W \)): The complement of the reverse word \( W \).
+                    </li>
+                </ol>
+            </div>
+
+            <div class="definition">
+                <h3>Definition: Θ-Drome</h3>
+                <p>A <strong>Θ-drome</strong> is a generalization of palindromes for rotational symmetries. It is a word that is symmetric under rotation by an angle \( \theta \) degrees.</p>
+                <p>A word \( X \) is a \( \theta \)-drome if it can be written in the form:</p>
+                <blockquote>
+                    \[
+                    X = Y \cdot t_{\theta + 180}(\widetilde{Y})
+                    \]
+                </blockquote>
+                <p>A factor \( X \) is <strong>admissible</strong> for a word \( W \) if we can write \( W = XU \) with \( U \) a word.</p>
+                <p><strong>Example of a 90-drome:</strong> Consider the boundary word "rurd", it is a 90-drome because "rurd" = \( Y \cdot t(90+180)({\widetilde{Y}}) \) with \( Y = "rd" \).</p>
+                <p><strong>Explanation of \( Y_e \):</strong> In the context of a Θ-drome, \( {\widetilde{Y}} \) represents the **ending segment** of the substring \( Y \). This segment is the portion of \( Y \) that undergoes the transformation \( t_{\Theta+180} \) to form the drome.</p>
+            </div>
+            <img src="images\90drome.png" alt="Example of 90 drome" width="440" height="240">
+            <!-- Definition: Admissible -->
+            <div class="definition">
+                <h3>Definition: Admissible</h3>
+                <p>An <strong>admissible factor</strong> is a substring \( X \) of the boundary word \( W \) that satisfies one of the following conditions, ensuring it can be part of a valid quarter-turn factorization:</p>
+                <ol>
+                    <li>
+                        <strong>Θ-drome:</strong>
+                        <ul>
+                            <li><em>Definition:</em> A word \( X \) is a Θ-drome if \( X = Y \cdot ( t_{\Theta+180}\{\widetilde{Y}\} \)), where \( {\widetilde{Y}} \) is the end segment of \( Y \), and \( t_{\Theta+180} \) represents a transformation combining a Θ-degree rotation with a 180-degree rotation.</li>
+                            <li><em>Admissibility Condition:</em> \( W = XU \) with \( U[-1] \neq t_{\Theta+180}(U)[1] \).</li>
+                        </ul>
+                    </li>
+                    
+                </ol>
+            </div>
+
+
+
+            <h2>Symmetries in Tilings</h2>
+            
+            <h3>3-Fold, 4-Fold, and 6-Fold Rotations</h3>
+
+            <p>Here, we focus on identifying isohedral tiles characterized by 3-fold, 4-fold, and 6-fold rotational symmetries. The specific polygons considered are:</p>
+            <ul>
+                <li><strong>Polyiamonds:</strong> Built from equilateral triangles, exhibiting 3-fold rotational symmetry.</li>
+                <li><strong>Polyominoes:</strong> Composed of squares, displaying 4-fold rotational symmetry.</li>
+                <li><strong>Polyhexes:</strong> Made from regular hexagons, allowing for 3-fold and 6-fold rotational symmetries.</li>
+            </ul>
+
+            <h3>Using the Quarter-Turn Factorization Algorithm for Rotational Symmetries</h3>
+            <p>The <strong>quarter-turn factorization algorithm</strong>, described below, is not limited to detecting 4-fold rotational symmetry. By adjusting the parameter \( \Theta \) (the rotation angle), the same algorithm can be applied to identify other rotational symmetries in boundary words. The algorithm works as follows:</p>
+        
+            <ul>
+                <li><strong>For 3-fold rotational symmetry:</strong> Set \( \Theta = 120° \).</li>
+                <li><strong>For 4-fold rotational symmetry:</strong> Set \( \Theta = 90° \) (default case in the algorithm).</li>
+                <li><strong>For 6-fold rotational symmetry:</strong> Set \( \Theta = 60° \).</li>
+            </ul>
+        
+            <p>The logic of the algorithm remains consistent across these symmetries. It identifies admissible factors such as palindromes and \( \Theta \)-dromes, preprocesses them, and verifies potential tiling configurations. This unified approach makes the algorithm versatile and applicable to a wide range of tiling problems.</p>
+
+            <!-- Definitions already wrapped above -->
+
+            <h3>Quarter-Turn Factorization in Boundary Words</h3>
+            <p>In the study of polyominoes and their tiling properties, understanding the symmetries of their boundary words is crucial. This section provides a comprehensive explanation of an algorithm for detecting quarter-turn factorizations in boundary words of polyominoes. We will define key concepts, present important lemmas with proofs, and explain the algorithm in a didactic manner, ensuring clarity and accessibility.</p>
+
+            <div class="definition">
+                <h3>Definition: Quarter-Turn Factorization</h3>
+                <p>A <strong>quarter-turn factorization</strong> of a boundary word \( W \) is a factorization of the form <strong>\( W = ABC \)</strong>, where:</p>
+                <ul>
+                    <li><strong>A</strong> is a palindrome.</li>
+                    <li><strong>B</strong> and <strong>C</strong> are 90-dromes.</li>
+                </ul>
+                <p>This factorization helps identify 4-fold rotational symmetries in polyominoes.</p>
+            </div>
+
+            <h4>Example of Quarter-Turn Factorization</h4>
+            <p>Consider the boundary word <strong>W = "uurruudurdrlrlud"</strong>.</p>
+            <ul>
+                <li><strong>A = "uurruu"</strong> &mdash; This is a palindrome because it reads the same forwards and backwards.</li>
+                <li><strong>B = "durdrl"</strong> &mdash; This is a 90-drome. Applying the rotation for a 90-drome:
+                    <ul>
+                        <li>\( t_{90+180}(u) = r \)</li>
+                        <li>\( t_{90+180}(d) = l \)</li>
+                        <li>\( t_{90+180}(l) = u \)</li>
+                        <li>\( t_{90+180}(r) = d \)</li>
+                    </ul> 
+                    
+                    We get for the first part of B "durl" : "lrd" which we reverse to get the 90-drome : <strong>"drl"</strong>. 
+                </li>
+                <li><strong>C = "rlud"</strong> &mdash; Similarly, <strong>C</strong> is a 90-drome by the same reasoning as <strong>B</strong>.</li>
+            </ul>
+            <p>Therefore, <strong>W = A + B + C = "uurruu" + "durdrl" + "rlud"</strong> is a valid quarter-turn factorization.</p>
+
+            <!-- Placeholder for Illustration -->
+            <p><em>[Illustration of the boundary word "EENNEEENWSENWS" factored into A (palindrome), B and C (90-dromes)]</em></p>
+
+                <div class="definition">
+                    <h3>Period</h3>
+                    <p>A <strong>period</strong> of a word \( W \) is the smallest positive integer \( p \) such that \( W[i] = W[i + p] \) for all valid \( i \).</p>
+                    <p><strong>Example:</strong> In the word "ababab", the smallest period is 2, since the pattern "ab" repeats.</p>
+                </div>
+
+                <div class="definition">
+                    <h3>Norm Function</h3>
+                    <p>The <strong>norm function</strong>, denoted as \( ||W|| \), represents the length of the word \( W \).</p>
+                    <p><strong>Example:</strong> If \( W = "ENWS" \), then \( ||W|| = 4 \).</p>
+                </div>
+            
+
+            <h1>Lemmas and Proofs</h1>
+
+            <p>To understand and develop the algorithm for detecting quarter-turn factorizations, we rely on several important lemmas. These lemmas help establish the properties of palindromes and 90-dromes within boundary words.</p>
+            <!-- TODO: explain useful lemmas, follow algo pipeline (add 4.12) -->
+
+            <!-- Lemma 1 -->
+            <div class="lemma">
+                <h5>Lemma 5.1. Let \( W \) be a word with a period \( p \), and \( X \) a 90-drome subword of \( W \). Then we have \( |X| \leq p \).</h5>
+                <p><strong>Explanation:</strong> In a word that repeats every \( p \) characters, any 90-drome within it cannot be longer than \( p \). This is because the symmetry imposed by the 90-drome cannot extend beyond the repeating pattern of the word.</p>
+                <p>This will be useful because: TODO</p>
+            </div>
+
+            <!-- Lemma 2 -->
+            <div class="lemma">
+                <h5>Lemma 5.2. Let \( W \) be a word. Let \( P \) be a prefix and \( S \) be a suffix of \( W \), both being distinct 90-dromes with \( |P|, |S| \geq \frac{2}{3}|W| \). Then any other 90-drome factor of \( W \) not sharing the center with \( P \) or \( S \) has length less than \( 2|W| - (|P| + |S|) \).</h5>
+                <p><strong>Explanation:</strong> This lemma limits the length of any additional 90-drome in \( W \) that doesn't overlap with the centers of \( P \) or \( S \). Essentially, large 90-dromes consume much of the word's length, restricting the size of other non-overlapping 90-dromes.</p>
+            </div>
+
+            <!-- Lemma 3 -->
+            <div class="lemma">
+                <h5>Lemma 5.3. Let \( W \) be a word. Let \( P \) and \( Q \) be prefixes of \( W \), both being 90-dromes, with \( |P| < |Q| < |W| \). Then \( |P| < \frac{2}{3}|W| \).</h5>
+                <p><strong>Explanation:</strong> If there are two 90-drome prefixes with different lengths, the shorter one cannot be too long. This is due to the limitations imposed by the presence of the longer 90-drome on the structure of the word.</p>
+            </div>
+
+            <!-- Lemma 4 -->
+            <div class="lemma">
+                <h5>Lemma 5.4. Let \( W \) be a boundary word. There exist \( O(1) \) admissible 90-drome factors of \( W \) with length at least \( \frac{|W|}{3} \).</h5>
+                <p><strong>Explanation:</strong> This lemma states that only a constant number of long 90-dromes can exist in \( W \). This is important for the efficiency of our algorithm, as it limits the number of candidates we need to consider.</p>
+            </div>
+
+            <!-- Lemma 5 -->
+            <div class="lemma">
+                <h5>Lemma 5.5. Let \( W \) be a word. Let \( P \) be a prefix and \( S \) be a suffix of \( W \), both being palindromes with \( |P|, |S| \geq \frac{2}{3}|W| \), and \( P \neq S \). Then \( W \) has a period of length \( 2|W| - (|P| + |S|) \).</h5>
+                <p><strong>Explanation:</strong> The overlapping structure of long palindromic prefixes and suffixes imposes a periodic pattern on the word \( W \).</p>
+            </div>
+
+            <!-- Lemma 6 -->
+            <div class="lemma">
+                <h5>Lemma 5.6. Under the same conditions as Lemma 5, any admissible middle palindrome of \( W \) has length at most \( 2|W| - (|P| + |S|) \).</h5>
+                <p><strong>Explanation:</strong> Middle palindromes not overlapping with the long palindromic prefix or suffix must be short due to the periodicity imposed by the longer palindromes.</p>
+            </div>
+
+            <!-- Lemma 7 -->
+            <div class="lemma">
+                <h5>Lemma 5.7. Let \( W \) be a word. There exists an \( O(1) \)-sized set \( F \) of factors of \( W \) such that every admissible palindrome factor with length at least \( \frac{|W|}{3} \) is an affix (prefix or suffix) of an element of \( F \). \( F \) is computable in \( O(|W|) \) time.</h5>
+                <p><strong>Explanation:</strong> All long palindromic factors are associated with a small, computable set. This allows us to efficiently identify and consider all significant palindromic factors.</p>
+            </div>
+
+            <!-- Lemma 8 -->
+            <div class="lemma">
+                <h5>Lemma 5.8. In a boundary word \( W = ABC \) with \( A \) a palindrome and \( B \), \( C \) being 90-dromes, \( A \), \( B \), and \( C \) are admissible.</h5>
+                <p><strong>Explanation:</strong> This lemma confirms that the factors in the quarter-turn factorization meet the necessary conditions to be considered palindromes and 90-dromes within the boundary word.</p>
+            </div>
+
+            <!-- Begin Algorithm Explanation -->
+
+    <h1>Quarter-Turn Factorization Algorithm</h1>
+    <p>This document outlines a step-by-step algorithm to determine whether a given boundary word \( W \) of a polyomino \( P \) can be factored into a <strong>quarter-turn factorization</strong> of the form:</p>
+    <blockquote>
+        <p>\( W = A \cdot D_1 \cdot D_2 \)</p>
+        <ul>
+            <li><strong>A</strong> is a <em>palindrome</em>.</li>
+            <li><strong>D₁</strong> and <strong>D₂</strong> are <em>90-dromes</em> (substrings exhibiting symmetry under a 90-degree rotation).</li>
+        </ul>
+    </blockquote>
+    
+    <p>The algorithm leverages several lemmas to preprocess \( W \), identify admissible factors, and verify potential factorizations efficiently within \( O(n) \) time complexity, where \( n = |W| \).</p>
+    
+    <h2>Algorithm Steps</h2>
+    
+    <div class="step">
+        <h3>Step 1: Preprocessing Admissible Factors</h3>
+        <p><strong>Objective:</strong> Identify all admissible <em>palindromic</em> and <em>90-drome</em> factors within the boundary word \( W \) efficiently.</p>
+        
+        <div class="lemma">
+            <h4>Lemma 4.12</h4>
+            <p><em>Two circular words \( X \) and \( Y \) can be preprocessed in \( O(|X| + |Y|) \) time to support the following queries in \( O(1) \)-time: What is the longest common factor of \( X \) and \( Y \) starting at \( X[i] \) and \( Y[j] \)?</em></p>
+        </div>
+        
+        <p><strong>Explanation:</strong> This lemma allows us to preprocess two circular words so that we can quickly determine the longest common substring (factor) starting at any given positions in both words. This is crucial for efficiently identifying maximal palindromic and 90-drome factors.</p>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function preprocessAdmissibleFactors(W):
+    // Step 1a: Preprocess Palindromic Factors
+    palindromes = preprocessPalindromes(W) // O(n) time
+    
+    // Step 1b: Preprocess 90-Drome Factors
+    dromes = preprocess90Dromes(W) // O(n) time
+    
+    // Step 1c: Organize Factors into Sorted Lists
+    organized = organizeFactors(W, palindromes, dromes) // O(n) time
+    
+    return organized
+        </code></pre>
+        
+        <h4>Function Descriptions:</h4>
+        <ul>
+            <li><code>preprocessPalindromes(W)</code>: Utilizes Lemma 4.12 to preprocess \( W \) and its reflection \( W_f \) to enable \( O(1) \)-time queries for the longest palindromic substrings centered at any position.</li>
+            <li><code>preprocess90Dromes(W)</code>: Applies Lemma 4.12 to preprocess \( W \) and its 90-degree rotated version \( t_{90}(W_f) \) to facilitate \( O(1) \)-time queries for the longest 90-drome substrings starting at any position.</li>
+            <li><code>organizeFactors(W, palindromes, dromes)</code>: Organizes the identified palindromic and 90-drome factors into length-sorted lists based on their starting and ending positions.</li>
+        </ul>
+        
+        <h4>Complexity:</h4>
+        <p>Each sub-step operates in linear time \( O(n) \), ensuring that the overall preprocessing step remains efficient.</p>
+    </div>
+    
+    <div class="step">
+        <h3>Step 2: Extracting Long Factors Using the Pigeonhole Principle</h3>
+        <p><strong>Objective:</strong> Utilize the pigeonhole principle to identify that any valid quarter-turn factorization must contain at least one <em>long factor</em> (length ≥ \( \frac{n}{3} \)).</p>
+        
+        <div class="lemma">
+            <h4>Lemma 5.4</h4>
+            <p><em>There are \( O(1) \) admissible long 90-drome factors (length ≥ \( \frac{|W|}{3} \)).</em></p>
+        </div>
+        
+        <div class="lemma">
+            <h4>Using lemma 5.3</h4>
+            <p><em>Long palindromic factors can be summarized by a \( O(1) \)-sized set of letters that contains either the first or last letter of every such factor.</em></p>
+        </div>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function extractLongFactors(organized, W):
+    // Step 2a: Extract Long 90-Drome Factors (Lemma 5.4)
+    longDromes = extractLong90Dromes(organized.dromes) // O(1) time
+    
+    // Step 2b: Summarize Long Palindromic Factors (Lemma 5.3)
+    summarizedLetters = summarizeLongPalindromes(organized.palindromes) // O(n) time
+    
+    return { longDromes, summarizedLetters }
+        </code></pre>
+        
+        <h4>Function Descriptions:</h4>
+        <ul>
+            <li><code>extractLong90Dromes(dromes)</code>: Extracts the \( O(1) \) long 90-drome factors based on Lemma 5.4.</li>
+            <li><code>summarizeLongPalindromes(palindromes)</code>: Summarizes long palindromic factors into a compact set of letters as per Lemma 5.3.</li>
+        </ul>
+        
+        <h4>Complexity:</h4>
+        <p>The extraction of long 90-drome factors operates in constant time \( O(1) \), while summarizing long palindromic factors operates in linear time \( O(n) \).</p>
+    </div>
+    
+    <div class="step">
+        <h3>Step 3: Combining Long 90-Drome Factors with Adjacent 90-Dromes</h3>
+        <p><strong>Objective:</strong> Form candidate factorizations by combining each long 90-drome factor with adjacent admissible 90-dromes, then verify if the remaining segment \( A \) is a palindrome.
+            For that we will use the lemma 5.8 stating that ABC are admissible if they are respectively, a palindrom and two 90-dromes of our boundary word.</p>
+        
+        <div class="lemma">
+            <h4>Lemma 5.8</h4>
+            <p><em>If \( P \) is a polyomino with \( B(P) = ABC \), where \( A \) is a palindrome and \( B, C \) are 90-dromes, then \( A, B, C \) are admissible.</em></p>
+        </div>
+        
+        <div class="lemma">
+            <h4>Using lemma 5.3</h4>
+            <p><em>For any letter, there are \( O(\log |W|) \) 90-drome factors that start or end at that letter, and thus \( O(\log^2 |W|) \) double 90-drome factors that start or end at the letter.</em></p>
+        </div>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function combineLong90Dromes(W, organized, longDromes):
+    validFactorizations = []
+    n = W.length
+    
+    for each d in longDromes: // O(1) iterations
+        i = d.start
+        j = d.end
+        
+        // Step 3a: Combine with 90-dromes ending at i-1
+        prevPos = (i - 1 + n) % n
+        endingDromes = getEndingDromes(organized.end90Dromes, prevPos) // O(log n) factors
+        for each D1 in endingDromes: // O(log n)
+            A = extractA(W, D1, d) // O(1) time
+            if isPalindrome(A): // O(1) time
+                validFactorizations.push({ A: A, D1: D1.substring, D2: d.substring })
+        
+        // Step 3b: Combine with 90-dromes starting at j+1
+        nextPos = (j + 1) % n
+        startingDromes = getStartingDromes(organized.start90Dromes, nextPos) // O(log n) factors
+        for each D2 in startingDromes: // O(log n)
+            A = extractA(W, d, D2) // O(1) time
+            if isPalindrome(A): // O(1) time
+                validFactorizations.push({ A: A, D1: d.substring, D2: D2.substring })
+        
+        // Step 3c: Handle cases where D2 is empty
+        A_emptyD2 = W.substring(0, i) // A before D1
+        if isPalindrome(A_emptyD2): // O(1) time
+            validFactorizations.push({ A: A_emptyD2, D1: d.substring, D2: "" })
+        
+        // Step 3d: Handle cases where D1 is empty
+        A_emptyD1 = W.substring(0, j + 1) // A before D2
+        if isPalindrome(A_emptyD1): // O(1) time
+            validFactorizations.push({ A: A_emptyD1, D1: "", D2: d.substring })
+    
+    return validFactorizations // Total O(log^2 n) time
+        </code></pre>
+        
+        <h4>Function Descriptions:</h4>
+        <ul>
+            <li><code>getEndingDromes(end90Dromes, position)</code>: Retrieves all admissible 90-drome factors ending at a given position.</li>
+            <li><code>getStartingDromes(start90Dromes, position)</code>: Retrieves all admissible 90-drome factors starting at a given position.</li>
+            <li><code>extractA(W, D1, D2)</code>: Extracts the substring \( A \) based on the positions of \( D1 \) and \( D2 \).</li>
+            <li><code>isPalindrome(A)</code>: Checks if substring \( A \) is a palindrome.</li>
+        </ul>
+        
+        <h4>Complexity:</h4>
+        <p>Each long 90-drome factor combines with \( O(\log n) \) ending and starting 90-dromes, resulting in \( O(\log^2 n) \) total combinations per long factor. Since there are \( O(1) \) long 90-drome factors, the overall time complexity for this step is \( O(\log^2 n) \).</p>
+    </div>
+    
+    <div class="step">
+        <h3>Step 4: Handling Large Palindromic Factors</h3>
+        <p><strong>Objective:</strong> Form additional candidate factorizations by focusing on large palindromic factors and combining them with double admissible 90-drome factors.
+            For that we will use the lemma 5.8 stating that ABC are admissible if they are respectively, a palindrom and two 90-dromes of our boundary word.</p>
+        
+        <div class="lemma">
+            <h4>Lemma 5.8</h4>
+            <p><em>If \( P \) is a polyomino with \( B(P) = ABC \), where \( A \) is a palindrome and \( B, C \) are 90-dromes, then \( A, B, C \) are admissible.</em></p>
+        </div>
+        
+        <div class="lemma">
+            <h4>Using lemma 5.3</h4>
+            <p><em>For any letter, there are \( O(\log |W|) \) 90-drome factors that start or end at that letter, and thus \( O(\log^2 |W|) \) double 90-drome factors that start or end at the letter.</em></p>
+        </div>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function handleLargePalindromicFactors(W, organized, summarizedLetters):
+    validFactorizations = []
+    n = W.length
+    
+    for each pos in summarizedLetters: // O(1) iterations
+        // Step 4a: Combine with double admissible 90-dromes starting at pos+1
+        doubleStartingDromes = getDoubleStartingDromes(organized.start90Dromes, pos + 1) // O(log^2 n)
+        for each D1D2 in doubleStartingDromes: // O(log^2 n)
+            A = W.substring(0, pos) // A before D1D2
+            if isPalindrome(A): // O(1) time
+                validFactorizations.push({ A: A, D1: D1D2.D1, D2: D1D2.D2 })
+        
+        // Step 4b: Combine with double admissible 90-dromes ending at pos-1
+        doubleEndingDromes = getDoubleEndingDromes(organized.end90Dromes, pos - 1) // O(log^2 n)
+        for each D1D2 in doubleEndingDromes: // O(log^2 n)
+            A = W.substring(0, pos) // A before D1D2
+            if isPalindrome(A): // O(1) time
+                validFactorizations.push({ A: A, D1: D1D2.D1, D2: D1D2.D2 })
+    
+    return validFactorizations // Total O(log^3 n) time
+        </code></pre>
+        
+        <h4>Function Descriptions:</h4>
+        <ul>
+            <li><code>getDoubleStartingDromes(start90Dromes, position)</code>: Retrieves all pairs \( D1D2 \) where \( D1 \) starts at the given position and \( D2 \) follows \( D1 \), including cases where \( D2 \) is empty.</li>
+            <li><code>getDoubleEndingDromes(end90Dromes, position)</code>: Retrieves all pairs \( D1D2 \) where \( D2 \) ends at the given position and \( D1 \) precedes \( D2 \), including cases where \( D1 \) is empty.</li>
+            <li><code>isPalindrome(A)</code>: Checks if substring \( A \) is a palindrome.</li>
+        </ul>
+        
+        <h4>Complexity:</h4>
+        <p>Each summarized letter combines with \( O(\log^2 n) \) double 90-drome factors, resulting in \( O(\log^3 n) \) total combinations across all summarized letters. Given that the number of summarized letters is \( O(1) \), the overall time complexity for this step is \( O(\log^3 n) \).</p>
+    </div>
+    
+    <div class="step">
+        <h3>Step 5: Determining Valid Factorizations</h3>
+        <p><strong>Objective:</strong> Aggregate all potential factorizations from previous steps and determine if any meet the quarter-turn factorization criteria.</p>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function determineValidFactorization(factorizations1, factorizations2):
+    // Step 5a: Aggregate All Valid Factorizations
+    allFactorizations = factorizations1.concat(factorizations2) // O(1) time
+    
+    // Step 5b: Check for Existence of Any Valid Factorization
+    if (allFactorizations.length > 0):
+        return {
+            hasFactorization: true,
+            factorizations: allFactorizations
+        }
+    else:
+        return {
+            hasFactorization: false,
+            factorizations: []
+        }
+        </code></pre>
+        
+        <h4>Function Descriptions:</h4>
+        <ul>
+            <li><code>concat</code>: Combines two arrays of factorizations into one.</li>
+            <li><code>hasFactorization</code>: Boolean flag indicating the existence of a valid factorization.</li>
+        </ul>
+        
+        <h4>Complexity:</h4>
+        <p>This step operates in \( O(\log^3 n) \) time, dominated by the aggregation and verification processes.</p>
+    </div>
+    
+    <div class="step">
+        <h3>Step 6: Main Function Execution</h3>
+        <p><strong>Objective:</strong> Execute all the steps in sequence to determine if \( W \) has a quarter-turn factorization.</p>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function hasQuarterTurnFactorization(W):
+    // Step 1: Preprocess Admissible Factors
+    organized = preprocessAdmissibleFactors(W) // O(n) time
+    palindromes = organized.palindromes
+    dromes = organized.dromes
+    start90Dromes = organized.start90Dromes
+    end90Dromes = organized.end90Dromes
+    
+    // Step 2: Extract Long Factors
+    longFactors = extractLongFactors(organized, W) // O(n) time
+    longDromes = longFactors.longDromes
+    summarizedLetters = longFactors.summarizedLetters
+    
+    // Step 3: Combine Long 90-Drome Factors
+    factorizations1 = combineLong90Dromes(W, organized, longDromes) // O(log^2 n) time
+    
+    // Step 4: Handle Large Palindromic Factors
+    factorizations2 = handleLargePalindromicFactors(W, organized, summarizedLetters) // O(log^3 n) time
+    
+    // Step 5: Determine Valid Factorizations
+    result = determineValidFactorization(factorizations1, factorizations2) // O(log^3 n) time
+    
+    return result // Contains hasFactorization flag and list of valid factorizations
+        </code></pre>
+        
+        <h4>Function Descriptions:</h4>
+        <ul>
+            <li><code>preprocessAdmissibleFactors(W)</code>: Executes Step 1 to identify and organize admissible factors.</li>
+            <li><code>extractLongFactors(organized, W)</code>: Executes Step 2 to extract long factors based on the pigeonhole principle.</li>
+            <li><code>combineLong90Dromes(W, organized, longDromes)</code>: Executes Step 3 to combine long 90-drome factors with adjacent factors.</li>
+            <li><code>handleLargePalindromicFactors(W, organized, summarizedLetters)</code>: Executes Step 4 to handle large palindromic factors.</li>
+            <li><code>determineValidFactorization(factorizations1, factorizations2)</code>: Executes Step 5 to determine the existence of valid factorizations.</li>
+        </ul>
+        
+        <h4>Overall Time Complexity:</h4>
+        <ul>
+            <li>Step 1: \( O(n) \)</li>
+            <li>Step 2: \( O(n) \)</li>
+            <li>Step 3: \( O(\log^2 n) \)</li>
+            <li>Step 4: \( O(\log^3 n) \)</li>
+            <li>Step 5: \( O(\log^3 n) \)</li>
+            <li><strong>Total:</strong> \( O(n + \log^3 n) = O(n) \) (since \( \log^3 n \) is dominated by \( n \))</li>
+        </ul>
+    </div>
+    
+    <h2>Supporting Functions and Detailed Explanations</h2>
+    
+    <div class="proof">
+        <h3>Function: isPalindrome(str)</h3>
+        <p><strong>Purpose:</strong> Check if a given string is a palindrome.</p>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function isPalindrome(str):
+    left = 0
+    right = str.length - 1
+    while left < right:
+        if str[left] != str[right]:
+            return false
+        left += 1
+        right -= 1
+    return true
+        </code></pre>
+        
+        <p><strong>Explanation:</strong> This function compares characters from both ends of the string moving towards the center. If all corresponding characters match, the string is a palindrome.</p>
+        
+        <h4>Complexity:</h4>
+        <p>Linear time \( O(m) \), where \( m \) is the length of the string being checked.</p>
+    </div>
+    
+    <div class="proof">
+        <h3>Function: is90Drome(word)</h3>
+        <p><strong>Purpose:</strong> Check if a given word is a 90-drome.</p>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function is90Drome(word):
+    n = word.length
+    for i from 0 to n - 1:
+        if word[i] != t90(word[n - i - 1]):
+            return false
+    return true
+        </code></pre>
+        
+        <p><strong>Explanation:</strong> A 90-drome requires that each character at position \( i \) is the 90-degree rotation of the character at position \( n - i - 1 \). This function verifies this condition for all positions.</p>
+        
+        <h4>Complexity:</h4>
+        <p>Linear time \( O(n) \), where \( n \) is the length of the word.</p>
+    </div>
+    
+    <div class="proof">
+        <h3>Function: getDoubleStartingDromes(start90Dromes, position)</h3>
+        <p><strong>Purpose:</strong> Retrieve all pairs \( D1D2 \) where \( D1 \) starts at the given position and \( D2 \) follows \( D1 \), including cases where \( D2 \) is empty.</p>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function getDoubleStartingDromes(start90Dromes, position):
+    doubleDromes = []
+    d1List = getStartingDromes(start90Dromes, position) // O(log n)
+    for each D1 in d1List: // O(log n)
+        for each D2 in getStartingDromes(start90Dromes, D1.end + 1): // O(log n)
+            doubleDromes.push({ D1: D1.substring, D2: D2.substring })
+    return doubleDromes // O(log^2 n) factors
+        </code></pre>
+        
+        <h4>Function Descriptions:</h4>
+        <ul>
+            <li><code>getStartingDromes(start90Dromes, position)</code>: Retrieves all admissible 90-drome factors starting at a given position.</li>
+        </ul>
+        
+        <h4>Complexity:</h4>
+        <p>Each call retrieves \( O(\log n) \) factors, resulting in \( O(\log^2 n) \) total factors per position.</p>
+    </div>
+    
+    <div class="proof">
+        <h3>Function: getDoubleEndingDromes(end90Dromes, position)</h3>
+        <p><strong>Purpose:</strong> Retrieve all pairs \( D1D2 \) where \( D2 \) ends at the given position and \( D1 \) precedes \( D2 \), including cases where \( D1 \) is empty.</p>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function getDoubleEndingDromes(end90Dromes, position):
+    doubleDromes = []
+    d2List = getEndingDromes(end90Dromes, position) // O(log n)
+    for each D2 in d2List: // O(log n)
+        for each D1 in getEndingDromes(end90Dromes, D2.start - 1): // O(log n)
+            doubleDromes.push({ D1: D1.substring, D2: D2.substring })
+    return doubleDromes // O(log^2 n) factors
+        </code></pre>
+        
+        <h4>Function Descriptions:</h4>
+        <ul>
+            <li><code>getEndingDromes(end90Dromes, position)</code>: Retrieves all admissible 90-drome factors ending at a given position.</li>
+        </ul>
+        
+        <h4>Complexity:</h4>
+        <p>Each call retrieves \( O(\log n) \) factors, resulting in \( O(\log^2 n) \) total factors per position.</p>
+    </div>
+    
+    <div class="proof">
+        <h3>Function: extractA(W, D1, D2)</h3>
+        <p><strong>Purpose:</strong> Extract the substring \( A \) based on the positions of \( D1 \) and \( D2 \).</p>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function extractA(W, D1, D2):
+    // Extracts the substring A before D1 and D2
+    // Assuming D1 and D2 are non-overlapping and properly positioned
+    startA = 0
+    endA = D1.start - 1
+    if (endA < 0):
+        endA += W.length
+    A = W.substring(startA, endA + 1)
+    return A
+        </code></pre>
+        
+        <h4>Explanation:</strong> This function calculates the substring \( A \) that precedes the 90-drome factors \( D1 \) and \( D2 \), ensuring proper extraction based on their positions.</h4>
+        
+        <h4>Complexity:</h4>
+        <p>Constant time \( O(1) \), as it involves simple substring extraction.</p>
+    </div>
+    
+    <div class="proof">
+        <h3>Function: getEndingDromes(end90Dromes, position)</h3>
+        <p><strong>Purpose:</strong> Retrieve all admissible 90-drome factors ending at a specified position.</p>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function getEndingDromes(end90Dromes, position):
+    n = end90Dromes.length
+    position = (position + n) % n // Handle circularity
+    return end90Dromes[position] || []
+        </code></pre>
+        
+        <h4>Explanation:</strong> This function ensures that the position wraps around correctly in the case of circular words and retrieves the list of 90-drome factors ending at that position.</h4>
+        
+        <h4>Complexity:</h4>
+        <p>Constant time \( O(1) \) for retrieval.</p>
+    </div>
+    
+    <div class="proof">
+        <h3>Function: getStartingDromes(start90Dromes, position)</h3>
+        <p><strong>Purpose:</strong> Retrieve all admissible 90-drome factors starting at a specified position.</p>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function getStartingDromes(start90Dromes, position):
+    n = start90Dromes.length
+    position = (position + n) % n // Handle circularity
+    return start90Dromes[position] || []
+        </code></pre>
+        
+        <h4>Explanation:</strong> Similar to <code>getEndingDromes</code>, this function retrieves 90-drome factors starting at a specified position, handling circularity appropriately.</h4>
+        
+        <h4>Complexity:</h4>
+        <p>Constant time \( O(1) \) for retrieval.</p>
+    </div>
+    
+    <div class="proof">
+        <h3>Function: getDoubleStartingDromes(start90Dromes, position)</h3>
+        <p><strong>Purpose:</strong> Retrieve all pairs \( D1D2 \) where \( D1 \) starts at the given position and \( D2 \) follows \( D1 \), including cases where \( D2 \) is empty.</p>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function getDoubleStartingDromes(start90Dromes, position):
+    doubleDromes = []
+    d1List = getStartingDromes(start90Dromes, position) // O(log n)
+    for each D1 in d1List: // O(log n)
+        for each D2 in getStartingDromes(start90Dromes, D1.end + 1): // O(log n)
+            doubleDromes.push({ D1: D1.substring, D2: D2.substring })
+    return doubleDromes // O(log^2 n) factors
+        </code></pre>
+        
+        <h4>Explanation:</strong> This function retrieves all possible pairs of 90-dromes where the first drome starts at the specified position and the second drome immediately follows the first.</h4>
+        
+        <h4>Complexity:</h4>
+        <p>The function operates in \( O(\log^2 n) \) time, as it handles \( O(\log n) \) factors for each of the two nested loops.</p>
+    </div>
+    
+    <div class="proof">
+        <h3>Function: getDoubleEndingDromes(end90Dromes, position)</h3>
+        <p><strong>Purpose:</strong> Retrieve all pairs \( D1D2 \) where \( D2 \) ends at the given position and \( D1 \) precedes \( D2 \), including cases where \( D1 \) is empty.</p>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function getDoubleEndingDromes(end90Dromes, position):
+    doubleDromes = []
+    d2List = getEndingDromes(end90Dromes, position) // O(log n)
+    for each D2 in d2List: // O(log n)
+        for each D1 in getEndingDromes(end90Dromes, D2.start - 1): // O(log n)
+            doubleDromes.push({ D1: D1.substring, D2: D2.substring })
+    return doubleDromes // O(log^2 n) factors
+        </code></pre>
+        
+        <h4>Explanation:</strong> This function retrieves all possible pairs of 90-dromes where the second drome ends at the specified position and the first drome immediately precedes the second.</h4>
+        
+        <h4>Complexity:</h4>
+        <p>The function operates in \( O(\log^2 n) \) time, similar to <code>getDoubleStartingDromes</code>.</p>
+    </div>
+    
+    <div class="proof">
+        <h3>Function: extractA(W, D1, D2)</h3>
+        <p><strong>Purpose:</strong> Extract the substring \( A \) based on the positions of \( D1 \) and \( D2 \).</p>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function extractA(W, D1, D2):
+    // Extracts the substring A before D1 and D2
+    // Assuming D1 and D2 are non-overlapping and properly positioned
+    startA = 0
+    endA = D1.start - 1
+    if (endA < 0):
+        endA += W.length
+    A = W.substring(startA, endA + 1)
+    return A
+        </code></pre>
+        
+        <h4>Explanation:</strong> This function calculates the substring \( A \) that precedes the 90-drome factors \( D1 \) and \( D2 \), ensuring proper extraction based on their positions.</h4>
+        
+        <h4>Complexity:</h4>
+        <p>Constant time \( O(1) \), as it involves simple substring extraction.</p>
+    </div>
+    
+    <div class="proof">
+        <h3>Function: getEndingDromes(end90Dromes, position)</h3>
+        <p><strong>Purpose:</strong> Retrieve all admissible 90-drome factors ending at a specified position.</p>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function getEndingDromes(end90Dromes, position):
+    n = end90Dromes.length
+    position = (position + n) % n // Handle circularity
+    return end90Dromes[position] || []
+        </code></pre>
+        
+        <h4>Explanation:</strong> This function ensures that the position wraps around correctly in the case of circular words and retrieves the list of 90-drome factors ending at that position.</h4>
+        
+        <h4>Complexity:</h4>
+        <p>Constant time \( O(1) \) for retrieval.</p>
+    </div>
+    
+    <div class="proof">
+        <h3>Function: getStartingDromes(start90Dromes, position)</h3>
+        <p><strong>Purpose:</strong> Retrieve all admissible 90-drome factors starting at a specified position.</p>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function getStartingDromes(start90Dromes, position):
+    n = start90Dromes.length
+    position = (position + n) % n // Handle circularity
+    return start90Dromes[position] || []
+        </code></pre>
+        
+        <h4>Explanation:</strong> Similar to <code>getEndingDromes</code>, this function retrieves 90-drome factors starting at a specified position, handling circularity appropriately.</h4>
+        
+        <h4>Complexity:</h4>
+        <p>Constant time \( O(1) \) for retrieval.</p>
+    </div>
+    
+    <div class="proof">
+        <h3>Function: getDoubleStartingDromes(start90Dromes, position)</h3>
+        <p><strong>Purpose:</strong> Retrieve all pairs \( D1D2 \) where \( D1 \) starts at the given position and \( D2 \) follows \( D1 \), including cases where \( D2 \) is empty.</p>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function getDoubleStartingDromes(start90Dromes, position):
+    doubleDromes = []
+    d1List = getStartingDromes(start90Dromes, position) // O(log n)
+    for each D1 in d1List: // O(log n)
+        for each D2 in getStartingDromes(start90Dromes, D1.end + 1): // O(log n)
+            doubleDromes.push({ D1: D1.substring, D2: D2.substring })
+    return doubleDromes // O(log^2 n) factors
+        </code></pre>
+        
+        <h4>Explanation:</strong> This function retrieves all possible pairs of 90-dromes where the first drome starts at the specified position and the second drome immediately follows the first.</h4>
+        
+        <h4>Complexity:</h4>
+        <p>The function operates in \( O(\log^2 n) \) time, as it handles \( O(\log n) \) factors for each of the two nested loops.</p>
+    </div>
+    
+    <div class="proof">
+        <h3>Function: getDoubleEndingDromes(end90Dromes, position)</h3>
+        <p><strong>Purpose:</strong> Retrieve all pairs \( D1D2 \) where \( D2 \) ends at the given position and \( D1 \) precedes \( D2 \), including cases where \( D1 \) is empty.</p>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function getDoubleEndingDromes(end90Dromes, position):
+    doubleDromes = []
+    d2List = getEndingDromes(end90Dromes, position) // O(log n)
+    for each D2 in d2List: // O(log n)
+        for each D1 in getEndingDromes(end90Dromes, D2.start - 1): // O(log n)
+            doubleDromes.push({ D1: D1.substring, D2: D2.substring })
+    return doubleDromes // O(log^2 n) factors
+        </code></pre>
+        
+        <h4>Explanation:</strong> This function retrieves all possible pairs of 90-dromes where the second drome ends at the specified position and the first drome immediately precedes the second.</h4>
+        
+        <h4>Complexity:</h4>
+        <p>The function operates in \( O(\log^2 n) \) time, similar to <code>getDoubleStartingDromes</code>.</p>
+    </div>
+    
+    <div class="proof">
+        <h3>Function: extractA(W, D1, D2)</h3>
+        <p><strong>Purpose:</strong> Extract the substring \( A \) based on the positions of \( D1 \) and \( D2 \).</p>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function extractA(W, D1, D2):
+    // Extracts the substring A before D1 and D2
+    // Assuming D1 and D2 are non-overlapping and properly positioned
+    startA = 0
+    endA = D1.start - 1
+    if (endA < 0):
+        endA += W.length
+    A = W.substring(startA, endA + 1)
+    return A
+        </code></pre>
+        
+        <h4>Explanation:</strong> This function calculates the substring \( A \) that precedes the 90-drome factors \( D1 \) and \( D2 \), ensuring proper extraction based on their positions.</h4>
+        
+        <h4>Complexity:</h4>
+        <p>Constant time \( O(1) \), as it involves simple substring extraction.</p>
+    </div>
+    
+    <div class="proof">
+        <h3>Function: getEndingDromes(end90Dromes, position)</h3>
+        <p><strong>Purpose:</strong> Retrieve all admissible 90-drome factors ending at a specified position.</p>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function getEndingDromes(end90Dromes, position):
+    n = end90Dromes.length
+    position = (position + n) % n // Handle circularity
+    return end90Dromes[position] || []
+        </code></pre>
+        
+        <h4>Explanation:</strong> This function ensures that the position wraps around correctly in the case of circular words and retrieves the list of 90-drome factors ending at that position.</h4>
+        
+        <h4>Complexity:</h4>
+        <p>Constant time \( O(1) \) for retrieval.</p>
+    </div>
+    
+    <div class="proof">
+        <h3>Function: getStartingDromes(start90Dromes, position)</h3>
+        <p><strong>Purpose:</strong> Retrieve all admissible 90-drome factors starting at a specified position.</p>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function getStartingDromes(start90Dromes, position):
+    n = start90Dromes.length
+    position = (position + n) % n // Handle circularity
+    return start90Dromes[position] || []
+        </code></pre>
+        
+        <h4>Explanation:</strong> Similar to <code>getEndingDromes</code>, this function retrieves 90-drome factors starting at a specified position, handling circularity appropriately.</h4>
+        
+        <h4>Complexity:</h4>
+        <p>Constant time \( O(1) \) for retrieval.</p>
+    </div>
+    
+    <div class="proof">
+        <h3>Function: getDoubleStartingDromes(start90Dromes, position)</h3>
+        <p><strong>Purpose:</strong> Retrieve all pairs \( D1D2 \) where \( D1 \) starts at the given position and \( D2 \) follows \( D1 \), including cases where \( D2 \) is empty.</p>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function getDoubleStartingDromes(start90Dromes, position):
+    doubleDromes = []
+    d1List = getStartingDromes(start90Dromes, position) // O(log n)
+    for each D1 in d1List: // O(log n)
+        for each D2 in getStartingDromes(start90Dromes, D1.end + 1): // O(log n)
+            doubleDromes.push({ D1: D1.substring, D2: D2.substring })
+    return doubleDromes // O(log^2 n) factors
+        </code></pre>
+        
+        <h4>Explanation:</strong> This function retrieves all possible pairs of 90-dromes where the first drome starts at the specified position and the second drome immediately follows the first.</h4>
+        
+        <h4>Complexity:</h4>
+        <p>The function operates in \( O(\log^2 n) \) time, as it handles \( O(\log n) \) factors for each of the two nested loops.</p>
+    </div>
+    
+    <div class="proof">
+        <h3>Function: getDoubleEndingDromes(end90Dromes, position)</h3>
+        <p><strong>Purpose:</strong> Retrieve all pairs \( D1D2 \) where \( D2 \) ends at the given position and \( D1 \) precedes \( D2 \), including cases where \( D1 \) is empty.</p>
+        
+        <h4>Pseudocode:</h4>
+        <pre><code>
+function getDoubleEndingDromes(end90Dromes, position):
+    doubleDromes = []
+    d2List = getEndingDromes(end90Dromes, position) // O(log n)
+    for each D2 in d2List: // O(log n)
+        for each D1 in getEndingDromes(end90Dromes, D2.start - 1): // O(log n)
+            doubleDromes.push({ D1: D1.substring, D2: D2.substring })
+    return doubleDromes // O(log^2 n) factors
+        </code></pre>
+        
+        <h4>Explanation:</strong> This function retrieves all possible pairs of 90-dromes where the second drome ends at the specified position and the first drome immediately precedes the second.</h4>
+        
+        <h4>Complexity:</h4>
+        <p>The function operates in \( O(\log^2 n) \) time, similar to <code>getDoubleStartingDromes</code>.</p>
+    </div>
+    
+    <h2>Conclusion</h2>
+    <p>The algorithm efficiently determines whether a boundary word \( W \) of a polyomino \( P \) possesses a valid quarter-turn factorization by systematically preprocessing admissible factors, leveraging the pigeonhole principle, and combining factors based on established lemmas. The use of Lemma 4.12 for preprocessing ensures rapid identification of maximal factors, while Lemmas 5.3, 5.4, and 5.8 guide the combination and verification processes, maintaining overall linear time complexity.</p>
+    
+    <p><strong>Final Note:</strong> While the pseudocode provided offers a clear structural representation, actual implementation may require further optimizations and handling of specific edge cases based on the exact definitions and properties of the polyomino tilings in question.</p>
+
+
+        </section>
+
+        <section id="folding">
+            <h2>Folding Tiles into Doubly-Covered Triangles</h2>
+            <p>In this phase, we explore how the identified isohedral tiles can be folded into simpler shapes, specifically doubly-covered triangles. This process involves manipulating the tiles to overlap parts of themselves, forming new shapes that can still tile the plane.</p>
+
+            <div class="definition">
+                <h2>Definition: Doubly-Covered Triangle</h2>
+                <p>A <strong>doubly-covered triangle</strong> is a configuration where two identical triangular shapes are overlaid on top of one another, typically formed by folding a tile.</p>
+            </div>
+
+            <!-- Placeholder for Illustration -->
+            <p><em>[Illustration of folding a tile into a doubly-covered triangle]</em></p>
+
+            <h3>Folding Algorithm</h3>
+            <p>The algorithm for folding involves:</p>
+            <ol>
+                <li><strong>Identifying fold lines:</strong> Determine where the tile can be folded without cutting.</li>
+                <li><strong>Executing the fold:</strong> Manipulate the tile along the fold lines to create overlapping regions.</li>
+                <li><strong>Verifying tiling capability:</strong> Ensure that the new shape can tile the plane without gaps or overlaps.</li>
+            </ol>
+
+            <h3>Applications</h3>
+            <p>Folding tiles into simpler shapes allows for the creation of new tiling patterns and can simplify the analysis of tiling capabilities. It also has implications in materials science for designing foldable structures.</p>
+
+            <!-- Placeholder for Illustration -->
+             
+            <p><em>[Illustration of tiling with the folded shape]</em></p>
+        </section>
+
+        <section id="poly_builder">
+            <h2>Polygon Builder</h2>
+            <p>Use the interactive grid below to create your own polyominoes, polyiamonds, or polyhexes and test the algorithms described above.</p>
+            <!-- Placeholder for Polygon Builder Interface -->
+            <div id="grid"></div>
+            <div id="controls">
+                <button id="submit-button" onclick="submitGrid()">Submit</button>
+                <button id="clear-button" onclick="clearGrid()">Clear</button>
+            </div>
+        </section>
+    </main>
+
+
+</body>
+</html>
