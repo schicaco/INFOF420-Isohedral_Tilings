@@ -166,3 +166,66 @@ label {
     border-color: #e57373;
     color: #d32f2f;
 }
+#table-of-contents {
+    background-color: #f7f7f7;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    width: 250px;
+}
+
+#table-of-contents h2 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+}
+
+#table-of-contents ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#table-of-contents ul li {
+    margin: 10px 0;
+}
+
+#table-of-contents ul li a {
+    text-decoration: none;
+    color: #3498db;
+    font-size: 1.1em;
+    transition: color 0.3s;
+}
+
+#table-of-contents ul li a:hover {
+    color: #2c3e50;
+    font-weight: bold;
+}
+
+/* Styling for active links */
+#table-of-contents ul li a.active {
+    color: #e74c3c;
+}
+
+/* Hover effect for list items */
+#table-of-contents ul li a:focus {
+    outline: 2px solid #e74c3c;
+    padding: 5px;
+}
+
+/* Styling for larger screens */
+@media (min-width: 768px) {
+    #table-of-contents {
+        width: 300px;
+    }
+}
+
+/* Scrollable content if ToC becomes long */
+#table-of-contents {
+    max-height: 80vh;
+    overflow-y: auto;
+}
