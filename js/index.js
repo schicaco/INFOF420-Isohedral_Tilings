@@ -6,6 +6,11 @@ function handlePolygonInput() {
 
     const word = new Word(htmlInput);
     let tiling = new Tiling(word);
+
+    // Check if fold symmetry is possible
+    const isSymmetryPossible = tiling.isFoldSymmetryPossible(90);
+    
+    // Compare the word input to a specific string, for example
     const specialCase = (htmlInput === "lurdrdldlulu");
 
     // Combine the results
