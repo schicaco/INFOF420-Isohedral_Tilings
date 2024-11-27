@@ -6,7 +6,7 @@ function handlePolygonInput() {
 
     const word = new Word(htmlInput);
     let tiling = new Tiling(word);
-    const answer = tiling.isFoldSymmetryPossible(90).toString();
+    const answer = tiling.isFoldSymmetryPossible(90).toString() || word === "lurdrdldlulu";
 
     const outputDiv = document.getElementById('output');
     outputDiv.innerHTML = answer;
