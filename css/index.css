@@ -1,85 +1,124 @@
+/* Global reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     line-height: 1.6;
     margin: 20px;
+    padding: 0;
+    color: #333;
 }
+
+/* Heading styles */
 h1, h2, h3, h4, h5 {
     color: #2E4053;
 }
-pre {
-    background-color: #F4F6F7;
-    padding: 10px;
-    border-radius: 5px;
-    overflow-x: auto;
-}
-code {
-    font-family: Consolas, monospace;
-}
-.lemma, .theorem {
-    background-color: #FCF3CF;
-    border-left: 6px solid #F7DC6F;
-    padding: 10px;
-    margin: 20px 0;
-}
-.proof {
-    background-color: #D6EAF8;
-    border-left: 6px solid #5DADE2;
-    padding: 10px;
-    margin: 20px 0;
-}
-.step {
-    margin-bottom: 30px;
-}
-.definition {
-    background-color: #FCF3CF;
-    border-left: 6px solid #F7DC6F;
-    padding: 10px;
+
+h1 {
+    text-align: center;
+    font-size: 36px;
     margin: 20px 0;
 }
 
-/* General styles for the section */
+h2 {
+    font-size: 28px;
+    margin: 20px 0;
+}
+
+h3 {
+    font-size: 24px;
+    margin: 20px 0;
+}
+
+h5 {
+    font-size: 20px;
+}
+
+/* List styles */
+ul, ol {
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+
+img {
+    max-width: 100%;
+    align-self: center;
+}
+
+/* Code block styling */
+pre {
+    background-color: #F4F6F7;
+    padding: 15px;
+    border-radius: 5px;
+    overflow-x: auto;
+    border-left: 3px solid #00796b;
+    margin-bottom: 20px;
+}
+
+code {
+    font-family: Consolas, monospace;
+}
+
+/* Box styles for lemmas, theorems, definitions, and proofs */
+.lemma, .theorem, .definition {
+    background-color: #FCF3CF;
+    border-left: 6px solid #F7DC6F;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.proof {
+    background-color: #D6EAF8;
+    border-left: 6px solid #5DADE2;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+/* Step styles */
+.step {
+    margin-bottom: 30px;
+}
+
+/* Polygon builder section */
 #polygon_builder {
     background-color: #fff;
     padding: 30px;
     margin: 40px auto;
-    max-width: 500px;
+    max-width: 600px;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    font-family: 'Arial', sans-serif;
-    color: #333;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 #polygon_builder h2 {
     text-align: center;
     font-size: 28px;
-    color: #333;
     margin-bottom: 20px;
+    color: #333;
 }
 
 label {
     font-size: 16px;
     font-weight: 600;
+    color: #555;
     margin-bottom: 8px;
     display: block;
-    color: #555;
 }
 
 #polygon_input {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     margin-bottom: 20px;
     font-size: 16px;
     border: 2px solid #ddd;
     border-radius: 5px;
     box-sizing: border-box;
-    transition: border-color 0.3s;
+    transition: border-color 0.3s ease;
 }
 
 #polygon_input:focus {
@@ -96,13 +135,14 @@ label {
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease;
 }
 
 #process_polygon:hover {
     background-color: #004d40;
 }
 
+/* Output section */
 #output {
     margin-top: 20px;
     padding: 15px;
