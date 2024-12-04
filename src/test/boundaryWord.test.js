@@ -94,12 +94,14 @@ describe('BoundaryWord Class', () => {
     describe('computePalindromes', () => {
         it('should compute palindromes for a word', () => {
             const word = 'abba';
-            expect(BoundaryWord.computePalindromes(word)).toEqual({
-                "aabb": [],
-                "abba": ["bb", "abba"],
-                "baab": ["aa", "baab"],
-                "bbaa": []
-            });
+            expect(BoundaryWord.computePalindromes(word)).toEqual(
+                {
+                    '0': [ 'aa', 'baab' ],
+                    '1': [ 'bb', 'abba' ],
+                    '2': [ 'bb', 'abba' ],
+                    '3': [ 'aa', 'baab' ]
+                }
+            );
         });
     });
 

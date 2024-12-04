@@ -48,31 +48,47 @@ class BoundaryWord extends Word {
      * @param {string} word - The word.
      * @returns {string[]} - Array of palindromic substrings.
      */
-    static computePalindrome(word) {
-        const palindromes = [];
-        const n = word.length;
-        let [left, right] = this.getCenter(word);
-
-        while (left >= 0 && right < n && word[left] === word[right]) {
-            palindromes.push(word.slice(left, right + 1));
-            left--;
-            right++;
+        static computePalindrome(word) {
+            const palindromes = [];
+            const n = word.length;
+            let [left, right] = this.getCenter(word);
+    
+            while (left >= 0 && right < n && word[left] === word[right]) {
+                palindromes.push(word.slice(left, right + 1));
+                left--;
+                right++;
+            }
+    
+            return palindromes;
         }
-
-        return palindromes;
-    }
 
     /**
      * Computes all palindromic substrings of shifted versions of the word.
      * @param {string} word - The word.
-     * @returns {Object} - Object mapping shifted words to their palindromes.
+     * @returns {Object} - Object mapping center indices to their palindromes.
      */
     static computePalindromes(word) {
         const palindromes = {};
+        const n = word.length;
+
+        const center = this.getCenter(word);
+
         for (let i = 0; i < word.length; i++) {
             const shiftedWord = this.shiftWord(word, i);
-            palindromes[shiftedWord] = this.computePalindrome(shiftedWord);
+            const palindrome = this.computePalindrome(shiftedWord);
+
+            let left = (center[0] + i) % n;
+            let right = (center[1] + i) % n;
+            
+            palindromes[left] = palindromes[left] || [];
+            palindromes[left].push(...palindrome);
+
+            if (left !== right) {
+                palindromes[right] = palindromes[right] || [];
+                palindromes[right].push(...palindrome);
+            }
         }
+
         return palindromes;
     }
 
