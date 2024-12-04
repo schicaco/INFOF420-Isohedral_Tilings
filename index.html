@@ -19,6 +19,7 @@
                     <li><a href="#symmetries">Symmetries in Tilings</a></li>
                     <li><a href="#algo">Quarter-Turn Factorization Algorithm</a></li>
                     <li><a href="#conclusion">Conclusion</a></li>
+                    <li><a href="#appendix">Appendix</a></li>
                 </ul>
             </nav>
             
@@ -399,7 +400,25 @@
         
                 <p><strong>Complexity: </strong>Each iteration over the long 90-drome factors is \( O(1) \), and the handling of adjacent factors involves logarithmic time for accessing the stored admissible 90-dromes, yielding an overall complexity of \( O(\log^2 n) \).</p>
             </div>
-            
+
+            <section>
+                <h3 id="conclusion">Conclusion</h3>
+                <p>The algorithm efficiently determines whether a boundary word \( W \) of a polyomino \( P \) possesses a valid quarter-turn factorization by systematically preprocessing admissible factors, leveraging the pigeonhole principle, and combining factors based on established lemmas. The use of Lemma 4.12 for preprocessing ensures rapid identification of maximal factors, while Lemmas 5.3, 5.4, and 5.8 guide the combination and verification processes, maintaining overall linear time complexity.</p>
+    
+                <p><strong>Final Note:</strong> While the pseudocode provided offers a clear structural representation, actual implementation may require further optimizations and handling of specific edge cases based on the exact definitions and properties of the polyomino tilings in question.</p>
+            </section>
+            <section id="polygon_builder">
+                    <h2>Process Polygon</h2>
+                    <label for="polygon_input">Enter polygon:</label>
+                    <input type="text" id="polygon_input" placeholder="rrdllu"/>
+                    <button id="process_polygon">Process polygon</button>
+                    <div id="output"></div>
+                </section>
+
+            </section>
+
+        <section>
+            <h2 id="appendix"> Appendix </h2>
             <h3>Supporting Functions and Detailed Explanations</h3>
 
             <div class="proof">
@@ -537,22 +556,7 @@
 
                 <p><strong>Complexity: </strong>Constant time \( O(1) \) for retrieval.</p>
             </div>
-
-            <section>
-                <h3 id="conclusion">Conclusion</h3>
-                <p>The algorithm efficiently determines whether a boundary word \( W \) of a polyomino \( P \) possesses a valid quarter-turn factorization by systematically preprocessing admissible factors, leveraging the pigeonhole principle, and combining factors based on established lemmas. The use of Lemma 4.12 for preprocessing ensures rapid identification of maximal factors, while Lemmas 5.3, 5.4, and 5.8 guide the combination and verification processes, maintaining overall linear time complexity.</p>
-    
-                <p><strong>Final Note:</strong> While the pseudocode provided offers a clear structural representation, actual implementation may require further optimizations and handling of specific edge cases based on the exact definitions and properties of the polyomino tilings in question.</p>
-            </section>
-            <section id="polygon_builder">
-                    <h2>Process Polygon</h2>
-                    <label for="polygon_input">Enter polygon:</label>
-                    <input type="text" id="polygon_input" placeholder="rrdllu"/>
-                    <button id="process_polygon">Process polygon</button>
-                    <div id="output"></div>
-                </section>
-
-            </section>
+        </section>
 
         <section id="references">
             <h2>References</h2>
