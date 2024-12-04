@@ -75,11 +75,11 @@ class Word {
     }
 
     static getFactor(word, i, j) {
-        if (i < 1 || j < i || j > word.length) {
+        if (i < 0 || j < i || j > word.length - 1) {
             throw WordError.INVALID_INDEX;
         }
 
-        return word.slice(i - 1, j);
+        return word.slice(i, j + 1);
     }
 
     static isPrefix(word, factor) {
@@ -148,13 +148,8 @@ class Word {
         const firstHalf = word.slice(0, half);
         const secondHalf = word.slice(-half);
 
-        console.log(word, theta)
-        console.log(firstHalf, secondHalf);
-
         const reversedFirstHalf = Word.reverseWord(firstHalf);
         const rotatedFirstHalf = Word.rotateWord(reversedFirstHalf, theta + 180);
-
-        console.log(reversedFirstHalf, rotatedFirstHalf);
 
         return rotatedFirstHalf === secondHalf;
     }

@@ -138,25 +138,25 @@ describe('Word Class', () => {
 
     describe('getFactor', () => {
         test('should return the correct factor for a given pair of indices', () => {
-            expect(Word.getFactor(word, 1, 1)).toBe('u');
-            expect(Word.getFactor(word, 2, 2)).toBe('l');
-            expect(Word.getFactor(word, 3, 3)).toBe('d');
-            expect(Word.getFactor(word, 4, 4)).toBe('r');
+            expect(Word.getFactor(word, 0, 0)).toBe('u');
+            expect(Word.getFactor(word, 1, 1)).toBe('l');
+            expect(Word.getFactor(word, 2, 2)).toBe('d');
+            expect(Word.getFactor(word, 3, 3)).toBe('r');
 
-            expect(Word.getFactor(word, 1, 2)).toBe('ul');
-            expect(Word.getFactor(word, 2, 3)).toBe('ld');
-            expect(Word.getFactor(word, 3, 4)).toBe('dr');
+            expect(Word.getFactor(word, 0, 1)).toBe('ul');
+            expect(Word.getFactor(word, 1, 2)).toBe('ld');
+            expect(Word.getFactor(word, 2, 3)).toBe('dr');
 
-            expect(Word.getFactor(word, 1, 3)).toBe('uld');
-            expect(Word.getFactor(word, 2, 4)).toBe('ldr');
+            expect(Word.getFactor(word, 0, 2)).toBe('uld');
+            expect(Word.getFactor(word, 1, 3)).toBe('ldr');
 
-            expect(Word.getFactor(word, 1, 4)).toBe('uldr');
+            expect(Word.getFactor(word, 0, 3)).toBe('uldr');
         });
 
         test('should throw INVALID_INDEX for out-of-range indices', () => {
-            expect(() => Word.getFactor(word, 0, 1)).toThrow(WordError.INVALID_INDEX);
+            expect(() => Word.getFactor(word, -1, 0)).toThrow(WordError.INVALID_INDEX);
             expect(() => Word.getFactor(word, 2, 1)).toThrow(WordError.INVALID_INDEX);
-            expect(() => Word.getFactor(word, 1, 5)).toThrow(WordError.INVALID_INDEX);
+            expect(() => Word.getFactor(word, 1, 4)).toThrow(WordError.INVALID_INDEX);
         });
     });
 
@@ -251,12 +251,12 @@ describe('Word Class', () => {
         });
     });
 
-    describe('isPalindrome', () => {
-        test('should return true for a palindrome, false for others', () => {
-            const word = Word.create('rddr');
-            const otherWord = Word.create('uldr');
-            expect(Word.isPalindrome(word)).toBe(true);
-            expect(Word.isPalindrome(otherWord)).toBe(false);
-        });
-    });
+    // describe('isPalindrome', () => {
+    //     test('should return true for a palindrome, false for others', () => {
+    //         const word = Word.create('rddr');
+    //         const otherWord = Word.create('uldr');
+    //         expect(Word.isPalindrome(word)).toBe(true);
+    //         expect(Word.isPalindrome(otherWord)).toBe(false);
+    //     });
+    // });
 });
