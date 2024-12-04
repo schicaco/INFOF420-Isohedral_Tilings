@@ -134,6 +134,32 @@ class BoundaryWord extends Word {
 
         return thetadromes;
     }
+
+    static extractLongThetaDromes(word, thetadromes) {
+        const n = word.length;
+        const longThetadromes = {};
+    
+        for (const key in thetadromes) {
+            const values = thetadromes[key];
+            for (const index in values) {
+                const substrings = values[index];
+                substrings.forEach(substring => {
+                    if (substring.length >= n / 3) {
+                        // Initialize key if not already present
+                        if (!longThetadromes[key]) {
+                            longThetadromes[key] = [];
+                        }
+                        // Avoid duplicates
+                        if (!longThetadromes[key].includes(substring)) {
+                            longThetadromes[key].push(substring);
+                        }
+                    }
+                });
+            }
+        }
+    
+        return longThetadromes;
+    }
 }
 
 export default BoundaryWord;
