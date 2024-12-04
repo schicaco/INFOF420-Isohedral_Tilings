@@ -1,36 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INFO-F-420 Project</title>
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script type="module" src="js/index.js"></script>
-    <link rel="stylesheet" href="css/index.css">
-</head>
-<body>
-    <header>
-        <h1>Isohedral Tilings & Folding Tiles</h1>
-        <p>by Sofia Chica Cobo, Alban Linchet Martinez, Zoé Moeremans</p>
-        <div style="text-align: center;">
-            <img src="images/tiling1.png" alt="An example of tiling pattern with rotational symmetry" width="30%">
-        </div>
-
-        <nav id="table-of-contents">
-            <h2>Table of Contents</h2>
-            <ul>
-                <li><a href="#intro">Introduction</a></li>
-                <li><a href="#core-concepts">Core Concepts</a></li>
-                <li><a href="#symmetries">Symmetries in Tilings</a></li>
-                <li><a href="#algo">Quarter-Turn Factorization Algorithm</a></li>
-
-            </ul>
-        </nav>
-
-    </header>
-    <main>
-        <section>
-            <h2 id="intro">Introduction</h2>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>INFO-F-420 Project</title>
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script type="module" src="js/index.js"></script>
+        <link rel="stylesheet" href="css/index.css">
+    </head>
+    <body>   
+        <!-- Wrapper for the layout -->
+        <div id="content-wrapper">
+            <nav id="table-of-contents">
+                <h2>Table of Contents</h2>
+                <ul>
+                    <li><a href="#intro">Introduction</a></li>
+                    <li><a href="#core-concepts">Core Concepts</a></li>
+                    <li><a href="#symmetries">Symmetries in Tilings</a></li>
+                    <li><a href="#algo">Quarter-Turn Factorization Algorithm</a></li>
+                    <li><a href="#conclusion">Conclusion</a></li>
+                </ul>
+            </nav>
+            
+            <main>
+                <header>
+                
+                    <h1>Isohedral Tilings & Folding Tiles</h1>
+                    <p>by Sofia Chica Cobo, Alban Linchet Martinez, Zoé Moeremans</p>
+                    <div style="text-align: center;">
+                        <img src="images/tiling1.png" alt="An example of tiling pattern with rotational symmetry" width="30%">
+                    </div>
+                </header>
+                <section>
+                    <h2 id="intro">Introduction</h2>
             <p>
                 In the world of geometry, tiling refers to the process of covering a surface with a pattern of shapes, called tiles, without gaps or overlaps.
                 One fascinating type of tiling is <strong>isohedral tiling</strong>, where all tiles in the pattern are identical in shape. This project delves into
@@ -536,17 +538,20 @@
                 <p><strong>Complexity: </strong>Constant time \( O(1) \) for retrieval.</p>
             </div>
 
-            <h3>Conclusion</h3>
-            <p>The algorithm efficiently determines whether a boundary word \( W \) of a polyomino \( P \) possesses a valid quarter-turn factorization by systematically preprocessing admissible factors, leveraging the pigeonhole principle, and combining factors based on established lemmas. The use of Lemma 4.12 for preprocessing ensures rapid identification of maximal factors, while Lemmas 5.3, 5.4, and 5.8 guide the combination and verification processes, maintaining overall linear time complexity.</p>
+            <section>
+                <h3 id="conclusion">Conclusion</h3>
+                <p>The algorithm efficiently determines whether a boundary word \( W \) of a polyomino \( P \) possesses a valid quarter-turn factorization by systematically preprocessing admissible factors, leveraging the pigeonhole principle, and combining factors based on established lemmas. The use of Lemma 4.12 for preprocessing ensures rapid identification of maximal factors, while Lemmas 5.3, 5.4, and 5.8 guide the combination and verification processes, maintaining overall linear time complexity.</p>
+    
+                <p><strong>Final Note:</strong> While the pseudocode provided offers a clear structural representation, actual implementation may require further optimizations and handling of specific edge cases based on the exact definitions and properties of the polyomino tilings in question.</p>
+            </section>
+            <section id="polygon_builder">
+                    <h2>Process Polygon</h2>
+                    <label for="polygon_input">Enter polygon:</label>
+                    <input type="text" id="polygon_input" placeholder="rrdllu"/>
+                    <button id="process_polygon">Process polygon</button>
+                    <div id="output"></div>
+                </section>
 
-            <p><strong>Final Note:</strong> While the pseudocode provided offers a clear structural representation, actual implementation may require further optimizations and handling of specific edge cases based on the exact definitions and properties of the polyomino tilings in question.</p>
-        </section>
-        <section id="polygon_builder">
-                <h2>Process Polygon</h2>
-                <label for="polygon_input">Enter polygon:</label>
-                <input type="text" id="polygon_input" placeholder="rrdllu"/>
-                <button id="process_polygon">Process polygon</button>
-                <div id="output"></div>
             </section>
 
         <section id="references">
