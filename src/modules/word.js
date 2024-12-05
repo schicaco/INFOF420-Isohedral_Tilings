@@ -1,5 +1,6 @@
 import { DIRECTION, ROTATION } from "../constants";
-import WordError from "../core/wordError";
+import { WordError } from "../core/error";
+import Factor from "../modules/factor";
 
 class Word {
     /**
@@ -9,18 +10,9 @@ class Word {
      * @throws {WordError} - If the word is invalid.
      */
     static create(word) {
-        if (typeof word !== 'string') {
-            throw WordError.INVALID_TYPE;
-        }
-
-        if (word.length < 4) {
-            throw WordError.INVALID_LENGTH;
-        }
-
-        if (!Word.isValidWord(word)) {
-            throw WordError.INVALID_WORD;
-        }
-
+        if (typeof word !== "string") throw WordError.INVALID_TYPE;
+        if (word.length < 4) throw WordError.INVALID_LENGTH;
+        if (!this.isValidWord(word)) throw WordError.INVALID_WORD;
         return word;
     }
 
@@ -30,8 +22,31 @@ class Word {
      * @returns {boolean} - True if the word is valid, false otherwise.
      */
     static isValidWord(word) {
-        const validDirections = Object.values(DIRECTION);
-        return [...word].every(char => validDirections.includes(char));
+        const validDirections = new Set(Object.values(DIRECTION));
+        return [...word].every(char => validDirections.has(char));
+    }
+
+    /**
+     * Checks if the word has an even length.
+     * @param {string} word - The word to check.
+     * @returns {boolean} - True if the word length is even, false otherwise.
+     */
+    static isEvenLength(word) {
+        return word.length % 2 === 0;
+    }
+
+    /**
+     * Gets the center indices of the word.
+     * @param {string} word - The word.
+     * @returns {Factor} - Factor representing the center of the word.
+     */
+    static getCenter(word) {
+        const mid = Math.floor(word.length / 2);
+        if (this.isEvenLength(word)) {
+            return new Factor(word, mid - 1, mid);
+        } else {
+            return new Factor(word, mid, mid);
+        }
     }
 
     /**
@@ -42,13 +57,9 @@ class Word {
      * @throws {WordError} - If the index is invalid.
      */
     static getLetter(word, index) {
-        const length = word.length;
-        index = index < 0 ? length + index : index;
-
-        if (index < 0 || index >= length) {
-            throw WordError.INVALID_INDEX;
-        }
-        return word[index];
+        const adjustedIndex = index < 0 ? word.length + index : index;
+        if (adjustedIndex < 0 || adjustedIndex >= word.length) throw WordError.INVALID_INDEX;
+        return word[adjustedIndex];
     }
 
     /**
@@ -59,15 +70,10 @@ class Word {
      * @throws {WordError} - If the angle or letter is invalid.
      */
     static rotateLetter(letter, theta) {
-        if (theta % 90 !== 0) {
-            throw WordError.INVALID_ANGLE;
-        }
-
-        if (!ROTATION[letter]) {
-            throw WordError.INVALID_LETTER;
-        }
-
-        return ROTATION[letter][(theta % 360 + 360) % 360];
+        theta = theta % 360;
+        if (theta % 90 !== 0) throw WordError.INVALID_ANGLE;
+        if (!ROTATION[letter]) throw WordError.INVALID_LETTER;
+        return ROTATION[letter][theta];
     }
 
     /**
@@ -77,13 +83,7 @@ class Word {
      * @returns {string} - The rotated word.
      */
     static rotateWord(word, theta) {
-        if (theta % 90 !== 0) {
-            throw WordError.INVALID_ANGLE;
-        }
-
-        return [...word]
-            .map(letter => Word.rotateLetter(letter, theta))
-            .join('');
+        return [...word].map(letter => this.rotateLetter(letter, theta)).join("");
     }
 
     /**
@@ -92,7 +92,7 @@ class Word {
      * @returns {string} - The complemented letter.
      */
     static complementLetter(letter) {
-        return Word.rotateLetter(letter, 180);
+        return this.rotateLetter(letter, 180);
     }
 
     /**
@@ -101,9 +101,7 @@ class Word {
      * @returns {string} - The complemented word.
      */
     static complementWord(word) {
-        return [...word]
-            .map(letter => Word.complementLetter(letter))
-            .join('');
+        return [...word].map(letter => this.complementLetter(letter)).join("");
     }
 
     /**
@@ -112,7 +110,7 @@ class Word {
      * @returns {string} - The reversed word.
      */
     static reverseWord(word) {
-        return [...word].reverse().join('');
+        return [...word].reverse().join("");
     }
 
     /**
@@ -121,10 +119,10 @@ class Word {
      * @returns {string} - The backtracked word.
      */
     static backtrackWord(word) {
-        return [...word]
-            .reverse()
-            .map(letter => Word.complementLetter(letter))
-            .join('');
+        const reversedWord = this.reverseWord(word);
+        const complementedWord = this.complementWord(reversedWord);
+
+        return complementedWord;
     }
 
     /**
@@ -132,95 +130,39 @@ class Word {
      * @param {string} word - The word.
      * @param {number} i - Start index.
      * @param {number} j - End index.
-     * @returns {string} - The extracted factor.
-     * @throws {WordError} - If indices are invalid.
+     * @returns {Factor} - The extracted factor.
      */
     static getFactor(word, i, j) {
-        if (i < 0 || j < i || j >= word.length) {
-            throw WordError.INVALID_INDEX;
-        }
-
-        return word.slice(i, j + 1);
+        return new Factor(word, i, j);
     }
 
     /**
-     * Determines whether the factor is a prefix of the word.
+     * Determines if the factor is a prefix of the word.
      * @param {string} word - The word.
-     * @param {string} factor - The factor to check.
+     * @param {Factor} factor - The factor to check.
      * @returns {boolean} - True if the factor is a prefix.
      */
     static isPrefix(word, factor) {
-        return word.startsWith(factor);
+        return word.startsWith(factor.value);
     }
 
     /**
-     * Determines whether the factor is a suffix of the word.
+     * Determines if the factor is a suffix of the word.
      * @param {string} word - The word.
-     * @param {string} factor - The factor to check.
+     * @param {Factor} factor - The factor to check.
      * @returns {boolean} - True if the factor is a suffix.
      */
     static isSuffix(word, factor) {
-        return word.endsWith(factor);
+        return word.endsWith(factor.value);
     }
 
     /**
-     * Determines whether the factor is an affix (prefix or suffix) of the word.
+     * Determines whether the word is a palindrome.
      * @param {string} word - The word.
-     * @param {string} factor - The factor to check.
-     * @returns {boolean} - True if the factor is an affix.
+     * @returns {boolean} - True if the word is a palindrome.
      */
-    static isAffix(word, factor) {
-        return Word.isPrefix(word, factor) || Word.isSuffix(word, factor);
-    }
-
-    /**
-     * Determines whether the factor is a middle substring (not an affix) of the word.
-     * @param {string} word - The word.
-     * @param {string} factor - The factor to check.
-     * @returns {boolean} - True if the factor is a middle substring.
-     */
-    static isMiddle(word, factor) {
-        return !Word.isAffix(word, factor);
-    }
-
-    /**
-     * Finds the center character(s) of the word.
-     * @param {string} word - The word.
-     * @returns {string} - The center character(s).
-     */
-    static findCenter(word) {
-        const mid = Math.floor(word.length / 2);
-        return word.length % 2 === 0
-            ? word.slice(mid - 1, mid + 1)
-            : word.charAt(mid);
-    }
-
-    /**
-     * Determines whether the factor is the center of the word.
-     * @param {string} word - The word.
-     * @param {string} factor - The factor to check.
-     * @returns {boolean} - True if the factor is the center.
-     */
-    static isCenter(word, factor) {
-        return Word.findCenter(word) === factor;
-    }
-
-    /**
-     * Determines whether the factor is a period of the word.
-     * @param {string} word - The word.
-     * @param {string} factor - The factor to check.
-     * @returns {boolean} - True if the factor is a period.
-     */
-    static isPeriod(word, factor) {
-        const wordLength = word.length;
-        const factorLength = factor.length;
-
-        if (wordLength % factorLength === 0) {
-            const repeatedFactor = factor.repeat(wordLength / factorLength);
-            return repeatedFactor === word;
-        }
-
-        return false;
+    static isPalindrome(word) {
+        return word === this.reverseWord(word);
     }
 
     /**
@@ -229,9 +171,9 @@ class Word {
      * @returns {boolean} - True if the word is composite.
      */
     static isComposite(word) {
-        for (let i = 1; i <= word.length / 2; i++) {
-            const subword = word.slice(0, i);
-            if (Word.isPeriod(word, subword)) {
+        const length = word.length;
+        for (let i = 1; i <= length / 2; i++) {
+            if (length % i === 0 && word.slice(0, i).repeat(length / i) === word) {
                 return true;
             }
         }
@@ -244,15 +186,14 @@ class Word {
      * @returns {boolean} - True if the word is primitive.
      */
     static isPrimitive(word) {
-        return !Word.isComposite(word);
+        return !this.isComposite(word);
     }
 
     /**
-     * Determines whether the word is a theta-drome for a given angle.
+     * Determines whether the word is a theta-drome.
      * @param {string} word - The word.
      * @param {number} theta - The rotation angle.
      * @returns {boolean} - True if the word is a theta-drome.
-     * @throws {WordError} - If the angle is invalid.
      */
     static isThetaDrome(word, theta) {
         theta = (theta % 360 + 360) % 360;

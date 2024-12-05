@@ -1,4 +1,4 @@
-class WordError extends Error {
+export class WordError extends Error {
     constructor(message) {
         super(message);
         this.name = 'WordError';
@@ -27,14 +27,23 @@ class WordError extends Error {
     static get INVALID_ANGLE() {
         return 'Invalid angle';
     }
-
-    static get INVALID_REPETITION() {
-        return 'Invalid repetition';
-    }
-
-    static get INVALID_PARENTHESIS() {
-        return 'Invalid parenthesis';
-    }
 }
 
-export default WordError;
+export class FactorError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'FactorError';
+    }
+
+    static get INVALID_TYPE() {
+        return 'Invalid type';
+    }
+
+    static get INVALID_INDICES() {
+        return 'Invalid indices';
+    }
+
+    static get DISJOINT_FACTORS() {
+        return 'Disjoint factors';
+    }
+}

@@ -1,4 +1,6 @@
 import Word from './word';
+import Factor from './factor';
+import { FactorError } from '../core/error';
 
 class BoundaryWord extends Word {
     /**
@@ -11,82 +13,76 @@ class BoundaryWord extends Word {
     }
 
     /**
-     * Checks if the word has an even length.
-     * @param {string} word - The word to check.
-     * @returns {boolean} - True if the word length is even, false otherwise.
-     */
-    static isEvenLength(word) {
-        return word.length % 2 === 0;
-    }
-
-    /**
-     * Gets the center indices of the word.
-     * @param {string} word - The word.
-     * @returns {number[]} - Array of center indices.
-     */
-    static getCenter(word) {
-        const mid = Math.floor(word.length / 2);
-        return this.isEvenLength(word) ? [mid - 1, mid] : [mid, mid];
-    }
-
-    /**
      * Shifts the word by the specified number of positions.
      * @param {string} word - The word to shift.
      * @param {number} shift - The number of positions to shift.
      * @returns {string} - The shifted word.
      */
     static shiftWord(word, shift) {
+        if (typeof shift !== "number" || !Number.isInteger(shift)) {
+            throw FactorError.INVALID_TYPE;
+        }
         const length = word.length;
-        if (length === 0 || shift % length === 0) return word; // No change needed for empty strings or zero shifts
+        if (length === 0 || shift % length === 0) return word;
 
         shift = ((shift % length) + length) % length; // Normalize shift
         return word.slice(-shift) + word.slice(0, -shift);
     }
 
     /**
-     * Computes all palindromic substrings expanding from the center of the word.
-     * @param {string} word - The word.
-     * @returns {string[]} - Array of palindromic substrings.
+     * Computes the longest theta-dromes for shifted versions of the word starting at each index.
+     * @param {string} word - The input word.
+     * @returns {Object} - An object mapping indices to the longest theta-drome.
      */
-        static computePalindrome(word) {
-            const palindromes = [];
-            const n = word.length;
-            let [left, right] = this.getCenter(word);
-    
-            while (left >= 0 && right < n && word[left] === word[right]) {
-                palindromes.push(word.slice(left, right + 1));
-                left--;
-                right++;
-            }
-    
-            return palindromes;
-        }
-
-    /**
-     * Computes all palindromic substrings of shifted versions of the word.
-     * @param {string} word - The word.
-     * @returns {Object} - Object mapping center indices to their palindromes.
-     */
-    static computePalindromes(word) {
+    static computePalindromesStartingAt(word) {
         const palindromes = {};
         const n = word.length;
 
-        const center = this.getCenter(word);
-
-        for (let i = 0; i < word.length; i++) {
+        for (let i = 0; i < n; i++) {
             const shiftedWord = this.shiftWord(word, i);
-            const palindrome = this.computePalindrome(shiftedWord);
 
-            let left = (center[0] + i) % n;
-            let right = (center[1] + i) % n;
-            
-            palindromes[left] = palindromes[left] || [];
-            palindromes[left].push(...palindrome);
+            let longestPalindrome = ""; // Keep track of the longest palindrome for this shift
 
-            if (left !== right) {
-                palindromes[right] = palindromes[right] || [];
-                palindromes[right].push(...palindrome);
+            for (let j = 1; j < n; j++) { // Substrings of length 1 to n
+                const factor = new Factor(shiftedWord, 0, j);
+
+                if (Word.isPalindrome(factor.value) && factor.length > longestPalindrome.length) {
+                    longestPalindrome = factor;
+                }
             }
+
+            // Store the longest palindrome for this shift index
+            palindromes[i] = longestPalindrome;
+        }
+
+        return palindromes;
+    }
+
+    /**
+     * Computes the longest theta-dromes for shifted versions of the word ending at each index.
+     * @param {string} word - The input word.
+     * @returns {Object} - An object mapping indices to the longest theta-drome.
+     */
+    static computePalindromesEndingAt(word) {
+        const palindromes = {};
+        const n = word.length;
+
+        for (let i = 0; i < n; i++) {
+            const shiftedWord = this.shiftWord(word, i);
+            const index = n - i;
+
+            let longestPalindrome = ""; // Keep track of the longest palindrome for this ending index
+
+            for (let j = 1; j < n; j++) { // Substrings ending at `n - 1`
+                const factor = new Factor(shiftedWord, j, n - 1);
+
+                if (Word.isPalindrome(factor.value) && factor.length > longestPalindrome.length) {
+                    longestPalindrome = factor;
+                }
+            }
+
+            // Store the longest palindrome for this ending index
+            palindromes[index] = longestPalindrome;
         }
 
         return palindromes;
@@ -94,8 +90,8 @@ class BoundaryWord extends Word {
 
     /**
      * Computes theta-dromes for shifted versions of the word starting at each index.
-     * @param {string} word - The word.
-     * @returns {Object} - Object mapping shifted words to theta-drome results.
+     * @param {string} word - The input word.
+     * @returns {Object} - An object mapping indices to arrays of theta-dromes.
      */
     static computeThetaDromesStartingAt(word) {
         const thetadromes = {};
@@ -106,10 +102,10 @@ class BoundaryWord extends Word {
             thetadromes[i] = [];
 
             for (let j = 0; j < n; j++) {
-                const substring = Word.getFactor(shiftedWord, 0, j);
+                const factor = Word.getFactor(shiftedWord, 0, j);
 
-                if (Word.isThetaDrome(substring, 90)) {
-                    thetadromes[i].push(substring);
+                if (Word.isThetaDrome(factor.value, 90)) {
+                    thetadromes[i].push(factor);
                 }
             }
 
@@ -121,23 +117,23 @@ class BoundaryWord extends Word {
 
     /**
      * Computes theta-dromes for shifted versions of the word ending at each index.
-     * @param {string} word - The word.
-     * @returns {Object} - Object mapping shifted words to theta-drome results.
+     * @param {string} word - The input word.
+     * @returns {Object} - An object mapping indices to arrays of theta-dromes.
      */
     static computeThetaDromesEndingAt(word) {
         const thetadromes = {};
         const n = word.length;
-        
+
         for (let i = 0; i < n; i++) {
             const shiftedWord = this.shiftWord(word, i);
             const index = n - i - 1;
             thetadromes[index] = [];
-    
+
             for (let j = 0; j < n; j++) {
-                const substring = Word.getFactor(shiftedWord, j, n - 1);
-    
-                if (Word.isThetaDrome(substring, 90)) {
-                    thetadromes[index].push(substring);
+                const factor = Word.getFactor(shiftedWord, j, n - 1);
+
+                if (Word.isThetaDrome(factor.value, 90)) {
+                    thetadromes[index].push(factor);
                 }
             }
 
@@ -148,19 +144,19 @@ class BoundaryWord extends Word {
     }
 
     /**
-     * Extracts factors with length greater than or equal to the specified minimum length.
-     * @param {number} n - The minimum length of dromes to include.
+     * Filters factors with length greater than or equal to the specified minimum length.
+     * @param {number} wordLength - Minimum length of factors to include.
      * @param {Object} factors - An object mapping indices to arrays of factors.
-     * @returns {Object} - Object mapping indices to arrays of long dromes.
+     * @returns {Object} - Filtered factors.
      */
-    static extractLongFactors(n, factors) {
+    static extractLongFactors(wordLength, factors) {
         const longFactors = {};
 
         for (const index in factors) {
             longFactors[index] = [];
 
             for (const factor of factors[index]) {
-                if (factor.length >= n/3) {
+                if (factor.length >= wordLength/3) {
                     longFactors[index].push(factor);
                 }
             }
