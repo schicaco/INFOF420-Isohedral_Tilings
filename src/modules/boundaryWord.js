@@ -93,66 +93,29 @@ class BoundaryWord extends Word {
     }
 
     /**
-     * Computes theta-dromes starting at each position in the word.
-     * @param {string} word - The word.
-     * @returns {Object} - Object mapping start indices to theta-drome substrings.
-     */
-    static computeThetaDromeStartingAt(word) {
-        const thetadromes = {};
-        const n = word.length;
-
-        for (let i = 0; i < n; i++) {
-            const substrings = [];
-
-            for (let j = i; j < n; j++) {
-                const substring = Word.getFactor(word, i, j);
-                if (Word.isThetaDrome(substring, 90)) {
-                    substrings.push(substring);
-                }
-            }
-
-            thetadromes[i] = substrings.sort((a, b) => a.length - b.length);
-        }
-
-        return thetadromes;
-    }
-
-    /**
-     * Computes theta-dromes ending at each position in the word.
-     * @param {string} word - The word.
-     * @returns {Object} - Object mapping end indices to theta-drome substrings.
-     */
-    static computeThetaDromeEndingAt(word) {
-        const thetadromes = {};
-        const n = word.length;
-
-        for (let i = 0; i < n; i++) {
-            const substrings = [];
-
-            for (let j = 0; j <= i; j++) {
-                const substring = Word.getFactor(word, j, i);
-                if (Word.isThetaDrome(substring, 90)) {
-                    substrings.push(substring);
-                }
-            }
-
-            thetadromes[i] = substrings.sort((a, b) => a.length - b.length);
-        }
-
-        return thetadromes;
-    }
-
-    /**
      * Computes theta-dromes for shifted versions of the word starting at each index.
      * @param {string} word - The word.
      * @returns {Object} - Object mapping shifted words to theta-drome results.
      */
     static computeThetaDromesStartingAt(word) {
         const thetadromes = {};
-        for (let i = 0; i < word.length; i++) {
+        const n = word.length;
+
+        for (let i = 0; i < n; i++) {
             const shiftedWord = this.shiftWord(word, i);
-            thetadromes[shiftedWord] = this.computeThetaDromeStartingAt(shiftedWord);
+            thetadromes[i] = [];
+
+            for (let j = 0; j < n; j++) {
+                const substring = Word.getFactor(shiftedWord, 0, j);
+
+                if (Word.isThetaDrome(substring, 90)) {
+                    thetadromes[i].push(substring);
+                }
+            }
+
+            thetadromes[i].sort((a, b) => a.length - b.length);
         }
+
         return thetadromes;
     }
 
@@ -163,44 +126,25 @@ class BoundaryWord extends Word {
      */
     static computeThetaDromesEndingAt(word) {
         const thetadromes = {};
-        for (let i = 0; i < word.length; i++) {
+        const n = word.length;
+        
+        for (let i = 0; i < n; i++) {
             const shiftedWord = this.shiftWord(word, i);
-            thetadromes[shiftedWord] = this.computeThetaDromeEndingAt(shiftedWord);
+            const index = n - i - 1;
+            thetadromes[index] = [];
+    
+            for (let j = 0; j < n; j++) {
+                const substring = Word.getFactor(shiftedWord, j, n - 1);
+    
+                if (Word.isThetaDrome(substring, 90)) {
+                    thetadromes[index].push(substring);
+                }
+            }
+
+            thetadromes[index].sort((a, b) => a.length - b.length);
         }
+
         return thetadromes;
-    }
-
-    /**
-     * Extracts long theta-dromes from the computed results.
-     * @param {string} word - The word.
-     * @param {Object} thetadromes - Theta-drome results to filter.
-     * @returns {Object} - Object containing long theta-dromes.
-     */
-    static extractLongThetaDromes(word, thetadromes) {
-        const longThetadromes = {};
-        const minLength = Math.ceil(word.length / 3);
-
-        for (const [key, values] of Object.entries(thetadromes)) {
-            if (typeof values !== 'object') continue; // Skip if values is not iterable
-
-            // Ensure values[index] is iterable (e.g., array)
-            Object.entries(values).forEach(([index, substrings]) => {
-                if (!Array.isArray(substrings)) return; // Skip non-array values
-
-                substrings.forEach(substring => {
-                    if (substring.length >= minLength) {
-                        if (!longThetadromes[key]) {
-                            longThetadromes[key] = [];
-                        }
-                        if (!longThetadromes[key].includes(substring)) {
-                            longThetadromes[key].push(substring);
-                        }
-                    }
-                });
-            });
-        }
-
-        return longThetadromes;
     }
 }
 

@@ -71,111 +71,71 @@ describe('BoundaryWord Class', () => {
         });
     });
 
-    describe('computePalindrome', () => {
-        it('should return the correct palindrome for an odd-length word', () => {
+    describe('computePalindrome method', () => {
+        it('should return an empty array for an empty word', () => {
+            expect(BoundaryWord.computePalindrome('')).toEqual([]);
+        });
+
+        it('should return an array of palindromic substrings', () => {
             const word = 'racecar';
             const palindromes = BoundaryWord.computePalindrome(word);
             expect(palindromes).toEqual(['e', 'cec', 'aceca', 'racecar']);
         });
+    });
 
-        it('should return the correct palindromes for an even-length word', () => {
-            const word = 'abba';
-            const palindromes = BoundaryWord.computePalindrome(word);
-            expect(palindromes).toEqual(['bb', 'abba']);
+    describe('computePalindromes method', () => {
+        it('should return an empty set for an empty word', () => {
+            expect(BoundaryWord.computePalindromes('')).toEqual({});
         });
 
-        it('should return an empty array if no palindrome is found', () => {
-            const word = 'abcd';
-            const palindromes = BoundaryWord.computePalindrome(word);
-            expect(palindromes).toEqual([]);
+        it('should return a set of palindromes for each center of the word', () => {
+            const word = 'kayak';
+            const palindromes = BoundaryWord.computePalindromes(word);
+            expect(palindromes).toEqual({
+                0: ['k'],
+                1: ['a'],
+                2: ['y', 'aya', 'kayak'],
+                3: ['a'],
+                4: ['k']
+            });
         });
     });
 
-    describe('computePalindromes', () => {
-        it('should compute palindromes for a word', () => {
-            const word = 'abba';
-            expect(BoundaryWord.computePalindromes(word)).toEqual(
+    describe('computeThetaDromesStartingAt method', () => {
+        it('should return an empty set for an empty word', () => {
+            expect(BoundaryWord.computeThetaDromesStartingAt('')).toEqual({});
+        });
+
+        it('should return a set of 90-dromes starting at each letter i', () => {
+            const word = 'ulur';
+            const thetadromes = BoundaryWord.computeThetaDromesStartingAt(word);
+            expect(thetadromes).toEqual(
                 {
-                    '0': [ 'aa', 'baab' ],
-                    '1': [ 'bb', 'abba' ],
-                    '2': [ 'bb', 'abba' ],
-                    '3': [ 'aa', 'baab' ]
+                    "0": ["ulur"],
+                    "1": [],
+                    "2": ["ur"],
+                    "3": ["lu", "luru"]
                 }
             );
         });
     });
 
-    describe('computeThetaDromeStartingAt', () => {
-        it('should return an object containing the correct 90-dromes', () => {
-            const word = 'urur';
-            const thetadromes = BoundaryWord.computeThetaDromeStartingAt(word);
-            expect(thetadromes).toHaveProperty('0'); // Should contain an entry for index 0
-            expect(thetadromes).toEqual({
-                "0": ["ur"],
-                "1": [],
-                "2": ["ur"],
-                "3": [],
-            });
+    describe('computeThetaDromesEndingAt method', () => {
+        it('should return an empty set for an empty word', () => {
+            expect(BoundaryWord.computeThetaDromesEndingAt('')).toEqual({});
         });
 
-        it('should handle edge cases like empty strings', () => {
-            const word = '';
-            const thetadromes = BoundaryWord.computeThetaDromeStartingAt(word);
-            expect(thetadromes).toEqual({});
-        });
-    });
-
-    describe('computeThetaDromeEndingAt', () => {
-        it('should return an object containing the correct 90-dromes', () => {
-            const word = 'urur';
-            const thetadromes = BoundaryWord.computeThetaDromeEndingAt(word);
-            expect(thetadromes).toHaveProperty('0'); // Should contain an entry for index 0
-            expect(thetadromes).toEqual({
-                "0": [],
-                "1": ["ur"],
-                "2": [],
-                "3": ["ur"],
-            });
-        });
-
-        it('should handle edge cases like empty strings', () => {
-            const word = '';
-            const thetadromes = BoundaryWord.computeThetaDromeEndingAt(word);
-            expect(thetadromes).toEqual({});
-        });
-    });
-
-    describe("extractLongThetaDromes", () => {
-        it('should return the correct long theta-drome', () => {
-            const word = 'urur';
-            const thetadromes = BoundaryWord.computeThetaDromesStartingAt(word);
-            const longThetaDrome = BoundaryWord.extractLongThetaDromes(word, thetadromes);
-            expect(longThetaDrome).toEqual({
-                "ruru": ["ur"],
-                "urur": [ "ur"]
-            });
-        });
-
-        it('should return the correct long theta-drome', () => {
-            const word = 'urur';
+        it('should return a set of 90-dromes ending at each letter i', () => {
+            const word = 'ulur';
             const thetadromes = BoundaryWord.computeThetaDromesEndingAt(word);
-            const longThetaDrome = BoundaryWord.extractLongThetaDromes(word, thetadromes);
-            expect(longThetaDrome).toEqual({
-                "ruru": [ "ur"],
-                "urur": ["ur"],
-            });
-        });
-
-        it('should return an empty string if no long theta-drome is found', () => {
-            const thetadromes = BoundaryWord.computeThetaDromesStartingAt(word);
-            const longThetaDrome = BoundaryWord.extractLongThetaDromes(word, thetadromes);
-            expect(longThetaDrome).toEqual({});
-        });
-
-        it('should return an empty string if no long theta-drome is found', () => {
-            const thetadromes = BoundaryWord.computeThetaDromesEndingAt(word);
-            const longThetaDrome = BoundaryWord.extractLongThetaDromes(word, thetadromes);
-            expect(longThetaDrome).toEqual({});
+            expect(thetadromes).toEqual(
+                {
+                    "0": ["luru"],
+                    "1": [],
+                    "2": ["lu"],
+                    "3": [ "ur", "ulur"],
+                }
+            );
         });
     });
 });
