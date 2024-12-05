@@ -19,7 +19,6 @@
                     <li><a href="#symmetries">Symmetries in Tilings</a></li>
                     <li><a href="#algo">Quarter-Turn Factorization Algorithm</a></li>
                     <li><a href="#conclusion">Conclusion</a></li>
-                    <li><a href="#appendix">Appendix</a></li>
                 </ul>
             </nav>
             
@@ -265,81 +264,126 @@
         </section>
         <section>
             <h2 id="algo">Quarter-Turn Factorization Algorithm</h2>
-            <p>This document outlines a step-by-step algorithm to determine whether a given boundary word \( W \) of a polyomino \( P \) can be factored into a <strong>quarter-turn factorization</strong>[1] of the form:</p>
-            <blockquote>
-                <p>\( W = A \cdot D_1 \cdot D_2 \)</p>
-                <ul>
-                    <li><strong>A</strong> is a <em>palindrome</em>.</li>
-                    <li><strong>D₁</strong> and <strong>D₂</strong> are <em>90-dromes</em> (substrings exhibiting symmetry under a 90-degree rotation).</li>
-                </ul>
-            </blockquote>
-        
-            <p>The algorithm leverages several lemmas to preprocess \( W \), identify admissible factors, and verify potential factorizations efficiently within \( O(n) \) time complexity, where \( n = |W| \).</p>
         
             <div class="step">
-                <h3>Step 1: Preprocessing Admissible Factors</h3>
-                <p><strong>Objective:</strong> Identify all admissible <em>palindromic</em> and <em>90-drome</em> factors within the boundary word \( W \) efficiently.</p>
+                <h3>Step 1: Computing Admissible Factors</h3>
+                <p>For each letter \( W[i] \), construct a length-sorted list of the admissible 90-dromes that start at \( W[i] \); do the same for those that end at \( W[i] \). Also construct similar lists of the admissible palindromes.</p>
         
-                <div class="lemma">
-                    <h4>Lemma 4.12</h4>
-                    <p><em>Two circular words \( X \) and \( Y \) can be preprocessed in \( O(|X| + |Y|) \) time to support the following queries in \( O(1) \)-time: What is the longest common factor of \( X \) and \( Y \) starting at \( X[i] \) and \( Y[j] \)?</em></p>
+                <div class="proof">
+                    <h5>Function: <code>isThetaDrome(word)</code></h5>
+                    <pre><code>
+        function isThetaDrome(word, theta):
+            firstHalf, secondHalf <- split(word)
+        
+            firstHalf = reverse(firstHalf)
+            firstHalf = rotate(firstHalf, theta + 180)
+        
+            return firstHalf == secondHalf
+                    </code></pre>
                 </div>
         
-                <p><strong>Explanation:</strong> This lemma allows us to preprocess two circular words so that we can quickly determine the longest common substring (factor) starting at any given positions in both words. This is crucial for efficiently identifying maximal palindromic and 90-drome factors.</p>
+                <div class="proof">
+                    <h5>Function: <code>isPalindrome(word)</code></h5>
+                    <pre><code>
+        function isPalindrome(word):
+            return isThetaDrome(word, 180)
+                    </code></pre>
+                </div>
         
-                <pre><code>
-        function preprocessAdmissibleFactors(W):
-            // Step 1a: Preprocess Palindromic Factors
-            palindromes = preprocessPalindromes(W) // O(n) time
+                <div class="proof">
+                    <h5>Functions: <code>computeLongestPalindromes</code></h5>
+                    <pre><code>
+        // Step 1a: Compute Longest Palindromes Starting at Each Position
+        function computeLongestPalindromesStartingAt(word):
+            palindromes = {}
+            n = len(word)
         
-            // Step 1b: Preprocess 90-Drome Factors
-            dromes = preprocess90Dromes(W) // O(n) time
+            for i in range(n):
+                longestPalindrome = ""
+                for j in range(i, n):
+                    substring = word[i:j+1]
+                    if isPalindrome(substring) and len(substring) > len(longestPalindrome):
+                        longestPalindrome = substring
+                palindromes[i] = longestPalindrome
         
-            // Step 1c: Organize Factors into Sorted Lists
-            organized = organizeFactors(W, palindromes, dromes) // O(n) time
+            return palindromes
         
-            return organized
-                </code></pre>
+        // Step 1a: Compute Longest Palindromes Ending at Each Position
+        function computeLongestPalindromesEndingAt(word):
+            palindromes = {}
+            n = len(word)
         
-                <p><strong>Function Descriptions: </strong>
-                    <ul>
-                        <li><code>preprocessPalindromes(W)</code>: Utilizes Lemma 4.12 to preprocess \( W \) and its reflection \( \widetilde{W} \) to enable \( O(1) \)-time queries for the longest palindromic substrings centered at any position.</li>
-                        <li><code>preprocess90Dromes(W)</code>: Applies Lemma 4.12 to preprocess \( W \) and its 90-degree rotated version \( t_{90}(\widetilde{W}) \) to facilitate \( O(1) \)-time queries for the longest 90-drome substrings starting at any position.</li>
-                        <li><code>organizeFactors(W, palindromes, dromes)</code>: Organizes the identified palindromic and 90-drome factors into length-sorted lists based on their starting and ending positions.</li>
-                    </ul>
-                </p>
+            for i in range(n):
+                longestPalindrome = ""
+                for j in range(0, i+1):
+                    substring = word[j:i+1]
+                    if isPalindrome(substring) and len(substring) > len(longestPalindrome):
+                        longestPalindrome = substring
+                palindromes[i] = longestPalindrome
         
-                <p><strong>Complexity: </strong>Each sub-step operates in linear time \( O(n) \), ensuring that the overall preprocessing step remains efficient.</p>
+            return palindromes
+                    </code></pre>
+                </div>
+        
+                <div class="proof">
+                    <h5>Functions: <code>compute90Dromes</code></h5>
+                    <pre><code>
+        // Step 1b: Compute 90-Dromes Starting at Each Position
+        function compute90DromesStartingAt(word):
+            thetadromes = {}
+            n = len(word)
+        
+            for i in range(n):
+                thetadromes[i] = []
+                for j in range(i, n):
+                    substring = word[i:j+1]
+                    if isThetaDrome(substring, 90):
+                        thetadromes[i].append(substring)
+                thetadromes[i].sort(key=len)
+        
+            return thetadromes
+        
+        // Step 1b: Compute 90-Dromes Ending at Each Position
+        function compute90DromesEndingAt(word):
+            thetadromes = {}
+            n = len(word)
+        
+            for i in range(n):
+                index = n - i - 1
+                thetadromes[index] = []
+                for j in range(0, index+1):
+                    substring = word[j:index+1]
+                    if isThetaDrome(substring, 90):
+                        thetadromes[index].append(substring)
+                thetadromes[index].sort(key=len)
+        
+            return thetadromes
+                    </code></pre>
+                </div>
             </div>
         
             <div class="step">
-                <h3>Step 2: Extracting Long Factors Using the Pigeonhole Principle</h3>
-                <p><strong>Objective:</strong> Utilize the pigeonhole principle to identify that any valid quarter-turn factorization must contain at least one <em>long factor</em> (length ≥ \( \frac{n}{3} \)).</p>
+                <h3>Step 2: Extracting Long Factors</h3>
         
                 <div class="lemma">
                     <h4>Lemma 5.4</h4>
                     <p><em>There are \( O(1) \) admissible long 90-drome factors (length ≥ \( \frac{|W|}{3} \)).</em></p>
                 </div>
         
-                <pre><code>
-        function extractLongFactors(organized, W):
-            // Step 2a: Extract Long 90-Drome Factors (Lemma 5.4)
-            longDromes = extractLong90Dromes(organized.dromes) // O(1) time
+                <div class="proof">
+                    <h5>Function: <code>extractLongFactors(wordLength, factors)</code></h5>
+                    <pre><code>
+        function extractLongFactors(wordLength, factors):
+            longFactors = {}
         
-            // Step 2b: Summarize Long Palindromic Factors (Lemma 5.3)
-            summarizedLetters = summarizeLongPalindromes(organized.palindromes) // O(n) time
+            for index in factors:
+                longFactors[index] = [
+                    factor for factor in factors[index] if len(factor) >= wordLength / 3
+                ]
         
-            return { longDromes, summarizedLetters }
-                </code></pre>
-        
-                <p><strong>Function Descriptions: </strong>
-                    <ul>
-                        <li><code>extractLong90Dromes(dromes)</code>: Extracts the \( O(1) \) long 90-drome factors based on Lemma 5.4.</li>
-                        <li><code>summarizeLongPalindromes(palindromes)</code>: Summarizes long palindromic factors into a compact set of letters as per Lemma 5.3.</li>
-                    </ul>
-                </p>
-        
-                <p><strong>Complexity: </strong>The extraction of long 90-drome factors operates in constant time \( O(1) \), while summarizing long palindromic factors operates in linear time \( O(n) \).</p>
+            return longFactors
+                    </code></pre>
+                </div>
             </div>
         
             <div class="step">
@@ -350,212 +394,10 @@
                     <h4>Lemma 5.8</h4>
                     <p><em>If \( P \) is a polyomino with \( B(P) = ABC \), where \( A \) is a palindrome and \( B, C \) are 90-dromes, then \( A, B, C \) are admissible.</em></p>
                 </div>
-        
-                <pre><code>
-        function combineLong90Dromes(W, organized, longDromes):
-            validFactorizations = []
-            n = W.length
-        
-            for each d in longDromes: // O(1) iterations
-                i = d.start
-                j = d.end
-        
-                // Step 3a: Combine with 90-dromes ending at i-1
-                prevPos = (i - 1 + n) % n
-                endingDromes = getEndingDromes(organized.end90Dromes, prevPos) // O(log n) factors
-                for each D₁ in endingDromes: // O(log n)
-                    A = extractA(W, D₁, d) // O(1) time
-                    if isPalindrome(A): // O(1) time
-                        validFactorizations.push({ A: A, D₁: D₁.substring, D₂: d.substring })
-        
-                // Step 3b: Combine with 90-dromes starting at j+1
-                nextPos = (j + 1) % n
-                startingDromes = getStartingDromes(organized.start90Dromes, nextPos) // O(log n) factors
-                for each D₂ in startingDromes: // O(log n)
-                    A = extractA(W, d, D₂) // O(1) time
-                    if isPalindrome(A): // O(1) time
-                        validFactorizations.push({ A: A, D₁: d.substring, D₂: D₂.substring })
-        
-                // Step 3c: Handle cases where D₂ is empty
-                A_emptyD₂ = W.substring(0, i) // A before D₁
-                if isPalindrome(A_emptyD₂): // O(1) time
-                    validFactorizations.push({ A: A_emptyD₂, D₁: d.substring, D₂: "" })
-        
-                // Step 3d: Handle cases where D₁ is empty
-                A_emptyD₁ = W.substring(0, j + 1) // A before D₂
-                if isPalindrome(A_emptyD₁): // O(1) time
-                    validFactorizations.push({ A: A_emptyD₁, D₁: "", D₂: d.substring })
-        
-            return validFactorizations // Total O(log^2 n) time
-                </code></pre>
-        
-                <p><strong>Function Descriptions: </strong>
-                    <ul>
-                        <li><code>getEndingDromes(organized.end90Dromes, prevPos)</code>: Retrieves admissible 90-dromes ending at the specified position \( prevPos \) in the boundary word \( W \).</li>
-                        <li><code>getStartingDromes(organized.start90Dromes, nextPos)</code>: Retrieves admissible 90-dromes starting at the specified position \( nextPos \) in the boundary word \( W \).</li>
-                        <li><code>extractA(W, D₁, D₂)</code>: Extracts the potential palindromic factor \( A \) from the boundary word \( W \) based on the positions of \( D₁ \) and \( D₂ \).</li>
-                        <li><code>isPalindrome(A)</code>: Verifies if the extracted substring \( A \) is a palindrome.</li>
-                    </ul>
-                </p>
-        
-                <p><strong>Complexity: </strong>Each iteration over the long 90-drome factors is \( O(1) \), and the handling of adjacent factors involves logarithmic time for accessing the stored admissible 90-dromes, yielding an overall complexity of \( O(\log^2 n) \).</p>
             </div>
-
-            <section>
-                <h3 id="conclusion">Conclusion</h3>
-                <p>The algorithm efficiently determines whether a boundary word \( W \) of a polyomino \( P \) possesses a valid quarter-turn factorization by systematically preprocessing admissible factors, leveraging the pigeonhole principle, and combining factors based on established lemmas. The use of Lemma 4.12 for preprocessing ensures rapid identification of maximal factors, while Lemmas 5.3, 5.4, and 5.8 guide the combination and verification processes, maintaining overall linear time complexity.</p>
-    
-                <p><strong>Final Note:</strong> While the pseudocode provided offers a clear structural representation, actual implementation may require further optimizations and handling of specific edge cases based on the exact definitions and properties of the polyomino tilings in question.</p>
-            </section>
-            <section id="polygon_builder">
-                    <h2>Process Polygon</h2>
-                    <label for="polygon_input">Enter polygon:</label>
-                    <input type="text" id="polygon_input" placeholder="rrdllu"/>
-                    <button id="process_polygon">Process polygon</button>
-                    <div id="output"></div>
-                </section>
-
-            </section>
-
-        <section>
-            <h2 id="appendix"> Appendix </h2>
-            <h3>Supporting Functions and Detailed Explanations</h3>
-
-            <div class="proof">
-                <h5>Function: isPalindrome(str)</h5>
-                <p><strong>Purpose:</strong> Check if a given string is a palindrome.</p>
-                
-                <pre><code>
-            function isPalindrome(str):
-                left = 0
-                right = str.length - 1
-                while left < right:
-                    if str[left] != str[right]:
-                        return false
-                    left += 1
-                    right -= 1
-                return true
-                </code></pre>
-
-                <p><strong>Explanation:</strong> This function compares characters from both ends of the string moving towards the center. If all corresponding characters match, the string is a palindrome.</p>
-
-                <p><strong>Complexity: </strong>Linear time \( O(m) \), where \( m \) is the length of the string being checked.</p>
-            </div>
-
-            <div class="proof">
-                <h5>Function: is90Drome(word)</h5>
-                <p><strong>Purpose:</strong> Check if a given word is a 90-drome.</p>
-                
-                <pre><code>
-            function is90Drome(word):
-                n = word.length
-                for i from 0 to n - 1:
-                    if word[i] != t90(word[n - i - 1]):
-                        return false
-                return true
-                </code></pre>
-
-                <p><strong>Explanation:</strong> A 90-drome requires that each character at position \( i \) is the 90-degree rotation of the character at position \( n - i - 1 \). This function verifies this condition for all positions.</p>
-
-                <p><strong>Complexity: </strong>Linear time \( O(n) \), where \( n \) is the length of the word.</p>
-            </div>
-
-            <div class="proof">
-                <h5>Function: getDoubleStartingDromes(start90Dromes, position)</h5>
-                <p><strong>Purpose:</strong> Retrieve all pairs \( D₁D₂ \) where \( D₁ \) starts at the given position and \( D₂ \) follows \( D₁ \), including cases where \( D₂ \) is empty.</p>
-                
-                <pre><code>
-            function getDoubleStartingDromes(start90Dromes, position):
-                doubleDromes = []
-                D₁List = getStartingDromes(start90Dromes, position) // O(log n)
-                for each D₁ in D₁List: // O(log n)
-                    for each D₂ in getStartingDromes(start90Dromes, D₁.end + 1): // O(log n)
-                        doubleDromes.push({ D₁: D₁.substring, D₂: D₂.substring })
-                return doubleDromes // O(log^2 n) factors
-                </code></pre>
-
-                <p><strong>Function Descriptions: </strong>
-                    <ul>
-                        <li><code>getStartingDromes(start90Dromes, position)</code>: Retrieves all admissible 90-drome factors starting at a given position.</li>
-                    </ul>
-                </p>
-
-                <p><strong>Complexity: </strong>Each call retrieves \( O(\log n) \) factors, resulting in \( O(\log^2 n) \) total factors per position.</p>
-            </div>
-
-            <div class="proof">
-                <h5>Function: getDoubleEndingDromes(end90Dromes, position)</h5>
-                <p><strong>Purpose:</strong> Retrieve all pairs \( D₁D₂ \) where \( D₂ \) ends at the given position and \( D₁ \) precedes \( D₂ \), including cases where \( D₁ \) is empty.</p>
-
-                <pre><code>
-            function getDoubleEndingDromes(end90Dromes, position):
-                doubleDromes = []
-                D₂List = getEndingDromes(end90Dromes, position) // O(log n)
-                for each D₂ in D₂List: // O(log n)
-                    for each D₁ in getEndingDromes(end90Dromes, D₂.start - 1): // O(log n)
-                        doubleDromes.push({ D₁: D₁.substring, D₂: D₂.substring })
-                return doubleDromes // O(log^2 n) factors
-                </code></pre>
-
-                <p><strong>Function Descriptions: </strong>
-                    <ul>
-                        <li><code>getEndingDromes(end90Dromes, position)</code>: Retrieves all admissible 90-drome factors ending at a given position.</li>
-                    </ul>
-                </p>
-
-                <p><strong>Complexity: </strong>Each call retrieves \( O(\log n) \) factors, resulting in \( O(\log^2 n) \) total factors per position.</p>
-            </div>
-
-            <div class="proof">
-                <h5>Function: extractA(W, D₁, D₂)</h5>
-                <p><strong>Purpose:</strong> Extract the substring \( A \) based on the positions of \( D₁ \) and \( D₂ \).</p>
-
-                <pre><code>
-            function extractA(W, D₁, D₂):
-                startA = 0
-                endA = D₁.start - 1
-                if (endA < 0):
-                    endA += W.length
-                A = W.substring(startA, endA + 1)
-                return A
-                </code></pre>
-
-                <p><strong>Explanation: </strong>This function calculates the substring \( A \) that precedes the 90-drome factors \( D₁ \) and \( D₂ \), ensuring proper extraction based on their positions.</p>
-
-                <p><strong>Complexity: </strong>Constant time \( O(1) \), as it involves simple substring extraction.</p>
-            </div>
-
-            <div class="proof">
-                <h5>Function: getEndingDromes(end90Dromes, position)</h5>
-                <p><strong>Purpose:</strong> Retrieve all admissible 90-drome factors ending at a specified position.</p>
-
-                <pre><code>
-            function getEndingDromes(end90Dromes, position):
-                n = end90Dromes.length
-                position = (position + n) % n // Handle circularity
-                return end90Dromes[position] || []
-                </code></pre>
-
-                <p><strong>Explanation: </strong>This function ensures that the position wraps around correctly in the case of circular words and retrieves the list of 90-drome factors ending at that position.</p>
-
-                <p><strong>Complexity: </strong>Constant time \( O(1) \) for retrieval.</p>
-            </div>
-
-            <div class="proof">
-                <h5>Function: getStartingDromes(start90Dromes, position)</h5>
-                <p><strong>Purpose:</strong> Retrieve all admissible 90-drome factors starting at a specified position.</p>
-
-                <pre><code>
-            function getStartingDromes(start90Dromes, position):
-                n = start90Dromes.length
-                position = (position + n) % n // Handle circularity
-                return start90Dromes[position] || []
-                </code></pre>
-
-                <p><strong>Explanation: </strong>Similar to <code>getEndingDromes</code>, this function retrieves 90-drome factors starting at a specified position, handling circularity appropriately.</p>
-
-                <p><strong>Complexity: </strong>Constant time \( O(1) \) for retrieval.</p>
-            </div>
+        
+            <h3 id="conclusion">Conclusion</h3>
+            <p>The algorithm efficiently determines whether a boundary word \( W \) of a polyomino \( P \) possesses a valid quarter-turn factorization by systematically preprocessing admissible factors, leveraging the pigeonhole principle, and combining factors based on established lemmas. The use of Lemma 4.12 for preprocessing ensures rapid identification of maximal factors, while Lemmas 5.3, 5.4, and 5.8 guide the combination and verification processes, maintaining overall linear time complexity.</p>
         </section>
 
         <section id="references">

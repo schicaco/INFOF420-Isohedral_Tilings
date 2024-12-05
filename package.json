@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "js/src/core/index.js",
   "scripts": {
-    "start": "open public/index.html",
+    "start": "open index.html",
     "test": "jest"
   },
   "author": "Zoé Moeremans",
