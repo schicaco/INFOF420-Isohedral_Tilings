@@ -111,10 +111,10 @@ describe('BoundaryWord Class', () => {
             const thetadromes = BoundaryWord.computeThetaDromesStartingAt(word);
             expect(thetadromes).toEqual(
                 {
-                    "0": ["ulur"],
-                    "1": [],
-                    "2": ["ur"],
-                    "3": ["lu", "luru"]
+                    0: ["ulur"],
+                    1: [],
+                    2: ["ur"],
+                    3: ["lu", "luru"]
                 }
             );
         });
@@ -130,12 +130,35 @@ describe('BoundaryWord Class', () => {
             const thetadromes = BoundaryWord.computeThetaDromesEndingAt(word);
             expect(thetadromes).toEqual(
                 {
-                    "0": ["luru"],
-                    "1": [],
-                    "2": ["lu"],
-                    "3": [ "ur", "ulur"],
+                    0: ["luru"],
+                    1: [],
+                    2: ["lu"],
+                    3: [ "ur", "ulur"],
                 }
             );
+        });
+    });
+
+    describe('extractLongFactors method', () => {
+        it('should return an empty set for an empty word', () => {
+            expect(BoundaryWord.extractLongFactors(0, {})).toEqual({});
+        });
+
+        it('should return a set of long factors for a word', () => {
+            const factors = {
+                0: ["ulur"],
+                1: ["l"],
+                2: ["u"],
+                3: ["luru"],
+            };
+
+            const longFactors = BoundaryWord.extractLongFactors(4, factors);
+            expect(longFactors).toEqual({
+                0: ["ulur"],
+                1: [],
+                2: [],
+                3: ["luru"],
+            });
         });
     });
 });

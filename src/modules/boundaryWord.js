@@ -146,6 +146,28 @@ class BoundaryWord extends Word {
 
         return thetadromes;
     }
+
+    /**
+     * Extracts factors with length greater than or equal to the specified minimum length.
+     * @param {number} n - The minimum length of dromes to include.
+     * @param {Object} factors - An object mapping indices to arrays of factors.
+     * @returns {Object} - Object mapping indices to arrays of long dromes.
+     */
+    static extractLongFactors(n, factors) {
+        const longFactors = {};
+
+        for (const index in factors) {
+            longFactors[index] = [];
+
+            for (const factor of factors[index]) {
+                if (factor.length >= n/3) {
+                    longFactors[index].push(factor);
+                }
+            }
+        }
+
+        return longFactors;
+    }
 }
 
 export default BoundaryWord;
